@@ -46,15 +46,15 @@ $A flee
 Decide to flee after all
 ```
 This is then fed through the compiler, which currently only supports json output, but is meant to also support custom binary chunked format. The resulting file is fed to an engine which can then be queried for the state of the discussion. A simple python usage might look something like:
-```
+```python
 import d3
 d = d3()
 d.load_json(sys.argv[1])
 while True:
-    print(d.text)
+    print(d.text) # <- current "room" description
     print("-   -  - ----- -  -   -")
     for i in range(len(d.answers)):
-        print(i, ")", d.answers[i])
+        print(i, ")", d.answers[i]) # <- current "room" choises
     print("q ) quit")
     ok = False
     while ok is False:
@@ -72,7 +72,7 @@ while True:
             if intv < 0 or intv > len(d.answers) - 1:
                 print("Choice out of range,", intv, "not within 0 ..", len(d.answers) - 1)
             else:
-                d.choose(i)
+                d.choose(i) # <- moving to the next "room"
                 ok = True
 ```
 ..and most of the complexity there goes into making sure python doesn't crash when you typo the input.
