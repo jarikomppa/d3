@@ -1,0 +1,77 @@
+#
+# This example shows some complex interactions with flags
+#
+
+#####################################################################
+
+# The neon light switches every time this room is drawn
+$Q start toggle:neon turns+1
+
+# Switch background between dark and light depending on the light switch
+
+# An  empty $O will always be shown.
+$O
+The room.
+
+---- --- -- -
+
+# Basic description depends on the light switch..
+$O !light
+You are in a small dark room with a window looking down to the street. The room has a single door, with a light switch next to it.
+$O light
+With the lights turned on, the room is not as opressive as it felt in the darkness.
+
+# We flash lightning really randomly (play sound effect)
+$O rnd:20 set:lightning 
+Lightning flashes in the window.
+$O open
+The door is open.
+
+# Neon toggler (see $Q, above) switches border color and description
+$O neon 
+Outside the window, neon sign glows red.
+$O !neon
+Outside the window, neon sign glows blue.
+
+
+# Only see the key if we have light
+$O !key light
+A small silver key glitters in the light.
+
+$O !key !light lightning
+A small silver key glitters in the lightning's light.
+
+$O clr:lightning
+
+# Don't bother mentioning the key if door is unlocked
+$O key !unlocked
+You have the key.
+
+$A start toggle:light
+Press the light switch
+$A start !key light set:key
+Get the key
+$A start key !unlocked set:unlocked
+Unlock the door
+$A start unlocked !open set:open
+Open the door
+$A start open clear:open
+Close the door
+$A end open
+Exit the room through the door
+$A start
+Wait for a while
+
+#####################################################################
+
+$Q end
+The end.
+
+---- --- -- -
+
+You played for <<turns>> turns.
+
+$O light
+You left the lights on.
+$O !light
+You remembered to turn off the lights.

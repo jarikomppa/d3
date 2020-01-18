@@ -1,0 +1,48 @@
+# Test file for flag operations
+$Q testroom set:headerset has:unused
+Flag test
+
+$O set:bodyset has:unused
+$O testroom
+testroom is set (ok)
+$O !testroom
+testroom is not set (ERROR)
+$O has:headerset
+headerset is set (ERROR)
+$O not:headerset
+headerset is not set (ok)
+$O has:bodyset
+bodyset is set (ERROR)
+$O not:bodyset
+bodyset is not set (ok)
+$O unused
+unused is set (ERROR)
+$O !unused
+unused is not set (ok)
+$O toggle
+toggle is set 
+$O !toggle
+toggle is not set
+$O toggle !toggle
+toggle is both set and not set (ERROR)
+
+$A testroom set:toggle
+Set toggle
+$A testroom clr:toggle
+Clear toggle
+$A testroom xor:toggle
+Toggle toggle
+$A testroom bodyset
+Bodyset is set (ERROR)
+$A testroom headerset
+Headerset is set (ERROR)
+$A testroom unused
+Unused is set (ERROR)
+$A testroom toggle
+Toggle is set
+$A testroom not:toggle
+Toggle is not set
+$A testroom testroom
+Testroom is set (ok)
+$A testroom !testroom
+Testroom is not set (ERROR)

@@ -1,0 +1,58 @@
+# Test file for various whitespace headaches
+
+
+
+
+$Q testroom
+
+
+
+test room,
+let's check it
+
+$O c=0 c-=7
+
+<<c>><<c>> <<c>>
+$P
+foo<<c>>bar
+foo <<c>> bar
+$P
+sub->
+$O GOSUB:sub1
+<-sub
+
+$P
+
+goto->
+$O GOTO:goto1
+
+$Q goto1
+<-goto
+
+$A testroom
+refresh
+$A testroom
+foo
+foo
+$A testroom
+foo
+
+foo
+$A testroom
+bar
+
+
+
+
+
+
+
+
+$Q gotoroom
+page with goto
+
+$Q sub1
+<-sub->
+$A testroom
+.
+

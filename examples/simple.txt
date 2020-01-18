@@ -1,0 +1,59 @@
+# Lines starting with # are comments
+# Lines starting with $ are statements
+# Lines with no start glyph are string literals
+# Single newlines or white space is not preserved, word wrapping is applied
+#
+# Everything between two $Q statements belongs to one "room"
+
+#####################################################################
+
+$Q start
+You're captive in a dark room. There's a door, a window and a trapdoor.
+
+$A window
+Try the window
+$A door
+Try the door
+$A trapdoor
+Try the trapdoor
+
+#####################################################################
+
+$Q window
+Try as you might, the window is out of reach.
+
+$A start
+Look around
+
+
+#####################################################################
+
+$Q door
+The door is locked
+
+$A window
+Try the window instead
+$A trapdoor
+Try the trapdoor instead
+
+
+#####################################################################
+
+$Q trapdoor
+The trapdoor opens easily, but leads to darkness, and there's no ladder.
+
+$A trapdoor
+Wait for a while
+$A start
+Look around
+$A end
+Jump down to the darkness
+
+
+#####################################################################
+
+$Q end
+The way down is much longer than you expected. How long exactly? Time will tell.
+
+
+#####################################################################

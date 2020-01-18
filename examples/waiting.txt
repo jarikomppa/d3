@@ -1,0 +1,1598 @@
+# This is the whole "Waiting for the light" gamebook by
+# Kieran Coghlan, converted to MuCho with the author's
+# permission for non-commercial use.
+
+$Q start
+
+WAITING FOR
+$P
+THE LIGHT
+$P
+By Kieran Coghlan
+$A p1
+Now Begin
+
+$Q p1
+You are in darkness. You open your gritted eyes but it makes little difference - there is nothing
+but pitch blackness before you. You try to move, but your arms are pinned to the cold stone
+wall behind you, manacled by rusty iron shackles that dig into your skin. You bellow out for
+assistance, but your calls are met only by the eternal silence. Such is the way it has been for as
+long as you have known - there is no reason to expect anything different today. You let your
+heavy eyelids close and become dormant once more.
+
+You are startled awake by something irritating your eyes. Blinkingly, you open your eyes to
+behold something you thought you would never see again - light! A faint white light is coming
+from what seems to be an open doorway in the far side of the room. Standing silhouetted in the
+light is the figure of a man. As he approaches you can see he is overweight and greasy skinned.
+He has a mass of curly ginger hair atop his head and wears thick glasses and a scruffy tweed
+suit. He reaches over to the shackles that trap your arms and undoes them with clumsy, shaking
+hands.
+
+"I hope you know what you're doing," he says in a thin reedy voice. "Turn right and head to the
+hall of lights. Good luck - for both our sakes."
+
+With that, he turns round and leaves through the doorway. You can just about see him turn left
+in the faint light.
+
+Rubbing the circulation back into your wrists, you follow him out the doorway. The light seems
+to be coming from a passageway to your right. To your left you see nothing but endless
+darkness. 
+$A p90
+Turn right 
+$A p33
+Take the left passage
+
+$Q p2
+Vine draws a card from his jacket pocket and begins to laugh. He turns to your opponent.
+
+"Bon voyage!" he says and a pit trap opens beneath your opponent's feet. He plunges into the
+darkness with a piercing shriek while the audience clap and cheer.
+
+"That means you win!" Vine says, turning to you.
+$A p100
+Continue
+
+$Q p3
+"I think there's no reason for us to waste any more time," he continues. "Here ya go."
+
+He tosses you a wad of cash which you catch and stick in your pocket. He then rises to his feet
+and strides towards the door. He opens the door for his wife who shuffles slowly out.
+
+"We won't be troubling you again," he says, closing the door behind him.
+
+Suddenly your chair begins to shake and the bookshelves before you crumble into dust to be
+replaced by a pulsating pink light. The light expands and surrounds you completely . . . and
+when it fades you are back in the hall of lights.
+$A p49 set:S set:cash
+Continue
+
+$Q p5
+"Well there's a promotion coming up in my office," he reveals. "I wasn't going to go for it as it
+means more hours. But the money's good. Maybe having a bit more money would help."
+
+The wife purses her lips uncertainly at this suggestion.
+$A p87
+State that this is a good idea 
+$A p26
+It won't solve their problems
+
+$Q p6
+$O gosub:scorecheck
+$O
+You answer before your opponents has a chance.
+
+"Correctamundo," replies Vine, giving you one of his trademark smiles. "Do you want to take the
+point, or risk a Surprise! card?"
+
+"The card!" screams an over-enthusiastic member of the audience. 
+$A p11 player_score+1
+Take the point 
+$A p63
+Take the card
+
+$Q p7
+You head in the rough direction of the noises which get louder and more disgusting the further
+you travel. Suddenly, the mist parts before you, revealing the completely hideous source of the
+noise. A long scaly creature stands before you, staring up at you with one beady bloodshot eye
+and one huge yellow eye which seems to have some sort of fungus growing out of it. It's
+reptilian face is almost split in half by a crooked grin full of sharp, brown teeth. A leathery
+purple tongue hangs lopsidedly from the mouth in a pool of black saliva. It makes another
+horrible retching sound and then stalks towards you. 
+$A p77
+Pick up a heavy branch and attack the creature 
+$A p21
+Run away from it
+
+$Q p8
+You emerge back into the studio, greeted by thunderous applause. Vine skips over to you.
+"Ladies and gentlemen, let's hear it for our valiant competitor!" he cries. The audience shrieks in
+appreciation.
+
+"And because no-one leaves Surprise! empty handed, here's a trophy to go on your mantelpiece."
+He hands you a golden trophy of a man with his hair standing on end. You pocket this and join
+Vine and the victor in waving to the audience as the announcer tells everyone to tune in next
+week for another edition of Surprise! As you wave, the studio lights seem to get impossibly
+bright. You are forced to shield your eyes and when the light finally fades, you uncover them to
+find you are back in the hall of lights, the studio gone. 
+$A p49 set:trophy
+Continue
+
+$Q p9
+$O gosub:scorecheck
+$O
+You buzz in a fraction of a second before your opponent and answer.
+"Well, blow me down and pick me up," begins Vine. "You're absolutely, positively, one-hundred
+percent correct! Will you be taking the point or would sir prefer the subtle mystery of a Surprise!
+card?"
+$A p91 player_score+1
+Take the point 
+$A p2
+Take the card
+
+$Q p11
+$O gosub:scorecheck
+$O
+"Question two," continues Vine. "According to Sigmund Freud, the apparatus of the psyche
+consists of the id, ego and . . . is it the instinct or the super-ego?"
+$A p34
+answer instinct 
+$A p89
+answer the super-ego 
+$A p55
+prefer not to answer at all
+
+$Q p12
+Bright, twinkly music seems to be coming from the yellow light. Intrigued, you walk nearer. As
+you do so, the light suddenly expands and surrounds you, the strange music getting louder.
+Your senses overwhelm you and you curl into a ball.
+
+You are brought back to awareness by someone gently nudging you in the side with their foot.
+"Hey kid, you're on," speaks a gruff voice.
+
+You pick yourself up and look around you. You are no longer in the hall of lights. Instead you
+are in a brightly lit, garishly decorated sitting room. You can still hear the annoying music
+which seems to be coming from behind a door with a large yellow star on it. A man in overalls
+is pointing emphatically at the door.
+
+"Don't keep Mr. Vine waiting," he says.
+
+Perplexed, you nod to the man in acknowledgement and head for the door. As you throw it
+open you are greeted by a huge cheer from above. You are in a television studio and a huge
+audience of men and women are cheering from the stands. Across from you, a skinny man with
+a ragged beard and thick glasses has just entered the studio via a similar yellow starred door.
+He waves feebly to the crowd and you do the same.
+
+"Folks!" cries an unseen announcer. "Welcome to "Surprise!" the gameshow where truly anything
+can happen. These are tonight's contestants and here is your host: Geraaaaaaaaaaaald Vine!"
+At this, a snappily dressed man with slicked back blond hair emerges amongst the audience. He
+runs down the stairs towards you, shaking hands with random audience members as he does
+so. He then leads you and your opponent to a pair of podiums fixed with bright red buzzers.
+
+"Welcome," he says in a cheesy voice as you and your opponent take positions. "Of course we all
+know the rules, but for the benefit of those at home who've been living on the moon for the past
+few months I'll give a quick recap. I'll ask a series of fifty-fifty questions. Buzz in if you think
+you know the answer. But be careful! Get it wrong and your opponent gets a point. Get it right
+however and you can either get a point or draw a Surprise! card. And what can happen with a
+Surprise! card?"
+
+"Anything!" roars the audience dutifully.
+
+"You betcha," says Gerald Vine, flashing a grin even cheesier than his voice and wardrobe put
+together. "First to get 3 points wins and can take home this new, off-the-road family vehicle," he
+indicates a shiny jeep, "or the Mystery Prize."
+
+"Oooooooooooooooooooooo," goes the audience, clearly enjoying themselves.
+
+"Question, the first," begins Vine with a theatrical flourish. "Which philosopher famously said
+"cogito ergo sum" meaning "I think, therefore I am? Was it Rene Descartes or Thomas Hobbes?"
+$A p6
+Answer Descartes 
+$A p59
+Answer Hobbes 
+$A p86
+Prefer not to answer
+
+$Q scorecheck
+#Keep a record of your's and your opponent's scores on your note sheet. Note down that if you reach 3
+#points first to turn to 100. If your opponent manages to do so first, turn to 96.
+$O player_score>=3 go:p100
+$O opponent_score>=3 go:p96
+$O
+You have <<player_score>> points and your opponent has <<opponent_score>> points.
+
+$Q p13
+You race towards the doors and lend your weight to the effort. The force attacking the doors is
+incredible and your bones jar with the effort of staying on your feet. Finally there is a
+tremendous blow and the doors are thrown open, scattering you and the soldiers across the
+room. Through dazed eyes you see a dark figure step through the remains of the devastated
+doors. It is a man clad entirely in black leather apart from his arms - if one could call them that.
+Huge steel monstrosities sprout from his shoulders. He surveys the room before him with a
+contemptuous sneer. One soldiers crawls to his feet and shakily aims his rifle. Before he even
+has time to fire, the steel-armed man grabs him by the head and crushes his skull with one
+gigantic hand. He tosses the remains away and the rifle clatters to the ground inches from your
+hand.
+
+The battle-hardened sergeant leaps to his feet and brings his combat knife into the hideous
+man's shoulder. Without even acknowledging him, the steel-armed man brings his elbow
+smashing back into the sergeant, grinding him into the wall. Another soldier tries to crawl away
+but is picked up and torn in half by those mighty metallic arms. The vile creature then takes one
+final look around the room and, apparently satisfied, turns around and stalks away. 
+$A p71
+Grab the assault rifle and take aim at his back
+$A p85
+Play dead and just let him go
+
+$Q p15
+You walk slowly towards the creature, your arms outstretched in what you hope it will take as a
+sign of friendship. The creature lets you approach and it's horrible leathery tongue slides from
+its toothy maw and proceeds to lick your feet. Interpreting this as the beast being affectionate,
+you reach down and pat its ridged head. As you do so, a small horn breaks off in your hand.
+
+You decide to pocket it. 
+$A p61 SET:A set:horn
+Continue
+
+$Q p16
+You reach down and prize the gun from deathly strong fingers. You march towards the
+creature, aiming between its eyes. The creatures makes a horrible hacking sound and its eyes
+leak some putrid fluid as it stares at you defiantly. Without hesitating, you pull the trigger and
+the bullet flies into the brute's skull. It tumbles sideways, blood and saliva mixing to make a
+foul liquid. Stooping over the creature you snap off one of the horns from it's ugly face and stick
+in you pocket - a fitting trophy for ridding the world of such a beast.
+$A p61 SET:D set:horn
+Continue
+
+$Q p17
+"I have no idea," he replies in a gruff voice. "Our marriage is perfectly fine. Ain't that right, love?
+I think we're just wasting time and money being here."
+
+The woman looks like she is going to respond then seems to think better of it and returns to
+staring at the ground.
+$A p99
+Ask her to speak her mind
+$A p3
+Let her be
+
+$Q p19
+They exchange sad looks with one another.
+
+"You really think that's for the best?" ask the husband, his voice unusually subdued.
+"I suppose it's not forever," manages the wife with a weak smile.
+
+The husband looks like he's going to reply, but he just gulps softly. He stands to his feet and
+hands you a wad of cash which you pocket.
+
+"Well I suppose we'd best get home and sort a few things out," he says to his wife. The two of
+them shuffle out of the room.
+
+Suddenly, a phone on a desk behind you begins to ring. You pick up the receiver and place it to
+your ear and hear the unmistakeable sound of a woman sobbing. You are about to demand who
+is on the other end when you are distracted by a growing pink light outside your office
+window. It swamps into the room encircling you and you close your eyes to shield them from
+its brilliance. When you open your eyes again, you find you are back in the hall of lights. 
+$A p49 SET:S set:cash
+Continue
+
+$Q p20
+$O gosub:scorecheck
+$O
+"Yes it was indeed," responds Vine. "A classic painting though the police didn't take too kindly
+to me lifting it out of the Munch Museum - philistines! Now will that be a point or card you'll
+be wanting, sir?"
+$A p75 player_score+1
+Take the point
+$A p88
+Take the card
+
+$Q p21
+You rush through the trees but it is quite hard to see where you're going through the mist and
+when you're not nearly slipping on marshy ground you're nearly stumbling in overgrown tree
+roots. All the while you hear the creature wheezing behind you, slowly but surely gaining upon
+you. The disgusting thing is just about to leap on you when a gunshot rings out from the trees
+to your left. The creature bolts in the opposite direction, leaving you staring dumbfounded after
+it as a man with long blond hair and armed with a flintlock pistol comes out from the trees
+followed by a pretty red-haired girl.
+
+"Damn it, Bianca you spoiled my aim," the man complains loudly. "I had the creature in my
+sights!"
+
+The girl is about to retort when the two of them notice you and stare questioningly.
+
+You ask "Who are you two?"
+$A p53
+Continue
+
+$Q p22
+$O gosub:scorecheck
+$O
+"Yes! Yes! Yes!" replies Vine to your answer. "What did I do to deserve such smart contestants?
+So what's it going to be - the point of the card?"
+
+"The card! The card! The card!" chants the audience.
+$A p27 player_score+1
+Take the point 
+$A p64
+Take the card
+
+$Q p23
+You burst through the mist-shrouded trees into a clearing of sorts. Richard has the beast backed
+up against the trunk of a solitary oak and is trying to take aim with Bianca tugging his arm and
+screaming at him to let the creature go. The beast looks towards you with its awful discoloured
+eyes as black saliva dribbles from the cavernous fanged mouth in its scaly face. Its expression is
+almost quizzical as if trying to gauge how much of a threat you are.
+
+Suddenly Richard loses his temper and sends Bianca flying backwards with a punch. She
+screams and he turns toward her in sudden remorse. Seizing its opportunity, the beast uses the
+distraction to pounce on Richard's gun arm, tearing it from his shoulder in a torrent of crimson.
+Richard howls in torment and then tumbles to the ground. The beast flings the arm from its
+jaws where it lands with a soft plop a few feet from you with the gun still clutched tightly in the
+hand. The beast watches you warily while Bianca begins to sob. 
+$A p16
+Seize the pistol and shoot the beast 
+$A p15
+Approach it peacefully
+
+$Q p25
+As you approach the white light, it seems to get fainter. You dash towards it, hoping to reach it
+before it disappears completely. You reach out to touch the light and when you do so there is a
+blinding flash. Once the flash fades you are no longer in the hall of lights. Instead you are in a
+dark room. The only light at all comes from a set of shining double doors in the far wall. The
+doors are made of some brilliant metal which intrigues you and you approach them. As you do
+so, you notice a man sitting at a desk next to the doors. He notices you looking at him and gets
+up from his seat, offering his hand for you to shake. You walk up to him and shake him by the
+hand. In the faint light you make out he has slicked-back black hair and is wearing a fancy navy
+suit. He motions for you to sit and flashes you a million dollar smile.
+As you sit, he speaks with a warm, friendly voice.
+
+"Nice to meet you," he says. "Now, I understand that you'll be eager to go through the platinum
+doors, but I'll need to see a few credentials first."
+
+You stare at him blankly.
+
+"You know," he says. "A few items to show you're taking this whole thing seriously."
+You pour out any items you have found on the desk in front of him. 
+$A p80 medal horn cash trophy
+A medal, a horn, a wad of cash and a trophy
+$A p73 !medal !horn !cash !trophy
+You have nothing
+$A p73 medal !horn !cash !trophy
+A medal
+$A p73 !medal horn !cash !trophy
+A horn
+$A p73 medal horn !cash !trophy
+A medal and a horn
+$A p73 !medal !horn cash !trophy
+A wad of cash
+$A p73 medal !horn cash !trophy
+A medal and a wad of cash
+$A p73 !medal horn cash !trophy
+A horn and a wad of cash
+$A p73 medal horn cash !trophy
+A medal, a horn and A wad of cash
+$A p73 !medal !horn !cash trophy
+A trophy
+$A p73 medal !horn !cash trophy
+A medal and a trophy
+$A p73 !medal horn !cash trophy
+A horn and a trophy
+$A p73 medal horn !cash trophy
+A medal, a horn and a trophy
+$A p73 !medal !horn cash trophy
+A wad of cash and a trophy
+$A p73 medal !horn cash trophy
+A medal, a wad of cash and a trophy
+$A p73 !medal horn cash trophy
+A horn, a wad of cash and a trophy
+
+
+
+$Q p26
+Neither of them looks too disappointed by your response.
+
+"So what is the answer then?" asks the husband.
+$A p94
+Ask why they got together in the first place
+$A p19
+Recommend a trial separation
+
+$Q p27
+$O gosub:scorecheck
+$O
+"Geez, hasn't anyone won yet?" continues Vine. "I hope I haven't left the oven on cos if I have my
+house'll be a pile of ashes at this rate. Now, question five: which artist created a series of
+expressionist paintings and prints named Skrik, or in English, The Scream between 1893 and
+1910? Was it Edvard Munch or Peder Balke?"
+$A p20
+Answer Munch
+$A p67
+Answer Balke 
+$A p41
+Stay silent
+
+$Q p28
+You sprawl on the comfortable seat, relieved to take the pressure on your feet.
+"Isn't that better?" says the man. "We should enjoy what little time is left."
+You nod in reply, too exhausted to speak.
+
+Time passes, marked only by the dwindling of the light coming from the corridor. Eventually
+you cannot see your companion at all. Then the light fades completely and your world is no
+more.
+
+$Q p29
+$O gosub:scorecheck
+$O
+"Don't be silly now," responds Vine to your answer. "That's clearly not the answer we're looking
+for. And you're going to pay the price for such silliness because now your opponent gets a
+point."
+
+Your opponent winks at you.
+$A p27 opponent_score+1
+Continue
+
+$Q p30
+You rush through the woods trying to find a way out, but perhaps it is the thick mist
+disorienting you for you cannot seem to find your way out of the wood. Panicking, you try to
+head back to Richard and Bianca, but though several times you think you see a flash of
+Richard's blond hair in the distance or hear Bianca's reprimanding voice on the breeze you
+cannot find the siblings again. You run on until the mist thickens and total darkness consumes
+the woods and you.
+
+$Q p31
+Your opponent buzzes in with incredible speed.
+
+"It's Kelsey Grammer," he says without hesitation.
+
+"Yes!!!!!!!!" screams Vine. "You are the winner!"
+$A p96
+Continue
+
+$Q p32
+You put your hand on his back. "We might get out of this alive yet," you say in what you hope is
+a comforting voice.
+
+"How?" he whines. "Those machine guns'll tear us apart. I just wanna get outta here."
+
+$A p38
+Suggest you both escape together
+$A p92
+Keep quiet about it
+
+$Q p33
+The light grows dimmer behind you as you walk down the passageway for what seems like
+hours. Soon the darkness is so deep that you must hold on to the stone walls on either side of
+you as you stride steadily forward. Suddenly you bump into something cold and hard. Feeling
+forward with your fingers you determine that a steel door bars your way. You grope for a
+handle. Eventually you find it and pull open the door, striding into the pitch dark room ahead.
+The door closes behind you with a clang. You hear a low grown.
+
+"Why did you come here?" whimpers a reedy voice. "I asked you to head to the hall of lights!"
+Just then, there is a grinding noise and suddenly you feel ice-cold water flowing between your
+feet - the room is flooding! Desperately you try to open the door, but there seems to be no
+handle on this side.
+
+"I was a fool," continues the voice as the freezing water reaches your chest. "There is no escaping
+the water. You cannot build a strong house on weak foundations."
+
+It is the last thing you hear before water enters your lungs and you fall into oblivion.
+
+$Q p34
+$O gosub:scorecheck
+$O
+"Wrooooooooooong!" bellows Vine. "Which means your opponent gets the point. You're really
+making this far too easy for him."
+$A p44 opponent_score+1
+Continue
+
+$Q p35
+You awaken to see the red-haired girl smiling down at you. You are lying on soft grass. You put
+a hand to your wound and find it has been stitched up by an expert hand.
+
+The girl smiles. "You're lucky my idiot brother is a bad shot. A couple more inches and that
+would have hit your heart."
+
+Her brother is standing behind her, staring angrily you with his burly arms crossed.
+
+"Well," he says, "if he will go skulking in the trees like some sort of fiend - what am I to do?
+Wave politely?!"
+
+"Don't mind him," continues the girl. "I'm Bianca and that oaf's name is Richard. He's here
+hunting some creature and I'm trying to convince him to leave the poor thing alone."
+
+"Poor thing nothing!" snaps Richard. "You only have to take one look at that foul abomination to
+know it should be wiped off the face of the Earth!"
+
+Bianca is about to retort when a horrible retching roar interrupts her. Richard turns in its
+direction and charges into the trees in pursuit, waving his pistol like a lunatic.
+"Wait! Richard!" yells the girl before pursuing.
+
+$A p23
+Follow the siblings in their pursuit of the beast
+$A p30
+Run off in the other direction
+$A p45
+Continue to rest on the soft grass
+
+$Q p36
+You dash into the locker room and slam the door behind you. Just then, you hear an almighty
+crash followed by bone chilling screaming and the sound of tearing flesh. Fighting the urge to
+vomit you sprint towards the red light. You are just about to throw yourself in when you see
+something glistening on the flagstones. Intrigued, you stoop down and pick up a medal made
+of a shiny red material. You pin this to your jacket and enter the red light.
+
+You open your eyes and find yourself back in the hall of lights. 
+$A p49 SET:F SET:medal
+Continue
+
+$Q p37
+You beat your opponent to the buzzer by a fraction of a second.
+
+"Kelsey Grammer," you say.
+
+"Riiiiiiiiiiiiiight!" cries Vine joyously. "Which means YOU win!'
+
+He turns to your opponent.
+
+"Sorry, we won't be needing you anymore."
+
+Your opponent disappears down a pit trap that suddenly opens beneath his feet.
+$A p100
+Continue
+
+$Q p38
+He turns to you with a look of utter disgust on his face.
+
+"You won't get me to desert my friends, coward," he snarls. "Hey Sarge! This guy is planning to
+ditch us all!"
+
+"Is that so?" growls the sergeant, spitting on the stone floor. "Well if that's the case maybe you'd
+better beat it. Go on, get lost! We don't need wimps getting in our way."
+
+Before he can go on he is interrupted by a heavy pounding on the mighty wooden doors.
+
+"Aw shit!" he barks. "Brace the door! Those sons of bitches are trying to get through."
+All the soldiers leap to their feet and rush towards the doors, throwing their weight against
+them in an effort to keep them closed. But still the pounding continues and the heavy bar begins
+to buckle and splinter.
+
+"Ain't ya gonna help?!" yells the sergeant at you.
+$A p13
+Aid the soldiers in what seems a futile effort
+$A p36
+Escape while you can
+
+$Q p39
+The pink light engulfs you as you approach, causing your head to swim and your eyes to screw
+up in pain. When you open your eyes you are sitting in a comfortable leather chair staring at a
+balding heavy set man and a skinny brown haired woman sitting opposite you in similar chairs
+to your own. You appear to be in a study of sorts - lined with ornate bookcases filled with
+leather-bound books. The man stares suspiciously at you while the woman shifts uncomfortably
+in her seat as she stares blankly at the ground. 
+$A p17
+Ask the man why he is here
+$A p14
+Ask the woman why she's here
+
+$Q p40
+You buzz in a millisecond before your opponent.
+
+"David Hyde Pierce?" you venture.
+
+"You idiot!" cries Vine. "You just threw it all away with that brazen display of stupidity. You
+LOSE!"
+$A p96
+Continue
+
+$Q p41
+Your opponent seems to mull it over for a while then buzzes in.
+
+"Munch?" he tries.
+
+"You sure about that?" queries Vine. "Well you should be because it's so correct it hurts! Are you
+going to be a wimp and ask for a point or a real man and take a Surprise! card?"
+
+Such manipulation clearly strikes a chord with your opponent as he asks for a card, much to the
+audience's delight.
+
+Vine pulls a card from his jacket.
+
+"My sympathies, my friend," he says. "Because you've just drawn the Forfeit card. Which means
+you lose."
+
+A pit trap opens up beneath your opponents feet and his screech as he plummets into the
+darkness mixes with sighs of sympathy from the audience.
+$A p100
+Continue
+
+$Q p43
+You drag yourself along the ground to a safer spot behind a pile of rubble. Taking a quick
+glimpse outside the gaping hole you see teams of black coated soldiers with sinister spiked
+helmets milling about outside. A few of them are operating a massive mounted machine gun
+and are taking pot shots at the castle wall. The noise of the revolving barrel is unbearable.
+
+"They're gonna kill us all!" screams a soldier next to you before burying his face in his hands and
+sobbing loudly.
+
+"Buck up soldier," commands a battle scarred sergeant, his back against two massive oak doors
+that have a heavy wooden bar across them.
+
+"Yeah," says another soldier cowering amongst some rubble. "There's plenty worse than machine
+guns out there." He then begins to laugh uproariously as the machine gun fire carries on in the
+background.
+$A p32
+Try and console the sobbing soldier
+$A p58
+Talk to the one laughing hysterically
+
+$Q p44
+$O gosub:scorecheck
+$O
+"Question three already, people," says Vine. "Gosh, time passes quickly when you're having fun.
+Which of these is a film directed by David Lynch - Mulholland Avenue or Inland Empire?"
+$A p98
+Answer Mulholland Avenue
+$A p9
+Answer Inland Empire
+$A p84
+Remain silent
+
+$Q p45
+You lie back on the grass and close your eyes and start to relax . . . until you are kicked hard in
+the side! You let out a grunt of pain and open your eyes to see a man with wavy brown hair and
+glasses standing over you.
+
+"No," he mumbles. "This won't do at all. This attitude solves nothing. It lets the darkness settle
+and seeds stagnation. Take it from someone who has trod this path eternally - you must made a
+decision!"
+
+His voice has become more insistent and higher pitched.
+
+"Make a choice!" he pleads. "Lest the darkness gain eternal dominion."
+
+With that he fades into the trees. You stagger to your feet. 
+$A p23
+Follow the siblings
+$A p30
+Run in the opposite direction
+
+$Q p47
+Your opponent buzzes in.
+
+"Plutchik?" he tries, sounding less than confident.
+
+"Plutchik?" says Vine. "Why that's . . . CORRECT! Will you take a point of do you dare ask for a
+Surprise! card?"
+
+"The caaaaaaaaaaaaaaaaaaaard!" scream the audience in unison.
+
+"Gerald," says your opponent. "I think I'm going to bow down to the will of the people and take
+a card."
+
+"Excellent," says Vine, pulling a yellow card from his jacket pocket. He then begins to laugh
+before turning to you.
+
+"Bon voyage!" he exclaims.
+
+Suddenly a pit opens beneath your feet and you plunge into darkness. Your piercing scream is
+interrupted by you landing in a soft bouncy castle. You are in a dim basement, but you can just
+about make out a set of wooden steps leading up to a door. You crawl off the bouncy castle and
+stride up the steps.
+$A p8 SET:U
+Continue
+
+$Q p49
+Your legs ache and your forehead is covered in a sheen of sweat. You consider turning back
+several times, but one thing spurs you on - the light before you is growing larger.
+
+Eventually, on the brink of collapse, you stumble into a large room. Directly ahead of you is the
+white light you have been following - it illuminates the ruins of what looks like a former
+temple. Broken pillars and rotted banners scatter the stone floor. But what grabs your attention
+are four other, dimmer lights in the room. To your left is a red and a green light, while pink and
+yellow lights lie to your right. Despite the fact it is still dim in here, you feel uplifted to be near
+these lights and the urge to approach them is insurmountable. Which light will you approach -
+$A p76 NOT:p76
+Red? 
+$A p82 NOT:p82
+Green?
+$A p39 NOT:p39
+Pink? 
+$A p12 NOT:p12
+Yellow? 
+$A p25 NOT:p25
+White?
+
+$Q p51
+Two people appear from the mist - a man with long blond hair and a pretty girl with red hair.
+Both are garbed in loose fitting leather clothing. On seeing you they both stop in surprise and
+the man levels a flintlock pistol at you.
+
+"Who are you, poltroon?" he demands. "Why are you skulking in this thrice accursed place?"
+
+"Oh put that pistol down, Richard," says the girl.
+
+"But what if he's in league with the creature?" he snaps back.
+
+"I hardly think that terribly likely," she replies. "Just put the gun down and let's talk like civilized
+people."
+
+The man reluctantly lowers his pistol, but continues to give you a contemptuous glare.
+
+"Who are you two anyway?" you ask.
+$A p53
+Continue
+
+$Q p53
+"I'm Bianca," says the girl. "This is my brother, Richard."
+
+"We're here hunting a foul beast," he adds.
+
+"You're hunting it," interjects Bianca. "I don't think the poor thing has done anything that
+warrants hunting."
+
+"Are you mad, woman?" says Richard. "You only have to look at the thing's awful visage to
+know it is an affront to God and must be destroyed."
+
+Before she can retort, there is a rustling in the trees to your right followed by the now familiar
+horrible noise.
+
+"The beast!" exclaims Richard. "This time it shall not escape me!"
+
+With that he charges into the trees waving his pistol.
+
+"Wait! Richard!" yells the girl before pursuing.
+$A p23
+Follow the siblings in their pursuit of the beast
+$A p30
+Run off in the other direction
+
+$Q p54
+"You're being unreasonable," he whines. "We've been married eight years and we never argue.
+We've never been unfaithful to one another and we've never had any financial worries. So I
+really don't see how you could be unhappy."
+$A p95
+Agree with him 
+$A p57
+Ask the wife what she wants from the marriage
+
+$Q p55
+$O gosub:scorecheck
+$O
+Your opponent buzzes in.
+
+"I think it was the instinct," he says.
+
+"Well, you think wrong, my friend," replies Vine, cheesy grin beaming. "Which means your
+opponent gets a point."
+$A p44 player_score+1
+Continue
+
+$Q p56
+$O gosub:scorecheck
+$O
+Vine pulls a yellow card from his jacket pocket.
+
+"Well, what d'ya know, folks?" he says. "It's the card that can make or break any game - the Swap
+card. You both swap scores."
+$A p44 temp=player_score player_score=opponent_score opponent_score=temp
+Continue
+
+$Q p57
+Her eyes dart from left to right like she is worried someone might overhear.
+
+"I want . . . kids!" she states and a childish smile crosses her face.
+
+Her husband looks appalled by this revelation. "You do?!" he manages.
+$A p81
+Agree that this might be a good idea
+$A p79
+Say that children are not the answer
+
+$Q p58
+"What's worse than machine guns?" you ask.
+
+He turns towards you but his eyes seem to be looking at nothing.
+
+"Oh, there's much worse," he chuckles. "Savage dogs who'll rip your skin off, enemy torturers
+who can keep you alive in exquisite pain for months. And worst of all is the one with the steel
+arms. He can rip your head clean off - I've seen 'im do it to a mate of mine - poor Mick didn't
+even have a chance to scream."
+
+At this the sobbing soldier begins to howl with fear.
+
+"Hey shut up, Preston!" barks the Sergeant.
+
+Preston stops talking but continues to grin inanely.
+
+Suddenly, there is a heavy pounding on the mighty wooden doors.
+
+"Aw shit!" he barks. "Brace the door! Those sons of bitches are trying to get through."
+All the soldiers leap to their feet and rush towards the doors, throwing their weight against
+them in an effort to keep them closed. But still the pounding continues and the heavy bar begins
+to buckle and splinter.
+
+"Ain't ya gonna help?!" yells the sergeant at you.
+$A p13
+Aid the soldiers in what seems a futile effort
+$A p36
+Escape while you can
+
+$Q p59
+$O gosub:scorecheck
+$O
+"And our survey says . . . uh-uhh!" jokes Vine. "No, I'm afraid it was Descartes." Your opponent
+beams.
+$A p11 opponent_score+1
+Continue
+
+$Q p61
+You turn back towards Richard and Bianca only to find they have vanished. In fact the mist and
+woods seem to be fading before your very eyes. You turn to the creature and see it too is gone:
+the only thing before you now is a floating green light. With no other recourse available to you,
+you enter the light and close your eyes as it envelopes you.
+When you open your eyes again you are back in the hall of lights.
+$A p49
+Continue
+
+$Q p63
+$O gosub:scorecheck
+$O
+Vine pulls a bright yellow card from his jacket pocket.
+
+"The card says -" he begins. The audience hushes in tension. "- that your opponent gets two
+points!"
+
+Your opponent cheers at this news while the audience sigh in sympathy.
+
+"Too bad my friend," says Vine, "but that's the way -"
+
+"- the cookie crumbles!" finish the audience.
+$A p11 opponent_score+2
+Continue
+
+$Q p64
+$O gosub:scorecheck
+$O
+Vine pulls forth a bright yellow card.
+
+"Audience," he says. "It's my favourite card cos it means I can hit the bar all the sooner - the
+Sudden Death card! Both players' score are set to 2 points. Everything to play for now people."
+$A p27 player_score=2 opponent_score=2
+Continue
+
+$Q p65
+He folds his arms in annoyance, but keeps silent. She licks her lips nervously then continues.
+"It's just there's nothing interesting happening in our marriage. We seem to be a couple due to
+routine more than anything else. We need some sort of a change."
+$A p57
+Ask her what kind of change she would want
+$A p5
+Ask him what change he would be willing to make
+
+$Q p66
+You rush through the trees, less than confident that you are not just running around in circles.
+Finally, the grotesque noise fades and you rest against a particularly tall tree to get your breath
+back.
+
+The sound of your panting almost covers the approaching sound of harsh whispers and
+footsteps in the marshy ground. Soon these newcomers will be upon you.
+$A p51
+Stay where you are
+$A p97
+Hide amongst the trees
+
+$Q p67
+$O gosub:scorecheck
+$O
+"Balke?!" says Vine to your answer. "I balk at such an idea. No, it was Munch. Your opponent
+gets the point I'm afraid."
+
+Your opponent cheers and applauds himself even though he did nothing.
+$A p75 opponent_score+1
+Continue
+
+$Q p71
+Screaming at the top of your lungs you open fire on the hateful figure. Bullet after bullet thuds
+into his back but rather than fall, he turns round and strides steadily toward you. You keep
+firing, your throat raw from screaming and your mind trying to calculate how many bullets you
+have in this clip. And still the hideous steel-armed man comes onward. He is soon before you
+and stretches out with his cruel steel hand . . . which stops centimetres from your face. Black
+ichor spills from his mouth and he tumbles backward, dead at last. You breathe a long sigh of
+relief and give his corpse a hearty kick. You salute the dismembered bodies of your fallen
+comrades - they have been avenged.
+
+You decide there is little more good you can do here and decide to return through the red light.
+Before you go, you notice a shining red medal on the steel-armed man's leather garb. On a
+whim, you tear it from his body and place it on your shirt. You then return to the locker room
+and step into the red light.
+
+You open your eyes and find yourself back in the hall of lights. 
+$A p49 SET:N SET:medal
+Continue
+
+$Q p73
+He shakes his head at what you have presented before him.
+
+"Y'know," he says sorrowfully. "I really thought you were going to make it. But you're a loser."
+His voice gets angrier. "There's no hope for you. There's no hope for any of us now!"
+
+As his tirade continues, the light of the platinum doors fades until there is only the man's voice
+in the darkness. And then there is nothing at all.
+
+$Q p74
+You scramble to your feet, trying not to slip on the brain matter that now lies on the flagstones.
+
+"Come back, coward!" yells one of the soldiers, but you pay him no heed as you run back
+through the doorway slamming the heavy door shut behind you. You are just about to throw
+yourself into the red light when you see something glistening on the flagstones. Intrigued, you
+stoop down and pick up a medal made of a shiny red material. You pin this to your jacket and
+enter the red light.
+
+You open your eyes and find yourself back in the hall of lights. 
+$A p49 SET:F set:medal
+Continue
+
+$Q p75
+$O gosub:scorecheck
+$O
+"So it's two all, folks," says Vine, his voice oddly serious. "Whoever gets the next question right
+wins and we can all go away and do something worthwhile with our lives. Question six: who
+played psychiatrist Frasier Crane in sitcoms Cheers and Frasier ? Was it Kelsey Grammer or
+David Hyde Pierce?"
+$A p37
+Answer Kelsey Grammer
+$A p40
+Answer David Hyde Pierce
+$A p31
+Keep silent
+
+$Q p76
+As you approach the red light, it envelops you, blinding you with its intensity. You close your
+eyes and when you are open them you are standing in a brightly lit stone room. Behind you is
+the red light - your exit back to the hall of lights, should you require it. Looking around the
+room, you feel it is old, perhaps hundreds of years old. A sturdy oak door in the corner and a
+high narrow window to your right suggest you are in some sort of castle or fortification. The
+only modern looking thing in the room is a steel locker in front of you. You turn the handle of
+the locker and reveal some clothes inside. Pulling them out, you see they are camouflaged
+combat fatigues. Not questioning the impulse to do so, you pull the fatigues over your current
+clothing - they are a perfect fit. You are distracted by the sound of gunfire and the screams of
+men coming from behind the door. You throw it open.
+
+"Get down!" barks a gruff voice. You duck instinctively just as a hail of machine gun bullets thud
+into the room through a gaping hole in the castle wall in front of you. A host of soldiers dressed
+as you are throw themselves down at the same time, but one is not quick enough. The bullets
+thud into his skull blowing his head open and covering you in gore.
+$A p74
+Retreat back to the red light
+$A p43
+Stick around
+
+$Q p77
+You wave the branch threateningly, but before you can take a good swing at the foul creature, it
+springs upon you, knocking you to the ground and pinning you underneath its bulk. You try to
+avoid its ugly gaze and shudder as a thin line of black dribble drips onto your face. The creature
+then opens its mouth wide and it's horrible leathery tongue licks your face roughly.
+
+You are just about to accept that your end has come when a gunshot comes from the trees
+behind you. The creature leaps off you and bolts into the deepening mist leaving you to pick
+yourself up as a man with long blond hair and armed with a flintlock pistol comes out from the
+trees followed by a pretty red-haired girl.
+
+"Damn it, Bianca you spoiled my aim," the man complains loudly. "I had the creature in my
+sights!"
+
+The girl is about to retort when the two of them notice you and stare questioningly.
+
+"Who are you two?" you ask.
+$A p53
+Continue
+
+$Q p79
+The husband tries to hide his sigh of relief with little success.
+
+The wife looks disappointed.
+
+"What would you suggest then?" she asks.
+$A p94
+Ask why they got together in the first place
+$A p19
+Recommend a trial separation
+
+$Q p81
+The husband has gone white as a sheet. "Maybe we could . . . give it a try," he says slowly.
+
+The wife grins in delight and gives him a big kiss before shaking you firmly by the hand. He
+rises unsteadily from his seat and hands you a wad of cash before slowly striding towards the
+door. The wife follows, her broad smile still splitting her face.
+
+As they close the door, you slip the cash into your pocket. As you do so, you see the bookcase
+before you collapse into dust. Then your chair gives way and you fall, not to the floor but into
+an ever expanding pink light. You shield your eyes as it envelopes you . . . and when you open
+your eyes again you are back in the hall of lights. 
+$A p49 SET:S set:cash
+Continue
+
+$Q p82
+The green light engulfs you totally and then fades to nothingness . . . but you are no longer
+standing in the hallway. Instead you seem to be in a wood of sorts. Tall, sickly trees surround
+you and the ground is soft and marshy underfoot. A dense mist flows between the trees making
+it so you can only see a few feet in front of you.
+
+You are just considering what to do when you hear the strangest noise coming from the trees to
+your right. At first it sound like a bestial roar but it soon turns into asthmatic coughing and
+wheezing before descending into a grotesque retching. 
+$A p7
+Investigate the noise
+$A p66
+Head away from it
+
+$Q p83
+You clamber into the car and honk the horn and wave wildly to the audience whose cheers are
+emphatic. Vine skips over to you and presents you with a golden trophy of a man with his hair
+standing on end.
+
+"To go on your mantelpiece," he says, flashing another cheesy grin.
+
+You take the trophy and continue waving as the announcer tells everyone to tune in next week
+for another edition of Surprise! As you wave, the studio lights seem to get impossibly bright.
+
+You are forced to shield your eyes and when the light finally fades, you uncover them to find
+you are back in the hall of lights, the studio and the jeep gone.
+$A p49 SET:T set:trophy
+Continue
+
+$Q p84
+$O gosub:scorecheck
+$O
+Your opponent buzzes in very fast.
+
+"Inland Empire," he says confidently.
+
+"Have you been looking at my cards?" says Vine. "Because that's absolutely correct! Will you
+take the point or risk the dangers or a Surprise! card?"
+
+"I'll take the point," he says. His response is booed by the audience.
+$A p91 opponent_score+1
+Continue
+
+$Q p85
+You wait until you cannot hear the dull thud of his footsteps anymore and then staggeringly
+pull yourself up. You are sickened by the sight of the mutilated corpses of your brief comrades
+and decide to beat a hasty retreat. You return to the locker room and the red light.
+
+You are just about to enter it when you see something glistening on the flagstones. Intrigued,
+you stoop down and pick up a medal made of a shiny red material. You pin this to your jacket
+and enter the red light.
+
+You open your eyes and find yourself back in the hall of lights.
+$A p49 SET:F set:medal
+Continue
+
+$Q p86
+$O gosub:scorecheck
+$O
+You are still pondering the question when your opponent hits his buzzer.
+
+"Descartes?" he ventures.
+
+"Howzabout that, folks?" asks Vine. "He got it right."
+
+A smile of relief creases your opponent's face. He resists the audience urging him to take a
+Surprise! card and instead takes 1 point.
+$A p11 opponent_score+1
+Continue
+
+$Q p87
+The wife nods her head slowly.
+
+"I suppose it's worth a try," she says less than convincingly.
+
+"Yeah," replies her husband, scratching the back of his neck awkwardly. "Whatever doesn't kill
+us and all that."
+
+He looks like he's trying to smile and can't quite manage it. Instead he rises to his feet and
+shakes you by the hand before handing you a wad of cash which you stuff in your pocket. He
+then leads his wife out the office door, neither one of them looking directly at the other. They
+close the door behind them.
+
+A few seconds later, there is a knock at the door. Thinking that they've forgotten something,
+you stride over and open it . . . to reveal a huge glowing pink light. The light surrounds you
+completely and when it finally fades you are no longer in the office - you are back in the hall of
+lights.
+$A p49 SET:S set:cash
+Continue
+
+$Q p88
+$O gosub:scorecheck
+$O
+Vine takes out a yellow card from the confines of his jacket.
+
+"Hard luck, friend," he says. "You've just drawn the Bankruptcy card. We'll be taking any money
+you have on you."
+
+Two burly, bald security guards rifle through your pockets, taking a wad of cash off you if you
+have it.
+
+"Sorry," says Vine. "I know it's hard to get far in this world without money. Tell ya what - to
+make it up to you I'm going to give you a chance to get back into the game by setting the scores
+to two all. How's about that folks?"
+
+The crowd cheers.
+$A p75 clr:cash player_score=2 opponent_score=2
+Continue
+
+$Q p89
+$O gosub:scorecheck
+$O
+"Indeed it was," replies Vine. "So what will it be this time, bucko - the point or the card?"
+The audience mutter amongst themselves while you decide.
+$A p44 player_score+1
+Take the point
+$A p56
+Take the card
+
+$Q p90
+You follow the corridor for what seems like countless hours. The light before you grows no
+larger. You wonder how far ahead this hall of lights is. Will you even make it - or will
+exhaustion claim you first?
+
+"I know what you're thinking," says a warm voice off to your left. You turn to see an overweight
+man sitting on a plush couch in an alcove you had not noticed before. Even in the dim light, his
+warm smile and bright eyes are apparent.
+
+"You're thinking is it worth it?" he continues. "Personally I doubt it is. Even if you make it to the
+light, will you know what to do when you get there? Just sit here with me. Relax, things will
+sort themselves out."
+
+He pats the seat beside him, inviting you to sit down. 
+$A p28
+Accept
+$A p49
+Press on into uncertain territory
+
+$Q p91
+$O gosub:scorecheck
+$O
+"Pay attention now," continues Vine. "We don't want you doing something stupid this late in the
+game. Question four: Which psychologist came up with the concept of the eight-spoked wheel
+of basic emotions in 1980? Was it Ernst Angel or Robert Plutchik?"
+$A p29
+Answer Angel
+$A p22
+Answer Plutchik 
+$A p47
+Say nothing
+
+$Q p92
+You say a few comforting words, but he seems inconsolable. You are about to say something
+more when you are interrupted by a heavy pounding on the mighty wooden doors.
+
+"Aw shit!" barks the sergeant. "Brace the door! Those sons of bitches are trying to get through!"
+The crying soldiers looks up, the tears gone, his face now grim with determination. He leaps to
+his feet and joins his fellow soldiers rushing towards the doors and throwing their weight
+against them in an effort to keep them closed. But still the pounding continues and the heavy
+bar begins to buckle and splinter.
+
+"Ain't ya gonna help?!" yells the sergeant at you.
+$A p13
+Aid the soldiers in what seems a futile effort 
+$A p36
+Escape while you can
+
+$Q p93
+Vine pulls forth a black envelope with a large yellow question mark stamped on it. He peels
+open the envelope and takes out a card.
+
+"You win . . ." he begins theatrically, "a year's supply of custard!"
+
+Before you can say anything, a pit opens beneath your feet and you plunge into a vat of sticky
+yellow custard. With great difficulty you pull yourself out and climb up some wooden steps
+towards a door in the distance.
+$A p8 SET:U
+Continue
+
+$Q p94
+"Well we used to dumb kids' stuff," begins the husband. "Y'know like going bowling, going to
+clubs, seeing bands."
+
+"We just kinda stopped doing those things after a while," adds the wife. "Maybe we should start
+doing a few of those things again."
+
+"Yeah, y'know that might be kinda fun," he says. "We should stop worrying about our
+relationship and just have fun."
+
+"Thanks," he says to you, shaking you by the hand. "You've made me realize in a few minutes
+what was wrong with our marriage and how we can get it back on track."
+
+He hands you a wad of cash which you pocket and then leads his wife out of the office, his arm
+round her shoulder. They close the door behind them softly.
+
+You are startled by a phone on a desk behind you ringing. You pick up the receiver and place it
+to your ear and hear what sounds like several voices laughing giddily. You are about to
+demand who is on the other end when you are distracted by a growing pink light outside your
+office window. It swamps into the room encircling you and you close your eyes to shield them
+from its brilliance. When you open your eyes again, you find you are back in the hall of lights.
+$A p49 SET:J set:cash
+Continue
+
+$Q p95
+The wife makes a small gulping noise and returns to staring at the floor.
+
+"Well that settles that then," growls the husband. He rises to his feet, handing you a wad of cash
+which you pocket. "We won't be needing your services anymore."
+
+He flings the door open, striding out of the office with his wife shuffling after him with head
+bowed.
+
+Before you can make any entreaty for them to come back, your chair begins to shake and the
+bookshelves before you crumble into dust to be replaced by a pulsating pink light. The light
+expands and surrounds you completely . . . and when it fades you are back in the hall of lights.
+$A p49 SET:S set:cash
+Continue
+
+$Q p96
+As your opponent celebrates his victory with great howls of joy, Vine turns to you.
+
+"What are YOU still doing here?" he says. "Get out of my sight."
+
+Suddenly, a pit opens beneath your feet and you plunge into darkness. Your piercing scream is
+interrupted by you landing in a soft bouncy castle. You are in a dim basement, but you can just
+about make out a set of wooden steps leading up to a door. You crawl off the bouncy castle and
+stride up the steps.
+$A p8 SET:U
+Continue
+
+$Q p97
+You find a clump of trees and hide amongst them just as a man with long blonde hair and a
+red-haired girl pass the place you just were. They seem to be arguing about something and you
+lean closer to hear what they're saying, but as you do so, you disturb a flock of birds who caw
+loudly before flying off. The man turns to your position and his mouth forms a cruel sneer as he
+sees you and levels a flintlock pistol at you.
+
+"No! Don't!" screams the girl but a bullet flies from the gun and strikes you hard in the chest.
+You try to talk but find you cannot. You tumble to the ground, blood flowing from your chest as
+you lose consciousness. 
+$A p35
+Continue
+
+$Q p98
+$O gosub:scorecheck
+$O
+You buzz in a fraction of a second before your opponent and answer.
+
+"No," replies Vine, "you could not be more wrong. You could try, but you would not be
+successful."
+
+The audience giggles at this put down and your opponent smiles as he gets a point. 
+$A p91 opponent_score+1
+Continue
+
+$Q p14
+"I'm not happy," she say slowly in a soft quiet voice. "We haven't been happy in a long time. Not
+since the first few years of our marriage."
+
+"Preposterous!" cries her husband.
+$A p54
+Let him interject
+$A p65
+Tell him to keep quiet and let his wife continue
+
+$Q p99
+The husband stares angrily at you as if offended that you would suggest his wife would
+disagree with him, but before he can say anything she speaks in a soft sad voice.
+
+"I'm not happy," she says. "We haven't been happy in a long time. Not since the first few years of
+our marriage."
+
+"Preposterous!" blubbers her husband.
+
+$A p54
+Let him interject
+$A p65
+Tell him to keep quiet and let his wife continue
+
+$Q p100
+"Well, who'd have thunk you'd actually win," says Vine in such a way that you can't tell if he's
+being sarcastic or not. "So what's it going to be - the car or the Mystery Prize?"
+
+The audience scream out for you to take the Mystery Prize. 
+$A p93
+Mystery Prize
+$A p83
+The car
+
+$Q p80
+He looks at what you have laid out before him.
+
+"Yes, very good. This all seems in order," he says enthusiastically. "I must say, I'm very pleased
+with the effort you're making. Well off you go then - this is no time to dawdle."
+
+He turns away from you and starts looking at some papers on the desk, despite the fact it would
+be near impossible to read in this dim light. You thank him and open the platinum doors which
+are surprisingly light.
+
+Beyond the doors is another dark room. A large monitor takes up most of the far wall and the
+flickering static on the screen provides the room with its sole source of light.
+
+As you watch the screen, an image forms in the static - faint at first, but getting gradually
+clearer. A man dressed in white is sitting against the wall of a white room. His face is blurred so
+you can make out none of his features. A door opens in the whiteness and a blonde woman, also
+clothed in white enters. She looks at the man for a few seconds before speaking.
+
+"What do you feel?" she asks.
+
+$A p72 S D F T
+Continue
+$A p18 S D F U
+Continue
+$A p62 S D N U
+Continue
+$A p48 S D N T
+Continue
+$A p52 S A F U
+Continue
+$A p78 S A F T
+Continue
+$A p24 S A N U
+Continue
+$A p68 S A N T
+Continue
+
+$A p46 J D F U
+Continue
+$A p42 J D F T
+Continue
+$A p50 J D N T
+Continue
+$A p60 J D N U
+Continue
+$A p69 J A F T
+Continue
+$A p10 J A F U
+Continue
+$A p70 J A N T
+Continue
+$A p4  J A N U
+Continue
+
+
+###################### endings
+$Q p72
+"I know you're only trying to help me," he says in a strangely familiar voice. "But there's no
+point. I'm a lost cause."
+
+"No-one is a lost cause," consoles the woman.
+
+"I am," he continues. "I have made too many mistakes in the past and they have caught up with
+me. There's no righting things now."
+
+"You cannot give up," she implores.
+
+"But I have. Leave me to my regrets."
+
+The woman shakes her head and leaves the room.
+
+The man says and does nothing and eventually the picture begins to flicker then fade
+completely, bathing the room in perpetual darkness.
+
+$Q p24
+He throws his arms theatrically in the air and speaks with an oddly familiar voice.
+
+"What's the point of all this? I'm never getting out of here!"
+
+"You can't say that," the woman replies.
+
+"Why not? It's true. Nothing gets better. Just leave me alone."
+
+He turns round and faces away from her. She shakes her head and leaves, closing the door
+behind her. The man begins to sob as the picture fades and finally disappears completely,
+plunging the room in perpetual darkness.
+
+$Q p78
+"I need help," he says slowly. His voice seems strangely familiar.
+
+"That's why you're here," the woman replies.
+
+"How do I get out? You have to tell me what to do."
+
+"You have to work that out on your own," she says.
+
+He says no more so she rises to her feet and leaves, closing the door behind him.
+"I need help," mutters the man again to himself.
+
+The pictures grows fuzzy then fades completely, plunging the room into perpetual darkness.
+
+$Q p50
+"I'm feeling good," replies the man, his voice eerily familiar.
+
+"Really?" asks the woman, sounding unconvinced.
+
+"Yes. I know now it is not my fault I'm here. It's you lot keeping me in here. Using me as an
+experiment."
+
+"It's not like that and you know it," she replies.
+
+"Pah! Don't give me that!" he snarls. "I should be out. There's no logical reason to keep me here!"
+He rises to his feet, tensing his fists.
+
+"Let me out now!" he bellows.
+
+The woman flees out the doorway and quickly slams the door shut behind her. The man strides
+up to the door and beats it with his fists before collapsing, to the ground.
+
+"Oh, I'll get outta here," he mutters to himself. "Just you wait."
+
+He keeps on muttering, but soon grows inaudible. The picture flickers and then finally fades,
+plunging the room into perpetual darkness.
+
+$Q p69
+"I think things are finally getting better," speaks the man in an oddly familiar voice. "And I think
+it's all down to you."
+
+The woman raises her eyebrows at this suggestion.
+
+"What would you suggest to get me out of here?" he continues. "Then once I'm out we can be
+together."
+
+The woman shakes her head and leaves the room. The man bows his head forlornly and the
+picture fades once more before disappearing completely, bathing the room in perpetual
+darkness.
+
+$Q p70
+"I think things are finally getting better," speaks the man in an oddly familiar voice. "And I think
+it's all down to you."
+
+The woman shakes her head at this suggestion.
+
+"Such thinking isn't good," she says, a hint of warning to her voice.
+
+"Don't say that!" he says, rising to his feet and tensing his fists. "I know what we feel - even if you
+won't admit it!"
+
+The woman flees out the doorway, slamming the door behind her. The man strides up to the
+door and beats it with his fists before collapsing, sobbing, to the ground. The picture fades once
+more before disappearing completely, bathing the room in perpetual darkness.
+
+$Q p46
+The man turns to the woman, but says nothing. Finally he manages to say something, but his
+voice is mumbled and he stutters. The woman shakes her head and turn to leave.
+
+"Wait! Don't go!" he cries, but she has already left. He bows his head forlornly and the picture
+fades once more before disappearing completely, bathing the room in perpetual darkness.
+
+#################################
+
+$Q p10
+"I think . . . I think I'm in love with you," the man declares in a voice that's oddly familiar.
+The woman raises her eyebrows at this suggestion.
+
+"Don't be angry with me," he says slowly. "I could never bear that. Please tell me what to do to
+get out of here. I know whatever you suggest will put anything right."
+
+The woman shakes her head and leaves the room. The man bows his head forlornly and the
+picture fades once more before disappearing completely, bathing the room in perpetual
+darkness.
+
+$Q p4
+"I think . . . I think I'm in love with you," the man declares in a voice that's oddly familiar.
+The woman raises her eyebrows at this suggestion.
+
+"I don't care who we are. I don't care where we are," he continues. "We should just be together
+regardless."
+
+He rises to his feet to embrace the woman. She pushes him away and the dashes out the door,
+slamming it behind her. The man sinks to the ground, his head in his hands. The picture fades
+once more before disappearing completely, bathing the room in perpetual darkness.
+
+$Q p42
+"I feel like there's finally hope," replies the man. There is something strangely familiar about his
+voice. "I think things might finally be improving and I may not need to be here too much
+longer."
+
+"That's good," says the woman. "Positive thinking is what you need most of all. I'm very pleased
+with your progress."
+
+The woman nods and leaves the room. The man seems to look out of the monitor at you. As he
+does so the picture improves in quality and suddenly there is a blinding flash and the room is
+bathed in brilliant light.
+
+You feel a tap on your shoulder and turn to see the red haired man who freed you, only now his
+hair is neatly brushed back, his face is no longer greasy, his glasses are gone and he has replaced
+his tweed jacket with a navy suit like that of the man outside the platinum doors.
+
+"Thank you," he says.
+
+And the light gets brighter still.
+
+$Q p68
+The man rises to his feet, his fists balled in rage.
+
+"The hell you care!" he roars. "Get outta here! Get out!"
+
+The woman flees, slamming the door closed behind her. The man races to the door and smashes
+against it with his fists to no avail.
+
+"Fucking bitch!" he growls before sinking to the floor.
+
+The picture flickers then fades, plunging the room in perpetual darkness.
+
+$Q p18
+He looks down at the ground, for a while before speaking.
+
+"I'm not getting out of here am I?" he said slowly, his voice oddly familiar.
+
+"We'll see," she replies.
+
+"I know you've done your best, but I just can't make it. The mistakes I've made in the past have
+doomed me."
+
+"You must look to the future," the woman consoles.
+
+"It's too late for that," he mutters. "I have made my bed and must lie in it forever more."
+The woman shakes her head and leaves. The man raises his head and you think for a second he
+will call out, but he remains silent.
+
+The picture on the screen begins to flicker then disappears, flooding the room with perpetual
+darkness.
+
+$Q p52
+He looks down at the ground, without speaking.
+
+"Answer me," says the woman firmly.
+
+He shakes his head. "I'm not getting out of here am I?"
+
+"We'll see," she replies.
+
+"I know you've done your best and I'm trying to do what you say, but I just can't make it."
+
+"Have faith," she says kindly before leaving the room, closing the door behind her. The man
+covers his face and sobs as the picture fades then disappears completely, plunging the room
+into perpetual darkness.
+
+######################
+$Q p60
+"Come to see how your little sideshow freak is doing?" he says in a bitter voice that seems
+somehow familiar to you.
+
+"You know it's not like that," says the woman.
+
+"Do I?" cries the man. "You all disgust me! You claim you're trying to help people like me, but
+we're just experiments. Get out of my sight!"
+
+The woman shakes her head and leaves the room, closing the door behind her. The picture in
+the screen flickers then fades completely, bathing the room in perpetual darkness.
+
+$Q p48
+"Come to gloat, have you?" he grunts.
+
+"No," she replies steadily. "Why would you think that?"
+
+"Because of the mess I've made of my life? I know we're all just sideshow freaks to you lot. I
+know it's my actions that brought me here. What more do you want of me?"
+
+"You must try to stay positive," she advises.
+
+"Oh, shut your hole!" he exclaims, rising to his feet and balling his fists in rage. "Get outta here
+now!"
+
+The woman flees, slamming the door closed behind her. The man races over to the door and
+beats it futilely with his fists, before spitting on the ground and sinking to the floor. He begins
+to mutter to himself and as he does so the image on the screen begins to flicker, then disappears
+completely, plunging the room into perpetual darkness.
+
+$Q p62
+"Come to gloat, have you?" he grunts.
+
+"No," she replies steadily. "Why would you think that?"
+
+"Because of the mess I've made of my life? I know you lot laugh at our misery and I know it's all
+my own fault. What more do you want of me?"
+
+"You must try to stay positive," she advises.
+
+"Oh, that's rich!" he exclaims. "You know as well as I do that there's no happy ending for me. Just
+leave me be."
+
+The woman shakes her head and leaves, closing the door behind her.
+
+The man begins to sob to himself and as he does so the image on the screen begins to flicker,
+then disappears completely, plunging the room into eternal darkness.

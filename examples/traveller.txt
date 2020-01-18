@@ -1,0 +1,63 @@
+
+$Q start set:red
+You're about to enter a three room world; a red, green and blue room. There's
+a wild yellow running around the rooms, and your goal is to catch it.
+$A redroom
+Got it!
+
+$Q redroom
+You're in the red room.
+$O clr:flip clr:stay
+$O rnd:127 set:flip
+$O rnd:20 set:stay
+$O red !stay flip clr:red set:green
+You see Yellow run towards the green room.
+$O red !stay !flip clr:red set:blue
+You see Yellow run towards the blue room.
+$O red
+You see a wild Yellow here.
+$A greenroom
+Go to the green room
+$A blueroom
+Go to the blue room
+$A end red
+Catch Yellow
+
+$Q greenroom
+You're in the green room.
+$O clr:flip clr:stay
+$O rnd:127 set:flip
+$O rnd:20 set:stay
+$O green !stay flip clr:green set:red
+You see Yellow run towards the red room.
+$O green !stay !flip clr:green set:blue
+You see Yellow run towards the blue room.
+$O green
+You see a wild Yellow here.
+$A redroom
+Go to the red room
+$A blueroom
+Go to the blue room
+$A end green
+Catch Yellow
+
+$Q blueroom
+You're in the blue room.
+$O clr:flip clr:stay
+$O rnd:127 set:flip
+$O rnd:20 set:stay
+$O blue !stay flip clr:blue set:red
+You see Yellow run towards the red room.
+$O blue !stay !flip clr:blue set:green
+You see Yellow run towards the green room.
+$O blue
+You see a wild Yellow here.
+$A greenroom
+Go to the green room
+$A redroom
+Go to the red room
+$A end blue
+Catch Yellow
+
+$Q end
+You finally manage to catch the elusive Yellow!

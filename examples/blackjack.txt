@@ -1,0 +1,224 @@
+$Q intro money=100 bet=0
+It hasn't been the best day of your life. You find yourself moderately drunk in an.. establishment
+you wouldn't normally venture into. A corner table attracts your attention, and you stumble towards
+it.
+$P
+The dealer shuffles his cards and gestures for you to sit down.
+$P
+$P
+(Note that this is a simplified version of Blackjack where you get cards from value 0 to 10,
+the card deck isn't really simulated and aces have no special function)
+
+$A start
+Shut up and sit down
+
+$Q start score=0 dealerscore=0
+You have <<money>> gold. How much would you like to bet?
+$P
+
+$O bet>0
+Your current bet is <<bet>>
+$O bet>100
+$P
+..that's a lot of money..
+
+$A ingame bet>0
+Start playing
+$A start money>=1 bet+1 money-1
+Bet 1
+$A start money>=2  bet+2 money-2
+Bet 2
+$A start money>=5  bet+5 money-5
+Bet 5
+$A start money>=10  bet+10 money-10
+Bet 10
+$A start money>=20  bet+20 money-20
+Bet 20
+$A start money>=50  bet+50 money-50
+Bet 50
+$A start money>0 bet+money money=0
+All in
+
+$Q ingame
+You have <<money>> gold, and the bet is <<bet>>.
+$P
+$O gosub:hit
+$O gosub:dealerhit dealerscore<16
+$O
+$P
+Your hand score is <<score>> and the dealer is at <<dealerscore>>.
+
+$O score<=21 dealerscore<=21
+Will you hit or stand?
+$A ingame score<=21 dealerscore<=21
+Hit
+$A stand score<=21 dealerscore<=21
+Stand
+$A bust score>21 dealerscore<=21
+Continue
+$A win dealerscore>21 score<=21
+Continue
+$A bothbust score>21 dealerscore>21
+Continue
+
+$Q stand
+# Play until bust or at 17 or more than player
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+$O gosub:dealerhit dealerscore<16 score>=dealerscore
+# .. that should be enough I think
+$O dealerscore<=21
+$P
+Your hand score is <<score>> and the dealer is at <<dealerscore>>.
+$O dealerscore<=21 score==dealerscore
+$P
+It's a tie.
+$O dealerscore<=21 score<dealerscore
+$P
+You lost.
+$O dealerscore<=21 score>dealerscore
+$P
+You won!
+$A win dealerscore>21
+Continue
+$A bothbust score==dealerscore
+Continue
+$A bust dealerscore<=21 score<dealerscore
+Continue
+$A win score>dealerscore
+Continue
+
+$Q hit clr:a clr:b clr:c clr:d
+$O rnd:128 set:a
+$O rnd:128 set:b
+$O rnd:128 set:c
+$O rnd:128 set:d
+$O !a !b !c !d score+1
+You get an 1.
+$O a !b !c !d score+2
+You get a 2.
+$O !a b !c !d score+3
+You get a 3.
+$O a b !c !d score+4
+You get a 4.
+$O !a !b c !d score+5
+You get a 5.
+$O a !b c !d score+6
+You get a 6.
+$O !a b c !d score+7
+You get a 7.
+$O a b c !d score+8
+You get an 8.
+$O !a !b !c d score+9
+You get a 9.
+$O a !b !c d score+10
+You get a 10.
+$O !a b !c d score+10
+You get a 10.
+$O a b !c d score+10
+You get a 10.
+$O !a !b c d 
+You get a 0.
+$O a !b c d 
+You get a 0.
+$O !a b c d 
+You get a 0.
+$O a b c d 
+You get a 0.
+$O
+$P
+$O score>21
+You go bust!
+
+$Q dealerhit clr:a clr:b clr:c clr:d
+$O rnd:128 set:a
+$O rnd:128 set:b
+$O rnd:128 set:c
+$O rnd:128 set:d
+$O !a !b !c !d dealerscore+1
+Dealer gets an 1.
+$O a !b !c !d dealerscore+2
+Dealer gets a 2.
+$O !a b !c !d dealerscore+3
+Dealer gets a 3.
+$O a b !c !d dealerscore+4
+Dealer gets a 4.
+$O !a !b c !d dealerscore+5
+Dealer gets a 5.
+$O a !b c !d dealerscore+6
+Dealer gets a 6.
+$O !a b c !d dealerscore+7
+Dealer gets a 7.
+$O a b c !d dealerscore+8
+Dealer gets an 8.
+$O !a !b !c d dealerscore+9
+Dealer gets a 9.
+$O a !b !c d dealerscore+10
+Dealer gets a 10.
+$O !a b !c d dealerscore+10
+Dealer gets a 10.
+$O a b !c d dealerscore+10
+Dealer gets a 10.
+$O !a !b c d 
+Dealer gets a 0.
+$O a !b c d 
+Dealer gets a 0.
+$O !a b c d 
+Dealer gets a 0.
+$O a b c d 
+Dealer gets a 0.
+$O
+$P
+$O dealerscore>21
+Dealer goes bust!
+
+$Q bust
+Smiling and never breaking eye contact, the dealer pockets the pot.
+$P
+$O money==0
+You've run out of money. Heavy-set men appear from the shadows and throw you out to the street.
+$A start money>0 bet=0
+Keep playing
+
+$Q bothbust
+The dealer calmly divides the pot in two and returns you your bet.
+$P
+$A start bet=0
+Keep playing
+
+$Q win
+The dealer shrugs and pushes the pot towards you, and you pocket your winnings.
+$P
+# Now here's a tricky bit. The money may overflow.
+$O money+bet tempmoney=money tempmoney+bet
+$O tempmoney>money money=tempmoney
+$O tempmoney<money
+# The only way the tempmoney can be less than money is that we've overflown. Let's end the game.
+Having run out of funds, the dealer pockets his cards and disappears in the shadows. You decide to spend your newfound wealth by paying for
+a few rounds at the bar - not that you remember much of it the following morning.
+$A start tempmoney==money bet=0
+Keep playing
