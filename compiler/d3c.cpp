@@ -142,6 +142,22 @@ public:
 	int getId(char* aString);
 };
 
+struct FileStack
+{
+	char *mFilename;
+	FILE *mFile;
+	int mLine;
+	FileStack()
+	{
+		mFilename = 0;
+		mFile = 0;
+		mLine = 0;
+	}
+};
+
+// 8 deep includes should be more than enough
+#define MAX_FILESTACK 8
+
 Symbol gSymbol;
 Symbol gNumber;
 Card* gCardRoot = 0;
@@ -149,6 +165,8 @@ Card* gCurrentCard = 0;
 Section* gCurrentSection = 0;
 Paragraph* gCurrentParagraph = 0;
 Op* gCurrentOp = 0;
+int gFile = -1;
+FileStack gFileStack[MAX_FILESTACK];
 
 bool gJsonOutput = false;
 
@@ -165,14 +183,55 @@ char *gPrefix = 0;
 
 int gCommandPtrOpOfs = 0;
 
-int gLine = 0;
-
 char gScratch[64 * 1024];
 char gText[64 * 1024];
 int gTextIdx;
 
 int gPreviousSection = 0;
 int gPreviousTexts = 0;
+
+void open_file(char *aFilename)
+{
+	gFile++;
+	if (gFile == MAX_FILESTACK)
+	{
+		printf("Error: too many nested includes\n");
+		exit(-1);
+	}
+	if (gFileStack[gFile].mFile)
+	{
+		printf("Internal Error: trying to open a file which is open\n");
+		exit(-1);
+	}
+	gFileStack[gFile].mFile = fopen(aFilename, "rb");
+	if (!gFileStack[gFile].mFile)
+	{
+		printf("Error: can't open file '%s'\n", aFilename);
+		exit(-1);
+	}
+	gFileStack[gFile].mFilename = mystrdup(aFilename);
+	gFileStack[gFile].mLine = 0;
+}
+
+void close_file()
+{
+	if (gFile == -1)
+	{
+		printf("Internal Error: trying to close file while file stack is empty\n");
+		exit(-1);
+	}
+	if (gFileStack[gFile].mFile == 0)
+	{
+		printf("Internal Error: trying to close file that's not open\n");
+		exit(-1);
+	}
+	fclose(gFileStack[gFile].mFile);
+	delete[] gFileStack[gFile].mFilename;
+	gFileStack[gFile].mFile = 0;
+	gFileStack[gFile].mFilename = 0;
+	gFileStack[gFile].mLine = 0;
+	gFile--;
+}
 
 int is_whitespace(char aCharacter)
 {
@@ -259,6 +318,23 @@ void trim_trailing_whitespace(char* aText)
 	aText[i] = 0;
 }
 
+void token(int aTokenIndex, char* aSource, char* aDestination)
+{
+	while (aTokenIndex && *aSource)
+	{
+		while (*aSource && !is_whitespace(*aSource)) aSource++;
+		while (*aSource && is_whitespace(*aSource)) aSource++;
+		aTokenIndex--;
+	}
+	while (*aSource && !is_whitespace(*aSource))
+	{
+		*aDestination = *aSource;
+		aDestination++;
+		aSource++;
+	}
+	*aDestination = 0;
+}
+
 void read_raw_line(char* aBuffer, FILE* aFile)
 {
 	int i = 0;
@@ -291,33 +367,30 @@ void read_raw_line(char* aBuffer, FILE* aFile)
 }
 
 // Skips commented lines
-void read_line(char* aBuffer, FILE* aFile)
+void read_line(char* aBuffer)
 {
+	char t[256];
 	do
 	{
-		read_raw_line(aBuffer, aFile);
+		read_raw_line(aBuffer, gFileStack[gFile].mFile);
 		trim_trailing_whitespace(aBuffer);
-		gLine++;
+		gFileStack[gFile].mLine++;
+		if (aBuffer[0] == '$' && aBuffer[1] == 'I')
+		{
+			// Include statement.
+			token(1, aBuffer, t);
+			open_file(t);
+			aBuffer[0] = 0;
+		}
+		if (aBuffer[0] == 0 && feof(gFileStack[gFile].mFile) && gFile > 0)
+		{
+			close_file();
+			aBuffer[0] = 0;
+		}
 	} 
-	while (!feof(aFile) && (aBuffer[0] == '#' || aBuffer[0] == 0));
+	while (!feof(gFileStack[0].mFile) && (aBuffer[0] == '#' || aBuffer[0] == 0));
 }
 
-void token(int aTokenIndex, char* aSource, char* aDestination)
-{
-	while (aTokenIndex && *aSource)
-	{
-		while (*aSource && !is_whitespace(*aSource)) aSource++;
-		while (*aSource && is_whitespace(*aSource)) aSource++;
-		aTokenIndex--;
-	}
-	while (*aSource && !is_whitespace(*aSource))
-	{
-		*aDestination = *aSource;
-		aDestination++;
-		aSource++;
-	}
-	*aDestination = 0;
-}
 
 Symbol::Symbol()
 {
@@ -459,7 +532,7 @@ void set_op(int aOpCode, int aValue)
 {
 	if (aValue > 255)
 	{
-		printf("Parameter value out of range, line %d\n", gLine);
+		printf("Parameter value out of range, %s line %d\n", gFileStack[gFile].mFilename, gFileStack[gFile].mLine);
 		exit(-1);
 	}
 
@@ -480,10 +553,11 @@ void set_go_op(int aOperation, int aValue)
 {
 	if (aValue >= gMaxCardSymbol)
 	{
-		printf("Invalid %s parameter: symbol \"%s\" is not a card, line %d\n",
+		printf("Invalid %s parameter: symbol \"%s\" is not a card, %s line %d\n",
 			aOperation == OP_GOSUB ? "GOSUB" : "GO",
 			gSymbol.mName[aValue],
-			gLine);
+			gFileStack[gFile].mFilename,
+			gFileStack[gFile].mLine);
 		exit(-1);
 	}
 	set_op(aOperation, aValue);
@@ -494,7 +568,7 @@ void parse_op(char* aOperation)
 	// Op may be of form "foo" "!foo" or "foo:bar" or "foo[intop]bar" where intop is <,>,<=,>=,==,!=,=,+,-,/,*
 	if (aOperation[0] == 0)
 	{
-		printf("Syntax error (op=null), line %d\n", gLine);
+		printf("Syntax error (op=null), %s line %d\n", gFileStack[gFile].mFilename, gFileStack[gFile].mLine);
 		exit(-1);
 	}
 	if (aOperation[0] == ':' ||
@@ -508,7 +582,7 @@ void parse_op(char* aOperation)
 		(aOperation[0] == '!' &&
 			aOperation[1] == '='))
 	{
-		printf("Syntax error (op starting with '%c') \"%s\", line %d\n", aOperation[0], aOperation, gLine);
+		printf("Syntax error (op starting with '%c') \"%s\", %s line %d\n", aOperation[0], aOperation, gFileStack[gFile].mFilename, gFileStack[gFile].mLine);
 		exit(-1);
 	}
 
@@ -545,7 +619,7 @@ void parse_op(char* aOperation)
 
 	if (operations > 1)
 	{
-		printf("Syntax error (op with more than one instruction) \"%s\", line %d\n", aOperation, gLine);
+		printf("Syntax error (op with more than one instruction) \"%s\", %s line %d\n", aOperation, gFileStack[gFile].mFilename, gFileStack[gFile].mLine);
 		exit(-1);
 	}
 
@@ -601,7 +675,7 @@ void parse_op(char* aOperation)
 			if (stricmp(cmd, "gosub")  == 0) set_go_op(OP_GOSUB, gSymbol.getId(sym)); else
 			if (stricmp(cmd, "call")   == 0) set_go_op(OP_GOSUB, gSymbol.getId(sym)); else
 			{
-				printf("Syntax error: unknown operation \"%s\", line %d\n", cmd, gLine);
+				printf("Syntax error: unknown operation \"%s\", %s line %d\n", cmd, gFileStack[gFile].mFilename, gFileStack[gFile].mLine);
 				exit(-1);
 			}
 		}
@@ -628,7 +702,7 @@ void parse_op(char* aOperation)
 
 			if (v == 0)
 			{
-				printf("Parse error near \"%s\" (\"%s\"), line %d\n", aOperation + i, aOperation, gLine);
+				printf("Parse error near \"%s\" (\"%s\"), %s line %d\n", aOperation + i, aOperation, gFileStack[gFile].mFilename, gFileStack[gFile].mLine);
 				exit(-1);
 			}
 
@@ -758,7 +832,7 @@ void parse_statement()
 		token(1, gScratch, t);
 		if (t[0])
 		{
-			printf("Syntax error - statement P may not include any operations, line %d\n", gLine);
+			printf("Syntax error - statement P may not include any operations, %s line %d\n", gFileStack[gFile].mFilename, gFileStack[gFile].mLine);
 			exit(-1);
 		}
 		break;
@@ -769,7 +843,7 @@ void parse_statement()
 		gPreviousSection = 'O';
 		break;
 	default:
-		printf("Syntax error: unknown statement \"%s\", line %d\n", gScratch, gLine);
+		printf("Syntax error: unknown statement \"%s\", %s line %d\n", gScratch, gFileStack[gFile].mFilename, gFileStack[gFile].mLine);
 		exit(-1);
 	}
 
@@ -869,7 +943,7 @@ void capture_text()
 				temp[i] = 0;
 				if (!(s[0] == '>' && s[1] == '>'))
 				{
-					printf("Error parsing numeric output on line %d, near column %d\n", gLine, column);
+					printf("Error parsing numeric output on %s line %d, near column %d\n", gFileStack[gFile].mFilename, gFileStack[gFile].mLine, column);
 					printf("\"%s\"\n", gScratch);
 					for (i = 0; i < column; i++)
 						printf(" ");
@@ -922,12 +996,7 @@ void capture_text()
 
 void scan_second_pass(char* aFilename)
 {
-	FILE* f = fopen(aFilename, "rb");
-	if (!f)
-	{
-		printf("File \"%s\" not found.\n", aFilename);
-		exit(-1);
-	}
+	open_file(aFilename);
 
 	if (gVerbose)
 	{
@@ -938,9 +1007,9 @@ void scan_second_pass(char* aFilename)
 	gTextIdx = 0;
 	gText[0] = 0;
 
-	while (!feof(f))
+	while (!feof(gFileStack[0].mFile))
 	{
-		read_line(gScratch, f);
+		read_line(gScratch);
 		if (gScratch[0] == '$')
 		{
 			if (gScratch[1] == 'P')
@@ -971,7 +1040,7 @@ void scan_second_pass(char* aFilename)
 	}
 	// process final text	
 	flush_text();
-	fclose(f);
+	close_file();
 
 	if (gVerbose)
 	{
@@ -982,17 +1051,12 @@ void scan_second_pass(char* aFilename)
 
 void scan_first_pass(char* aFilename)
 {
-	FILE* f = fopen(aFilename, "rb");
-	if (!f)
-	{
-		printf("File \"%s\" not found.\n", aFilename);
-		exit(-1);
-	}
+	open_file(aFilename);
 
 	int i = 0;
-	while (!feof(f))
+	while (!feof(gFileStack[0].mFile))
 	{
-		read_line(gScratch, f);
+		read_line(gScratch);
 		if (gScratch[0] == '$')
 		{
 			char t[256];
@@ -1002,7 +1066,7 @@ void scan_first_pass(char* aFilename)
 				i = gSymbol.getId(t);
 				if (gSymbol.mHits[i] > 1)
 				{
-					printf("syntax error: card id \"%s\" used more than once, line %d\n", t, gLine);
+					printf("syntax error: card id \"%s\" used more than once, %s line %d\n", t, gFileStack[gFile].mFilename, gFileStack[gFile].mLine);
 					exit(-1);
 				}
 				gSymbol.mHits[i]--; // clear the hit, as it'll be scanned again
@@ -1055,7 +1119,7 @@ void scan_first_pass(char* aFilename)
 		}
 	}
 	gMaxCardSymbol = gSymbol.mCount;
-	fclose(f);
+	close_file();
 }
 
 
@@ -1437,10 +1501,8 @@ int main(int aParc, char** aPars)
 		exit(-1);
 	}
 
-	gLine = 0;
 	scan_first_pass(aPars[infile]);
 
-	gLine = 0;
 	scan_second_pass(aPars[infile]);
 
 	patch_tree_pass();
