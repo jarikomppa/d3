@@ -1254,10 +1254,112 @@ void output_json(FILE* f)
 	fprintf(f, " ]\n}\n");
 }
 
+void writedword(unsigned int d, FILE *f)
+{
+	fwrite(&d, 1, 4, f);
+}
+
+void patchdword(unsigned int d, int ofs, FILE *f)
+{
+	int cp = ftell(f);
+	fseek(f, ofs, SEEK_SET);
+	fwrite(&d, 1, 4, f);
+	fseek(f, cp, SEEK_SET);
+}
+
 void output_binary(FILE* f)
 {
-	// TODO
-	printf("Binary output not implemented\n");
+	writedword(0x30303344, f); // 'D300' in reverse
+	int d300ofs = ftell(f);
+	writedword(0, f); // placeholder
+	int count = 0;
+	Card* cw = gCardRoot;
+	while (cw)
+	{
+		writedword(0x44524143, f); // 'CARD' in reverse
+		int cardofs = ftell(f);
+		writedword(0, f); // placeholder
+		Section* sw = cw->mSection;
+		while (sw)
+		{
+			writedword(0x54434553, f); // 'SECT' in reverse
+			int sectofs = ftell(f);
+			writedword(0, f); // placeholder
+			writedword(sw->mQuestion ? 'Q' : 'A', f);
+			writedword(sw->mSymbol, f);
+				
+			Paragraph* pw = sw->mParagraph;
+			while (pw)
+			{
+				writedword(0x54434553, f); // 'SECT' in reverse
+				int paraofs = ftell(f);
+				writedword(0, f); // placeholder
+				
+				int count = 0;
+				Op* ow = pw->mOp;
+				while (ow)
+				{
+					count++;
+					ow = ow->mNext;
+				}
+				writedword(count, f);
+				
+				ow = pw->mOp;
+				while (ow)
+				{
+					writedword(ow->mOpcode, f);
+					writedword(ow->mOperand1, f);
+					writedword(ow->mOperand2, f);
+					ow = ow->mNext;
+				}
+				if (pw->mText)
+				{
+					int len = strlen(pw->mText);
+					writedword(len, f);
+					fwrite(pw->mText, 1, len, f);
+				}
+				else
+				{
+					writedword(0, f);
+				}
+			
+				pw = pw->mNext;
+				int paraendofs = ftell(f);
+				patchdword(paraendofs - paraofs, paraofs, f);
+			}
+			sw = sw->mNext;
+			int sectendofs = ftell(f);
+			patchdword(sectendofs - sectofs, sectofs, f);
+		}
+		cw = cw->mNext;
+		int cardendofs = ftell(f);
+		patchdword(cardendofs - cardofs, cardofs, f);
+	}
+	writedword(0x534d5953, f); // 'SYMS' in reverse
+	int symsofs = ftell(f);
+	writedword(0, f); // placeholder
+	writedword(gSymbol.mCount, f);
+	writedword(gNumber.mCount, f);
+	int i;
+	for (i = 0; i < gSymbol.mCount; i++)
+	{
+		int len = strlen(gSymbol.mName[i]);
+		writedword(len, f);
+		fwrite(gSymbol.mName[i], 1, len, f);
+	}
+	for (i = 0; i < gNumber.mCount; i++)
+	{
+		int len = strlen(gNumber.mName[i]);
+		writedword(len, f);
+		fwrite(gNumber.mName[i], 1, len, f);
+	}
+
+	int symsendofs = ftell(f);
+	patchdword(symsendofs - symsofs, symsofs, f);
+
+	int d300endofs = ftell(f);
+	patchdword(d300endofs - d300ofs, d300ofs, f);
+	fclose(f);
 }
 
 void output(char* aFilename)
@@ -1434,7 +1536,8 @@ int main(int aParc, char** aPars)
 			"  -q   quiet (minimal output)\n"
 			"  -m   disable implicit flags by default\n"
 			"  -t   output data tree after parsing\n"
-			"  -j   JSON output (default binary)\n",
+			"  -j   JSON output\n"
+			"  -b   Binary output (default)\n",
 			aPars[0]);
 		return -1;
 	}
@@ -1464,6 +1567,10 @@ int main(int aParc, char** aPars)
 			case 'j':
 			case 'J':
 				gJsonOutput = true;
+				break;
+			case 'b':
+			case 'B':
+				gJsonOutput = false;
 				break;
 			case 'm':
 			case 'M':
