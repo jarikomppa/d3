@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define strdup _strdup
 #define stricmp _stricmp
 
 // 16k symbols should be enough for everybody
@@ -81,6 +80,17 @@ bool is_predicate(int aOp)
 	return false;
 }
 
+// delete[]able string duplicate
+char *mystrdup(const char* src)
+{
+	char *t;
+	int l = strlen(src);
+	t = new char[l + 1];
+	memcpy(t, src, l);
+	t[l] = 0;
+	return t;
+}
+
 class Op
 {
 public:
@@ -127,57 +137,9 @@ public:
 	int mCount;
 	int mFirstIndex;
 
-	Symbol()
-	{
-		mCount = 0;
-		mFirstIndex = 0;
-		int i;
-		for (i = 0; i < MAX_SYMBOLS * 2; i++)
-		{
-			mName[i] = 0;
-			mHits[i] = 0;
-			mHash[i] = 0;
-		}
-	}
-
-	int calcHash(char* aString)
-	{
-		unsigned int i = 0;
-		while (*aString)
-		{
-			char c = toupper(*aString);
-
-			i = (i << 11) | (i >> 21);
-			i ^= *aString;
-			aString++;
-		}
-
-		return 0;
-	}
-
-	int getId(char* aString)
-	{
-		int i;
-		int hash = calcHash(aString);
-		for (i = 0; i < mCount; i++)
-		{
-			if (mHash[i] == hash && stricmp(mName[i], aString) == 0)
-			{
-				mHits[i]++;
-				return i + mFirstIndex;
-			}
-		}
-		if (mCount >= MAX_SYMBOLS)
-		{
-			printf("Too many symbols, line %d\n", MAX_SYMBOLS);
-			exit(-1);
-		}
-		mName[mCount] = strdup(aString);
-		mHits[mCount] = 1;
-		mHash[mCount] = hash;
-		mCount++;
-		return mCount - 1;
-	}
+	Symbol();
+	int calcHash(char* aString);
+	int getId(char* aString);
 };
 
 Symbol gSymbol;
@@ -198,6 +160,8 @@ int gMaxCardSymbol = 0;
 bool gVerbose = false;
 bool gQuiet = false;
 bool gDumpTree = false;
+bool gImplicitFlags = true;
+char *gPrefix = 0;
 
 int gCommandPtrOpOfs = 0;
 
@@ -233,6 +197,55 @@ int is_numeric(char* aString)
 		aString++;
 	}
 	return 1;
+}
+
+int is_oksymbol(char* aString)
+{
+	if (aString == 0 || *aString == 0)
+		return 0;
+	while (*aString)
+	{
+		int ok = 0;
+		if (*aString >= 'a' && *aString <= 'z') ok = 1;
+		if (*aString >= 'A' && *aString <= 'Z') ok = 1;
+		if (*aString >= '0' && *aString <= '9') ok = 1;
+		if (*aString == '_') ok = 1;
+		if (!ok)
+			return 0;
+		aString++;
+	}
+	return 1;
+}
+
+int is_okglobalsymbol(char* aString)
+{
+	if (aString == 0 || *aString == 0)
+		return 0;
+	while (*aString)
+	{
+		int ok = 0;
+		if (*aString >= 'a' && *aString <= 'z') ok = 1;
+		if (*aString >= 'A' && *aString <= 'Z') ok = 1;
+		if (*aString >= '0' && *aString <= '9') ok = 1;
+		if (*aString == '_' || *aString == '.') ok = 1;
+		if (!ok)
+			return 0;
+		aString++;
+	}
+	return 1;
+}
+
+int is_globalsymbol(char* aString)
+{
+	if (aString == 0 || *aString == 0)
+		return 0;
+
+	while (*aString)
+	{
+		if (*aString == '.') return 1;
+		aString++;
+	}
+	return 0;
 }
 
 void trim_trailing_whitespace(char* aText)
@@ -305,6 +318,73 @@ void token(int aTokenIndex, char* aSource, char* aDestination)
 	}
 	*aDestination = 0;
 }
+
+Symbol::Symbol()
+{
+	mCount = 0;
+	mFirstIndex = 0;
+	int i;
+	for (i = 0; i < MAX_SYMBOLS * 2; i++)
+	{
+		mName[i] = 0;
+		mHits[i] = 0;
+		mHash[i] = 0;
+	}
+}
+
+int Symbol::calcHash(char* aString)
+{
+	unsigned int i = 0;
+	while (*aString)
+	{
+		char c = toupper(*aString);
+
+		i = (i << 11) | (i >> 21);
+		i ^= *aString;
+		aString++;
+	}
+
+	return 0;
+}
+
+int Symbol::getId(char* aString)
+{
+	int i;
+	char tempSym[64];
+	if (gPrefix == 0 || is_globalsymbol(aString))
+	{
+		sprintf(tempSym, "%s", aString);
+	}
+	else
+	{
+		sprintf(tempSym, "%s.%s", gPrefix, aString);
+	}
+
+	int hash = calcHash(tempSym);
+	for (i = 0; i < mCount; i++)
+	{
+		if (mHash[i] == hash && stricmp(mName[i], tempSym) == 0)
+		{
+			mHits[i]++;
+			return i + mFirstIndex;
+		}
+	}
+	if (mCount >= MAX_SYMBOLS)
+	{
+		printf("Too many symbols %d\n", MAX_SYMBOLS);
+		exit(-1);
+	}
+	if (!is_okglobalsymbol(aString))
+	{
+		printf("Warning: symbol '%s' uses bad characters, please use a-z,A-Z,0-9,_\n", aString);
+	}
+	mName[mCount] = mystrdup(tempSym);
+	mHits[mCount] = 1;
+	mHash[mCount] = hash;
+	mCount++;
+	return mCount - 1;
+}
+
 
 void disasm_op(int aOperation, int aParameter1, int aParameter2)
 {
@@ -657,6 +737,8 @@ void parse_statement()
 		start_section('Q', i);
 		if (gVerbose) printf("Card: \"%s\" (%d)\n", t, i);
 		gPreviousSection = 'Q';
+		if (gImplicitFlags)
+			set_op(OP_SET, i);
 		break;
 	case 'A':
 		token(1, gScratch, t);
@@ -665,6 +747,10 @@ void parse_statement()
 		start_section('A', i);
 		if (gVerbose) printf("Choice: %s (%d)\n", t, i);
 		gPreviousSection = 'A';
+		break;
+	case 'C':
+		if (gVerbose) printf("Config\n");
+		gCommandPtrOpOfs = 10000;
 		break;
 	case 'P':
 		if (gVerbose) printf("Paragraph break\n");
@@ -716,7 +802,7 @@ void store_text(char* aText)
 	{
 		printf("    Text:\n%s\n\"\"\"\n", aText);
 	}
-	gCurrentParagraph->mText = strdup(aText);
+	gCurrentParagraph->mText = mystrdup(aText);
 }
 
 void flush_text()
@@ -859,8 +945,14 @@ void scan_second_pass(char* aFilename)
 		{
 			if (gScratch[1] == 'P')
 			{
+				// Paragraph break statement
 				paragraph_break();
 				paragraph_break();
+			}
+			else
+			if (gScratch[1] == 'C') 
+			{
+				// Skip config statement
 			}
 			else
 			{
@@ -914,6 +1006,47 @@ void scan_first_pass(char* aFilename)
 					exit(-1);
 				}
 				gSymbol.mHits[i]--; // clear the hit, as it'll be scanned again
+			}
+			if (gScratch[1] == 'C')
+			{
+				if (t[0] == 0)
+				{
+					printf("Warning: config statement with no parameters\n");
+				}
+				else
+				{
+					if (gPrefix)
+					{
+						printf("Warning: prefix already set, replacing '%s' with '%s'\n", gPrefix, t);
+						delete[] gPrefix;
+					}
+
+					if (!is_oksymbol(t))
+					{
+						printf("Warning: prefix '%s' contains bad characters, please use a-z,A-Z,0-9,_\n", t);
+					}
+					gPrefix = mystrdup(t);
+
+					int i = 2;
+					token(i, gScratch, t);
+					while (t[0])
+					{
+						if (stricmp(t, "implicitflags") == 0)
+						{
+							gImplicitFlags = true;
+						} else
+						if (stricmp(t, "noimplicitflags") == 0)
+						{
+							gImplicitFlags = false;
+						}
+						else
+						{
+							printf("Warning: undefined option '%s'\n", t);
+						}
+						i++;
+						token(i, gScratch, t);
+					}
+				}
 			}
 		}
 		else
@@ -1235,6 +1368,7 @@ int main(int aParc, char** aPars)
 			"Optional flags:\n"
 			"  -v   verbose (useful for debugging)\n"
 			"  -q   quiet (minimal output)\n"
+			"  -m   disable implicit flags by default\n"
 			"  -t   output data tree after parsing\n"
 			"  -j   JSON output (default binary)\n",
 			aPars[0]);
@@ -1266,6 +1400,10 @@ int main(int aParc, char** aPars)
 			case 'j':
 			case 'J':
 				gJsonOutput = true;
+				break;
+			case 'm':
+			case 'M':
+				gImplicitFlags = false;
 				break;
 			default:
 				printf("Unknown parameter \"%s\"\n", aPars[i]);

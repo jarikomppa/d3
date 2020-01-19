@@ -9,7 +9,6 @@ Here's a non-exhaustive list of things still to be done:
 - Pure C engine
 - C++ engine
 - $I include file tag
-- $C config tag for current deck prefix and possibly other options
 - Separate state from the d3 class in Python so same state can be shared between decks
 - Path to localization
 - Compiler output .dot files
