@@ -43,6 +43,8 @@ In others, including the d3.h will do.
 #ifndef D3_H_INCLUDED
 #define D3_H_INCLUDED
 
+#define D3_MAX_ANSWERS 16
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -56,6 +58,7 @@ typedef struct d3_ {
 	int      mDataAllocated;
 	char*    mMemPool;
 	int      mMemPoolSize;
+	int      mMemPoolTop;
 	int      mCurrentCard;
 	int      mCurrentSection;
 	int      mCurrentParagraph;
@@ -75,10 +78,44 @@ extern void d3_choose(d3* d, int aChoise);
 #include <malloc.h>
 #include <string.h>
 
+char * d3i_reserve(d3* d, int aBytes)
+{
+	char* b;
+	int newsize;
+	int i;
+	if (d->mMemPoolTop + aBytes > d->mMemPoolSize)
+	{
+		newsize = d->mMemPoolSize;
+		while (d->mMemPoolTop + aBytes > newsize)
+		{
+			newsize *= 2;
+		}
+		b = (char*)malloc(newsize);
+		memcpy(b, d->mMemPool, d->mMemPoolSize);
+		free(d->mMemPool);
+		/* Readjust pointers */
+		for (i = 0; i < D3_MAX_ANSWERS; i++)
+		{
+			((char**)d->mMemPool)[i] += b - d->mMemPool;
+		}
+
+		d->mMemPool = b;
+		d->mMemPoolSize = newsize;
+	}
+	b = d->mMemPool + d->mMemPoolTop;
+	d->mMemPoolTop += aBytes;
+	return b;
+}
+
 void d3i_parsecard(d3* d)
 {
-	memcpy(d->mMemPool, "hello\0", 6);
-	d->mText = d->mMemPool;
+	d->mMemPoolTop = D3_MAX_ANSWERS * sizeof(char*) + D3_MAX_ANSWERS * sizeof(int);
+	d->mText = d3i_reserve(d, 6);
+	memcpy(d->mText, "hello\0", 6);
+	d->mAnswerCount = 1;
+	((char**)d->mMemPool)[0] = d3i_reserve(d, 6);
+	memcpy(((char**)d->mMemPool)[0], "world\0", 6);
+	d->mAnswer = (char**)d->mMemPool;
 }
 
 
@@ -95,6 +132,7 @@ d3* d3_alloc()
 	d->mCurrentCard = 0;
 	d->mCurrentSection = 0;
 	d->mCurrentParagraph = 0;
+	d->mMemPoolTop = 0;
 	return d;
 }
 
