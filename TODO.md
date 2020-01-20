@@ -14,5 +14,8 @@ Here's a non-exhaustive list of things still to be done:
 - C++ engine
 - Compiler
     - Path to localization
+    - Path to voiceover
     - Compiler output .dot files
+    - $G global page, same as doing gosub from every page
+    - $R copy just the answers from a page
 - Multi-deck example
