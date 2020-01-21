@@ -11,6 +11,15 @@
 // max number of numeric variables
 #define MAX_NUMBERS 255 
 
+enum d3_tags
+{
+	D3_HEAD = 0x30303344,
+	D3_CARD = 0x44524143,
+	D3_SECT = 0x54434553,
+	D3_PARA = 0x41524150,
+	D3_SYMS = 0x534d5953
+};
+
 enum opcodeval
 {
 	OP_NOP,
@@ -1269,20 +1278,20 @@ void patchdword(unsigned int d, int ofs, FILE *f)
 
 void output_binary(FILE* f)
 {
-	writedword(0x30303344, f); // 'D300' in reverse
+	writedword(D3_HEAD, f); // 'D300' in reverse
 	int d300ofs = ftell(f);
 	writedword(0, f); // placeholder
 	int count = 0;
 	Card* cw = gCardRoot;
 	while (cw)
 	{
-		writedword(0x44524143, f); // 'CARD' in reverse
+		writedword(D3_CARD, f); // 'CARD' in reverse
 		int cardofs = ftell(f);
 		writedword(0, f); // placeholder
 		Section* sw = cw->mSection;
 		while (sw)
 		{
-			writedword(0x54434553, f); // 'SECT' in reverse
+			writedword(D3_SECT, f); // 'SECT' in reverse
 			int sectofs = ftell(f);
 			writedword(0, f); // placeholder
 			writedword(sw->mQuestion ? 'Q' : 'A', f);
@@ -1291,7 +1300,7 @@ void output_binary(FILE* f)
 			Paragraph* pw = sw->mParagraph;
 			while (pw)
 			{
-				writedword(0x54434553, f); // 'SECT' in reverse
+				writedword(D3_PARA, f); // 'PARA' in reverse
 				int paraofs = ftell(f);
 				writedword(0, f); // placeholder
 				
@@ -1335,7 +1344,7 @@ void output_binary(FILE* f)
 		int cardendofs = ftell(f);
 		patchdword(cardendofs - cardofs, cardofs, f);
 	}
-	writedword(0x534d5953, f); // 'SYMS' in reverse
+	writedword(D3_SYMS, f); // 'SYMS' in reverse
 	int symsofs = ftell(f);
 	writedword(0, f); // placeholder
 	writedword(gSymbol.mCount, f);
