@@ -15,7 +15,11 @@ int main(int parc, char** pars)
 		return -1;
 	}
 	d = d3_alloc();
-	d3_loadfile(d, pars[1]);
+	if (d3_loadfile(d, pars[1]))
+	{
+		printf("Failed to load %s\n", pars[1]);
+		return -1;
+	}
 
 	while (1)
 	{ 

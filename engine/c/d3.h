@@ -66,10 +66,9 @@ typedef struct d3_ {
 
 extern d3* d3_alloc();
 extern void d3_free(d3* d);
-extern void d3_loadfile(d3* d, char* aFilename);
-extern void d3_usedata(d3* d, char* aData);
+extern int d3_loadfile(d3* d, char* aFilename);
+extern int d3_usedata(d3* d, char* aData, int len);
 extern void d3_choose(d3* d, int aChoise);
-
 
 #ifdef __D3_IMPLEMENTATION__
 
@@ -77,6 +76,60 @@ extern void d3_choose(d3* d, int aChoise);
 #include <stdlib.h>
 #include <malloc.h>
 #include <string.h>
+
+enum d3_tags
+{
+	D3_HEAD = 0x30303344,
+	D3_CARD = 0x44524143,
+	D3_SECT = 0x54434553,
+	D3_PARA = 0x41524150,
+	D3_SYMS = 0x534d5953
+};
+
+enum d3_opcodeval
+{
+	D3_NOP,
+
+	D3_HAS,
+	D3_NOT,
+
+	D3_SET,
+	D3_CLR,
+	D3_XOR,
+
+	D3_RND,
+
+	D3_GO,
+	D3_GOSUB,
+
+	// Print value of variable
+	D3_PRINT,
+
+	// variable-constant pairs. The code below depends on the pairing.
+	D3_GT,  // a>b
+	D3_GTC, // a>n
+	D3_LT,  // a<b
+	D3_LTC, // a<n
+	D3_GTE, // a>=b
+	D3_GTEC,// a>=n
+	D3_LTE, // a<=b
+	D3_LTEC,// a<=n
+	D3_EQ,  // a==b
+	D3_EQC, // a==n
+	D3_IEQ, // a!=b
+	D3_IEQC,// a!=n
+
+	D3_ASSIGN,  // a=b
+	D3_ASSIGNC, // a=n
+	D3_ADD,     // a+b
+	D3_ADDC,    // a+n
+	D3_SUB,     // a-b
+	D3_SUBC,    // a-n
+	D3_MUL,     // a*b
+	D3_MULC,    // a*n
+	D3_DIV,     // a/b
+	D3_DIVC     // a/n
+};
 
 char * d3i_reserve(d3* d, int aBytes)
 {
@@ -107,15 +160,219 @@ char * d3i_reserve(d3* d, int aBytes)
 	return b;
 }
 
+
+int d3i_predicate(d3* d, int *op, int ops)
+{
+	int pred = 1;
+	int i;
+	for (i = 0; i < ops; i++)
+	{
+		switch (*op)
+		{
+		case D3_NOP:
+			break;
+
+		case D3_HAS:
+			break;
+		case D3_NOT:
+			break;
+
+		case D3_SET:
+			break;
+		case D3_CLR:
+			break;
+		case D3_XOR:
+			break;
+
+		case D3_RND:
+			break;
+
+		case D3_GO:
+			break;
+		case D3_GOSUB:
+			break;
+
+		case D3_PRINT:
+			break;
+
+		case D3_GT:  // a>b
+			break;
+		case D3_GTC: // a>n
+			break;
+		case D3_LT:  // a<b
+			break;
+		case D3_LTC: // a<n
+			break;
+		case D3_GTE: // a>=b
+			break;
+		case D3_GTEC:// a>=n
+			break;
+		case D3_LTE: // a<=b
+			break;
+		case D3_LTEC:// a<=n
+			break;
+		case D3_EQ:  // a==b
+			break;
+		case D3_EQC: // a==n
+			break;
+		case D3_IEQ: // a!=b
+			break;
+		case D3_IEQC:// a!=n
+			break;
+
+		case D3_ASSIGN:  // a=b
+			break;
+		case D3_ASSIGNC: // a=n
+			break;
+		case D3_ADD:     // a+b
+			break;
+		case D3_ADDC:    // a+n
+			break;
+		case D3_SUB:     // a-b
+			break;
+		case D3_SUBC:    // a-n
+			break;
+		case D3_MUL:     // a*b
+			break;
+		case D3_MULC:    // a*n
+			break;
+		case D3_DIV:     // a/b
+			break;
+		case D3_DIVC:     // a/n
+			break;
+		}
+		op += 3;
+	}
+	return pred;
+}
+
+void d3i_execute(d3* d, int *op, int ops)
+{
+	int i;
+	int v;
+	for (i = 0; i < ops; i++)
+	{
+		switch (*op)
+		{
+		case D3_NOP:
+			break;
+
+		case D3_HAS:
+			break;
+		case D3_NOT:
+			break;
+
+		case D3_SET:
+			break;
+		case D3_CLR:
+			break;
+		case D3_XOR:
+			break;
+
+		case D3_RND:
+			break;
+
+		case D3_GO:
+			break;
+		case D3_GOSUB:
+			break;
+
+		case D3_PRINT:
+			v = snprintf(NULL, 0, "%d", 0x7447);
+			snprintf(d3i_reserve(d, v+1), v+1, "%d", 0x7447);
+			d->mMemPoolTop--; /* overwrite the terminating 0 */
+			break;
+
+		case D3_GT:  // a>b
+			break;
+		case D3_GTC: // a>n
+			break;
+		case D3_LT:  // a<b
+			break;
+		case D3_LTC: // a<n
+			break;
+		case D3_GTE: // a>=b
+			break;
+		case D3_GTEC:// a>=n
+			break;
+		case D3_LTE: // a<=b
+			break;
+		case D3_LTEC:// a<=n
+			break;
+		case D3_EQ:  // a==b
+			break;
+		case D3_EQC: // a==n
+			break;
+		case D3_IEQ: // a!=b
+			break;
+		case D3_IEQC:// a!=n
+			break;
+
+		case D3_ASSIGN:  // a=b
+			break;
+		case D3_ASSIGNC: // a=n
+			break;
+		case D3_ADD:     // a+b
+			break;
+		case D3_ADDC:    // a+n
+			break;
+		case D3_SUB:     // a-b
+			break;
+		case D3_SUBC:    // a-n
+			break;
+		case D3_MUL:     // a*b
+			break;
+		case D3_MULC:    // a*n
+			break;
+		case D3_DIV:     // a/b
+			break;
+		case D3_DIVC:     // a/n
+			break;
+		}
+		op += 3;
+	}
+}
+
+
 void d3i_parsecard(d3* d)
 {
+	char *p, *op;
+	int i;
+	int opcount;
+	int textlen;
+	int pred;
 	d->mMemPoolTop = D3_MAX_ANSWERS * sizeof(char*) + D3_MAX_ANSWERS * sizeof(int);
-	d->mText = d3i_reserve(d, 6);
-	memcpy(d->mText, "hello\0", 6);
-	d->mAnswerCount = 1;
-	((char**)d->mMemPool)[0] = d3i_reserve(d, 6);
-	memcpy(((char**)d->mMemPool)[0], "world\0", 6);
-	d->mAnswer = (char**)d->mMemPool;
+	d->mAnswerCount = 0;
+//	((char**)d->mMemPool)[0] = d3i_reserve(d, 6);
+	p = d->mData + 8; /* start of first card */
+	d->mCurrentCard = 1; // HAX
+	i = d->mCurrentCard;
+	while (i > 0)
+	{
+		p += *(unsigned int *)(p + 4)+4;
+		i--;
+	}
+
+	/* card + size + sect + size + id + q -> para */
+	p += 4 + 4 + 4 + 4 + 4 + 4;
+	while (*(unsigned int *)p == D3_PARA)
+	{
+		p += 4 + 4; /* tag + size */
+		opcount = *(unsigned int *)p;
+		op = p + 4; /* op count */
+		pred = d3i_predicate(d, (int*)op, opcount);
+		if (pred)
+			d3i_execute(d, (int*)op, opcount);
+		p += 4 + opcount * 4 * 3; /* skip ops */
+		textlen = *(unsigned int *)p;
+		p += 4; /* text len */
+		if (textlen && pred)
+			memcpy(d3i_reserve(d, textlen), p, textlen);
+		p += textlen;
+	}
+	memset(d3i_reserve(d, 1), 0, 1);
+	d->mText = d->mMemPool + D3_MAX_ANSWERS * sizeof(char*) + D3_MAX_ANSWERS * sizeof(int);
+	
 }
 
 
@@ -146,7 +403,7 @@ void d3_free(d3* d)
 	free(d);
 }
 
-void d3_loadfile(d3* d, char* aFilename)
+int d3_loadfile(d3* d, char* aFilename)
 {
 	int len;
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
@@ -155,7 +412,7 @@ void d3_loadfile(d3* d, char* aFilename)
 #else
 	FILE* f = fopen(aFilename, "rb");
 #endif
-	if (!f) return;
+	if (!f) return 1;
 	fseek(f, 0, SEEK_END);
 	len = ftell(f);
 	fseek(f, 0, SEEK_SET);
@@ -163,13 +420,33 @@ void d3_loadfile(d3* d, char* aFilename)
 	d->mDataAllocated = 1;
 	fread(d->mData, 1, len, f);
 	fclose(f);
+	// Sanity check: is header tag ok
+	if (*(unsigned int*)d->mData != D3_HEAD)
+		return 2;
+	// Sanity check: is file length same as reported
+	if (*(unsigned int*)(d->mData + 4) != len - 4)
+		return 3;
+
 	d3i_parsecard(d);
+	return 0;
 }
 
-void d3_usedata(d3* d, char* aData)
+int d3_usedata(d3* d, char* aData, int len)
 {
+	if (aData == NULL)
+		return 1;
+	if (d->mDataAllocated)
+		free(d->mData);
+	d->mDataAllocated = 0;
 	d->mData = aData;
+	// Sanity check: is header tag ok
+	if (*(unsigned int*)d->mData != D3_HEAD)
+		return 2;
+	// Sanity check: is file length same as reported
+	if (*(unsigned int*)(d->mData + 4) != len - 4)
+		return 3;
 	d3i_parsecard(d);
+	return 0;
 }
 
 void d3_choose(d3* d, int aChoise)
