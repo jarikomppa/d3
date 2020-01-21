@@ -56,6 +56,7 @@ typedef struct d3_ {
 	/* Internals */
 	char*    mData;
 	int      mDataAllocated;
+	char*    mSyms;
 	char*    mMemPool;
 	int      mMemPoolSize;
 	int      mMemPoolTop;
@@ -341,15 +342,16 @@ void d3i_parsecard(d3* d)
 	int opcount;
 	int textlen;
 	int pred;
+	int target;
+	int output;
+	
 	d->mMemPoolTop = D3_MAX_ANSWERS * sizeof(char*) + D3_MAX_ANSWERS * sizeof(int);
 	d->mAnswerCount = 0;
-//	((char**)d->mMemPool)[0] = d3i_reserve(d, 6);
-	p = d->mData + 8; /* start of first card */
-	d->mCurrentCard = 1; // HAX
+	p = d->mData + 4 + 4; /* start of first card */
 	i = d->mCurrentCard;
 	while (i > 0)
 	{
-		p += *(unsigned int *)(p + 4)+4;
+		p += *(unsigned int *)(p + 4) + 4;
 		i--;
 	}
 
@@ -367,12 +369,50 @@ void d3i_parsecard(d3* d)
 		textlen = *(unsigned int *)p;
 		p += 4; /* text len */
 		if (textlen && pred)
+		{
 			memcpy(d3i_reserve(d, textlen), p, textlen);
+		}
 		p += textlen;
 	}
-	memset(d3i_reserve(d, 1), 0, 1);
-	d->mText = d->mMemPool + D3_MAX_ANSWERS * sizeof(char*) + D3_MAX_ANSWERS * sizeof(int);
+	memset(d3i_reserve(d, 1), 0, 1); /* zero terminate the q text block */
 	
+	while (*(unsigned int*)p == D3_SECT)
+	{
+		p += 4 + 4 + 4; /* tag + size + a */
+		target = (int)(p - d->mData); // offset to data buffer
+		p += 4; /* target */
+		/* Set answer text pointer */
+		((char**)d->mMemPool)[d->mAnswerCount] = d->mMemPool + d->mMemPoolTop;
+		/* Set answer target */
+		*(int*)(d->mMemPool + D3_MAX_ANSWERS * sizeof(char*) + d->mAnswerCount * sizeof(int)) = target;
+		output = d->mMemPoolTop;
+		while (*(unsigned int*)p == D3_PARA)
+		{
+			p += 4 + 4; /* tag + size */
+			opcount = *(unsigned int*)p;
+			op = p + 4; /* op count */
+			pred = d3i_predicate(d, (int*)op, opcount);
+			if (pred)
+				d3i_execute(d, (int*)op, opcount);
+			p += 4 + opcount * 4 * 3; /* skip ops */
+			textlen = *(unsigned int*)p;
+			p += 4; /* text len */
+			if (textlen && pred)
+			{
+				memcpy(d3i_reserve(d, textlen), p, textlen);
+			}
+			p += textlen;
+		}
+		if (output != d->mMemPoolTop)
+		{
+			/* The answer has text, so we'll include it */
+			memset(d3i_reserve(d, 1), 0, 1); /* zero terminate */
+			d->mAnswerCount++;
+		}
+	}
+
+	d->mAnswer = (char**)d->mMemPool;
+	d->mText = d->mMemPool + D3_MAX_ANSWERS * sizeof(char*) + D3_MAX_ANSWERS * sizeof(int);	
 }
 
 
@@ -390,6 +430,7 @@ d3* d3_alloc()
 	d->mCurrentSection = 0;
 	d->mCurrentParagraph = 0;
 	d->mMemPoolTop = 0;
+	d->mSyms = 0;
 	return d;
 }
 
@@ -403,9 +444,30 @@ void d3_free(d3* d)
 	free(d);
 }
 
+int d3i_prep(d3* d, int len)
+{
+	char* p;
+	// Sanity check: is header tag ok
+	if (*(unsigned int*)d->mData != D3_HEAD)
+		return 2;
+	// Sanity check: is file length same as reported
+	if (*(unsigned int*)(d->mData + 4) != len - 4)
+		return 3;
+	p = d->mData + 4 + 4;
+	while (*(unsigned int*)p == D3_CARD)
+	{
+		p += *(unsigned int*)(p + 4) + 4;
+	}
+	if (*(unsigned int*)p != D3_SYMS)
+		return 4;
+	d->mSyms = p;
+	return 0;
+}
+
 int d3_loadfile(d3* d, char* aFilename)
 {
 	int len;
+	int res;
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
 	FILE* f;
 	fopen_s(&f, aFilename, "rb");
@@ -420,31 +482,29 @@ int d3_loadfile(d3* d, char* aFilename)
 	d->mDataAllocated = 1;
 	fread(d->mData, 1, len, f);
 	fclose(f);
-	// Sanity check: is header tag ok
-	if (*(unsigned int*)d->mData != D3_HEAD)
-		return 2;
-	// Sanity check: is file length same as reported
-	if (*(unsigned int*)(d->mData + 4) != len - 4)
-		return 3;
-
+	res = d3i_prep(d, len);
+	if (res)
+	{
+		return res;
+	}
 	d3i_parsecard(d);
 	return 0;
 }
 
 int d3_usedata(d3* d, char* aData, int len)
 {
+	int res;
 	if (aData == NULL)
 		return 1;
 	if (d->mDataAllocated)
 		free(d->mData);
 	d->mDataAllocated = 0;
 	d->mData = aData;
-	// Sanity check: is header tag ok
-	if (*(unsigned int*)d->mData != D3_HEAD)
-		return 2;
-	// Sanity check: is file length same as reported
-	if (*(unsigned int*)(d->mData + 4) != len - 4)
-		return 3;
+	res = d3i_prep(d, len);
+	if (res)
+	{
+		return res;
+	}
 	d3i_parsecard(d);
 	return 0;
 }

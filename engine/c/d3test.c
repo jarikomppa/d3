@@ -4,6 +4,9 @@
 #define __D3_IMPLEMENTATION__
 #include "d3.h"
 
+#ifdef _MSC_VER
+#include <windows.h>
+#endif
 
 int main(int parc, char** pars)
 {
@@ -20,9 +23,14 @@ int main(int parc, char** pars)
 		printf("Failed to load %s\n", pars[1]);
 		return -1;
 	}
-
+#ifdef _MSC_VER
+	/* enable console "ansi" commands */
+	SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+#endif
 	while (1)
 	{ 
+		/* clear screen, move cursor to top*/
+		printf("%s", "\033[1J\033[1;1H");
 		printf("%s\n", d->mText);
 		printf("-   -  - ---- -  -   -\n");
 		for (i = 0; i < d->mAnswerCount; i++)
