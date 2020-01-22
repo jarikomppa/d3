@@ -66,26 +66,26 @@ typedef struct d3_ {
 	int      mCurrentParagraph;
 } d3;
 
-extern d3* d3_alloc(void *state);
-extern void d3_free(d3* d);
-extern int d3_loadfile(d3* d, char* aFilename);
-extern int d3_usedata(d3* d, char* aData, int len);
-extern void d3_close(d3* d);
-extern void d3_choose(d3* d, int aChoise);
+extern d3*   d3_alloc(void *state);
+extern void  d3_free(d3* d);
+extern int   d3_loadfile(d3* d, char* aFilename);
+extern int   d3_usedata(d3* d, char* aData, int len);
+extern void  d3_close(d3* d);
+extern void  d3_choose(d3* d, int aChoise);
 
 extern void* d3state_alloc();
-extern void d3state_free(void *s);
-extern int d3state_serialize(void *s, char *aFilename);
-extern int d3state_deserialize(void *s, char *aFilename);
-extern int d3state_serialize_size(void *s);
-extern int d3state_serialize_mem(void *s, char *mem, int size);
-extern int d3state_deserialize_mem(void *s, char *mem, int size);
+extern void  d3state_free(void *s);
+extern int   d3state_serialize(void *s, char *aFilename);
+extern int   d3state_deserialize(void *s, char *aFilename);
+extern int   d3state_serialize_size(void *s);
+extern int   d3state_serialize_mem(void *s, char *mem, int size);
+extern int   d3state_deserialize_mem(void *s, char *mem, int size);
 
-extern void d3state_set(void *s, char *symbol);
-extern void d3state_clear(void *s, char *symbol);
-extern int d3state_get(void *s, char *symbol);
-extern void d3state_setvalue(void *s, char *symbol, int value);
-extern int d3state_getvalue(void *s, char *symbol);
+extern void  d3state_set(void *s, char *symbol);
+extern void  d3state_clear(void *s, char *symbol);
+extern int   d3state_get(void *s, char *symbol);
+extern void  d3state_setvalue(void *s, char *symbol, int value);
+extern int   d3state_getvalue(void *s, char *symbol);
 
 #ifdef __D3_IMPLEMENTATION__
 
@@ -440,7 +440,9 @@ void d3i_parsecard(d3* d)
 			op = p + 4; /* op count */
 			pred = d3i_predicate(d, (int*)op, opcount);
 			if (pred)
+			{
 				d3i_execute(d, (int*)op, opcount);
+			}
 			p += 4 + opcount * 4 * 3; /* skip ops */
 			textlen = *(unsigned int*)p;
 			p += 4; /* text len */
@@ -567,6 +569,13 @@ int d3_usedata(d3* d, char* aData, int len)
 
 void d3_choose(d3* d, int aChoise)
 {
+	char* p = d->mData + *(int*)(d->mMemPool + D3_MAX_ANSWERS * sizeof(char*) + aChoise * 4);
+	int id = *(int*)p;
+	p += 4 + 4 + 4; /* id, tag, size*/
+	int ops = *(int*)p;
+	p += 4; /* op count */
+	d3i_execute(d, (int*)p, ops);
+	d->mCurrentCard = id;
 	d3i_parsecard(d);
 }
 
