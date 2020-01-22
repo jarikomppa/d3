@@ -17,7 +17,7 @@ int main(int parc, char** pars)
 		printf("Give me a DialogTree binary file as parameter\n");
 		return -1;
 	}
-	d = d3_alloc();
+	d = d3_alloc(NULL);
 	if (d3_loadfile(d, pars[1]))
 	{
 		printf("Failed to load %s\n", pars[1]);

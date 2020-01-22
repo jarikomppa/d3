@@ -54,6 +54,7 @@ typedef struct d3_ {
 	char**   mAnswer;
 	int      mAnswerCount;
 	/* Internals */
+	void*    mState;
 	char*    mData;
 	int      mDataAllocated;
 	char*    mSyms;
@@ -65,10 +66,11 @@ typedef struct d3_ {
 	int      mCurrentParagraph;
 } d3;
 
-extern d3* d3_alloc();
+extern d3* d3_alloc(void *state);
 extern void d3_free(d3* d);
 extern int d3_loadfile(d3* d, char* aFilename);
 extern int d3_usedata(d3* d, char* aData, int len);
+extern void d3_close(d3* d);
 extern void d3_choose(d3* d, int aChoise);
 
 extern void* d3state_alloc();
@@ -365,7 +367,7 @@ void d3i_parsecard(d3* d)
 	i = d->mCurrentCard;
 	while (i > 0)
 	{
-		p += *(unsigned int *)(p + 4) + 4;
+		p += *(unsigned int *)(p + 4);
 		i--;
 	}
 
@@ -429,10 +431,14 @@ void d3i_parsecard(d3* d)
 	d->mText = d->mMemPool + D3_MAX_ANSWERS * sizeof(char*) + D3_MAX_ANSWERS * sizeof(int);	
 }
 
+void d3_close(d3* d)
+{
+}
 
-d3* d3_alloc()
+d3* d3_alloc(void *state)
 {
 	d3* d = (d3*)malloc(sizeof(d3));
+	d->mState = state;
 	d->mText = 0;
 	d->mAnswer = 0;
 	d->mAnswerCount = 0;
@@ -450,10 +456,16 @@ d3* d3_alloc()
 
 void d3_free(d3* d)
 {
+	if (d->mData)
+	{
+		d3_close(d);
+	}
 	if (d->mDataAllocated)
 	{
 		free(d->mData);
+		d->mDataAllocated = 0;
 	}
+	d->mData = 0;
 	free(d->mMemPool);	
 	free(d);
 }
@@ -465,12 +477,12 @@ int d3i_prep(d3* d, int len)
 	if (*(unsigned int*)d->mData != D3_HEAD)
 		return 2;
 	// Sanity check: is file length same as reported
-	if (*(unsigned int*)(d->mData + 4) != len - 4)
+	if (*(unsigned int*)(d->mData + 4) != len)
 		return 3;
 	p = d->mData + 4 + 4;
 	while (*(unsigned int*)p == D3_CARD)
 	{
-		p += *(unsigned int*)(p + 4) + 4;
+		p += *(unsigned int*)(p + 4);
 	}
 	if (*(unsigned int*)p != D3_SYMS)
 		return 4;
@@ -482,6 +494,16 @@ int d3_loadfile(d3* d, char* aFilename)
 {
 	int len;
 	int res;
+	if (d->mData)
+	{
+		d3_close(d);
+	}
+	if (d->mDataAllocated)
+	{
+		free(d->mData);
+		d->mDataAllocated = 0;
+	}
+	d->mData = 0;
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
 	FILE* f;
 	fopen_s(&f, aFilename, "rb");
@@ -509,9 +531,17 @@ int d3_usedata(d3* d, char* aData, int len)
 {
 	int res;
 	if (aData == NULL)
+	{
 		return 1;
+	}	
+	if (d->mData)
+	{
+		d3_close(d);
+	}
 	if (d->mDataAllocated)
-		free(d->mData);
+	{
+		free(d->mData);		
+	}	
 	d->mDataAllocated = 0;
 	d->mData = aData;
 	res = d3i_prep(d, len);

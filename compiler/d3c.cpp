@@ -1333,15 +1333,15 @@ void output_binary(FILE* f)
 				}
 			
 				pw = pw->mNext;
-				int paraendofs = ftell(f);
+				int paraendofs = ftell(f) + 4;
 				patchdword(paraendofs - paraofs, paraofs, f);
 			}
 			sw = sw->mNext;
-			int sectendofs = ftell(f);
+			int sectendofs = ftell(f) + 4;
 			patchdword(sectendofs - sectofs, sectofs, f);
 		}
 		cw = cw->mNext;
-		int cardendofs = ftell(f);
+		int cardendofs = ftell(f) + 4;
 		patchdword(cardendofs - cardofs, cardofs, f);
 	}
 	writedword(D3_SYMS, f); // 'SYMS' in reverse
@@ -1352,13 +1352,13 @@ void output_binary(FILE* f)
 	int i;
 	for (i = 0; i < gSymbol.mCount; i++)
 	{
-		int len = strlen(gSymbol.mName[i]);
+		int len = strlen(gSymbol.mName[i]) + 1;
 		writedword(len, f);
 		fwrite(gSymbol.mName[i], 1, len, f);
 	}
 	for (i = 0; i < gNumber.mCount; i++)
 	{
-		int len = strlen(gNumber.mName[i]);
+		int len = strlen(gNumber.mName[i]) + 1;
 		writedword(len, f);
 		fwrite(gNumber.mName[i], 1, len, f);
 	}
@@ -1366,7 +1366,7 @@ void output_binary(FILE* f)
 	int symsendofs = ftell(f);
 	patchdword(symsendofs - symsofs, symsofs, f);
 
-	int d300endofs = ftell(f);
+	int d300endofs = ftell(f) + 4;
 	patchdword(d300endofs - d300ofs, d300ofs, f);
 	fclose(f);
 }
