@@ -71,6 +71,20 @@ extern int d3_loadfile(d3* d, char* aFilename);
 extern int d3_usedata(d3* d, char* aData, int len);
 extern void d3_choose(d3* d, int aChoise);
 
+extern void* d3state_alloc();
+extern void d3state_free(void *s);
+extern int d3state_serialize(void *s, char *aFilename);
+extern int d3state_deserialize(void *s, char *aFilename);
+extern int d3state_serialize_size(void *s);
+extern int d3state_serialize_mem(void *s, char *mem, int size);
+extern int d3state_deserialize_mem(void *s, char *mem, int size);
+
+extern void d3state_set(void *s, char *symbol);
+extern void d3state_clear(void *s, char *symbol);
+extern int d3state_get(void *s, char *symbol);
+extern void d3state_setvalue(void *s, char *symbol, int value);
+extern int d3state_getvalue(void *s, char *symbol);
+
 #ifdef __D3_IMPLEMENTATION__
 
 #include <stdio.h>
