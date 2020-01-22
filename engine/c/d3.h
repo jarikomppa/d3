@@ -148,6 +148,27 @@ enum d3_opcodeval
 	D3_DIVC     // a/n
 };
 
+char * d3i_sym(d3 *d, int id)
+{
+	/* tag + size + symcount + nsymcount*/
+	char *s = d->mSyms + 4 + 4 + 4 + 4;
+	/*int symcount = *(int*)(d->mSyms + 4 + 4) + *(int*)(d->mSyms + 4 + 4 + 4);
+	if (id >= symcount)
+		return 0;*/
+	while (id)
+	{
+		s += *(int*)s + 4;
+		id--;
+	}
+	return s+4;
+}
+
+char * d3i_nsym(d3 *d, int id)
+{
+	/* tag + size, symcount, nsymcount */
+	return d3i_sym(d, id + *(int*)(d->mSyms + 4 + 4));
+}
+
 char * d3i_reserve(d3* d, int aBytes)
 {
 	char* b;
@@ -190,8 +211,12 @@ int d3i_predicate(d3* d, int *op, int ops)
 			break;
 
 		case D3_HAS:
+			if (!d3state_get(d->mState, d3i_sym(d, op[1])))
+				pred = 0;
 			break;
 		case D3_NOT:
+			if (d3state_get(d->mState, d3i_sym(d, op[1])))
+				pred = 0;
 			break;
 
 		case D3_SET:
@@ -280,10 +305,16 @@ void d3i_execute(d3* d, int *op, int ops)
 			break;
 
 		case D3_SET:
+			d3state_set(d->mState, d3i_sym(d, op[1]));
 			break;
 		case D3_CLR:
+			d3state_clear(d->mState, d3i_sym(d, op[1]));
 			break;
 		case D3_XOR:
+			if (d3state_get(d->mState, d3i_sym(d, op[1])))
+				d3state_clear(d->mState, d3i_sym(d, op[1]));
+			else
+				d3state_set(d->mState, d3i_sym(d, op[1]));
 			break;
 
 		case D3_RND:
@@ -433,6 +464,12 @@ void d3i_parsecard(d3* d)
 
 void d3_close(d3* d)
 {
+	if (d->mData && d->mDataAllocated)
+	{
+		free(d->mData);
+	}
+	d->mDataAllocated = 0;
+	d->mData = 0;
 }
 
 d3* d3_alloc(void *state)
@@ -456,16 +493,7 @@ d3* d3_alloc(void *state)
 
 void d3_free(d3* d)
 {
-	if (d->mData)
-	{
-		d3_close(d);
-	}
-	if (d->mDataAllocated)
-	{
-		free(d->mData);
-		d->mDataAllocated = 0;
-	}
-	d->mData = 0;
+	d3_close(d);
 	free(d->mMemPool);	
 	free(d);
 }
@@ -494,15 +522,7 @@ int d3_loadfile(d3* d, char* aFilename)
 {
 	int len;
 	int res;
-	if (d->mData)
-	{
-		d3_close(d);
-	}
-	if (d->mDataAllocated)
-	{
-		free(d->mData);
-		d->mDataAllocated = 0;
-	}
+	d3_close(d);
 	d->mData = 0;
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
 	FILE* f;
@@ -534,15 +554,7 @@ int d3_usedata(d3* d, char* aData, int len)
 	{
 		return 1;
 	}	
-	if (d->mData)
-	{
-		d3_close(d);
-	}
-	if (d->mDataAllocated)
-	{
-		free(d->mData);		
-	}	
-	d->mDataAllocated = 0;
+	d3_close(d);
 	d->mData = aData;
 	res = d3i_prep(d, len);
 	if (res)

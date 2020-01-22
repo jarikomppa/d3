@@ -11,18 +11,22 @@
 int main(int parc, char** pars)
 {
 	int i, c, ok;
+	void* s;
 	d3* d;
 	if (parc < 2)
 	{
 		printf("Give me a DialogTree binary file as parameter\n");
 		return -1;
 	}
-	d = d3_alloc(NULL);
+	s = d3state_alloc();
+	d3state_deserialize(s, "d3state.dat");
+	d = d3_alloc(s);
 	if (d3_loadfile(d, pars[1]))
 	{
 		printf("Failed to load %s\n", pars[1]);
 		return -1;
 	}
+
 #ifdef _MSC_VER
 	/* enable console "ansi" commands */
 	SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), 7);
@@ -44,6 +48,8 @@ int main(int parc, char** pars)
 			c = _getch();
 			if (c == 'q')
 			{
+				d3_close(d);
+				d3state_serialize(s, "d3state.dat");
 				return 0;
 			}
 			c = c - '0';
