@@ -120,33 +120,32 @@ enum d3_opcodeval
 	D3_GO,
 	D3_GOSUB,
 
-	// Print value of variable
+	/* Print value of variable */
 	D3_PRINT,
 
-	// variable-constant pairs. The code below depends on the pairing.
-	D3_GT,  // a>b
-	D3_GTC, // a>n
-	D3_LT,  // a<b
-	D3_LTC, // a<n
-	D3_GTE, // a>=b
-	D3_GTEC,// a>=n
-	D3_LTE, // a<=b
-	D3_LTEC,// a<=n
-	D3_EQ,  // a==b
-	D3_EQC, // a==n
-	D3_IEQ, // a!=b
-	D3_IEQC,// a!=n
+	D3_GT,  /* a>b */
+	D3_GTC, /* a>n */
+	D3_LT,  /* a<b */
+	D3_LTC, /* a<n */
+	D3_GTE, /* a>=b */
+	D3_GTEC,/* a>=n */
+	D3_LTE, /* a<=b */
+	D3_LTEC,/* a<=n */
+	D3_EQ,  /* a==b */
+	D3_EQC, /* a==n */
+	D3_IEQ, /* a!=b */
+	D3_IEQC,/* a!=n */
 
-	D3_ASSIGN,  // a=b
-	D3_ASSIGNC, // a=n
-	D3_ADD,     // a+b
-	D3_ADDC,    // a+n
-	D3_SUB,     // a-b
-	D3_SUBC,    // a-n
-	D3_MUL,     // a*b
-	D3_MULC,    // a*n
-	D3_DIV,     // a/b
-	D3_DIVC     // a/n
+	D3_ASSIGN,  /* a=b */
+	D3_ASSIGNC, /* a=n */
+	D3_ADD,     /* a+b */
+	D3_ADDC,    /* a+n */
+	D3_SUB,     /* a-b */
+	D3_SUBC,    /* a-n */
+	D3_MUL,     /* a*b */
+	D3_MULC,    /* a*n */
+	D3_DIV,     /* a/b */
+	D3_DIVC     /* a/n */
 };
 
 int d3i_rand(d3 *d)
@@ -214,7 +213,7 @@ int d3i_predicate(d3* d, int *op, int ops)
 	{
 		switch (*op)
 		{
-		//case D3_NOP:
+		/*case D3_NOP:*/
 		default:
 			break;
 
@@ -232,57 +231,57 @@ int d3i_predicate(d3* d, int *op, int ops)
 				pred = 0;
 			break;
 
-		case D3_GT:  // a>b
+		case D3_GT:  /* a>b */
 			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) >
 				  d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
 				pred = 0;
 			break;
-		case D3_GTC: // a>n
+		case D3_GTC: /* a>n */
 			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) > op[2]))
 				pred = 0;
 			break;
-		case D3_LT:  // a<b
+		case D3_LT:  /* a<b */
 			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) <
 				d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
 				pred = 0;
 			break;
-		case D3_LTC: // a<n
+		case D3_LTC: /* a<n */
 			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) < op[2]))
 				pred = 0;
 			break;
-		case D3_GTE: // a>=b
+		case D3_GTE: /* a>=b */
 			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) >=
 				d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
 				pred = 0;
 			break;
-		case D3_GTEC:// a>=n
+		case D3_GTEC:/* a>=n */
 			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) >= op[2]))
 				pred = 0;
 			break;
-		case D3_LTE: // a<=b
+		case D3_LTE: /* a<=b */
 			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) <=
 				d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
 				pred = 0;
 			break;
-		case D3_LTEC:// a<=n
+		case D3_LTEC:/* a<=n */
 			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) <= op[2]))
 				pred = 0;
 			break;
-		case D3_EQ:  // a==b
+		case D3_EQ:  /* a==b */
 			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) ==
 				d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
 				pred = 0;
 			break;
-		case D3_EQC: // a==n
+		case D3_EQC: /* a==n */
 			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) == op[2]))
 				pred = 0;
 			break;
-		case D3_IEQ: // a!=b
+		case D3_IEQ: /* a!=b */
 			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) !=
 				d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
 				pred = 0;
 			break;
-		case D3_IEQC:// a!=n
+		case D3_IEQC:/* a!=n */
 			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) != op[2]))
 				pred = 0;
 			break;
@@ -301,7 +300,7 @@ void d3i_execute(d3* d, int *op, int ops, int execute)
 		switch (*op)
 		{
 		default:
-		//case D3_NOP:
+		/* case D3_NOP: */
 			break;
 
 		case D3_SET:
@@ -333,50 +332,50 @@ void d3i_execute(d3* d, int *op, int ops, int execute)
 			d->mMemPoolTop--; /* overwrite the terminating 0 */
 			break;
 
-		case D3_ASSIGN:  // a=b
+		case D3_ASSIGN:  /* a=b */
 			d3state_setvalue(d->mState, d3i_sym(d, op[1]), d3state_getvalue(d->mState, d3i_sym(d, op[2])));
 			break;
-		case D3_ASSIGNC: // a=n
+		case D3_ASSIGNC: /* a=n */
 			d3state_setvalue(d->mState, d3i_sym(d, op[1]), op[2]);
 			break;
-		case D3_ADD:     // a+b
+		case D3_ADD:     /* a+b */
 			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
 				d3state_getvalue(d->mState, d3i_sym(d, op[1])) +
 				d3state_getvalue(d->mState, d3i_sym(d, op[2])));
 			break;
-		case D3_ADDC:    // a+n
+		case D3_ADDC:    /* a+n */
 			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
 				d3state_getvalue(d->mState, d3i_sym(d, op[1])) +
 				op[2]);
 			break;
-		case D3_SUB:     // a-b
+		case D3_SUB:     /* a-b */
 			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
 				d3state_getvalue(d->mState, d3i_sym(d, op[1])) -
 				d3state_getvalue(d->mState, d3i_sym(d, op[2])));
 			break;
-		case D3_SUBC:    // a-n
+		case D3_SUBC:    /* a-n */
 			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
 				d3state_getvalue(d->mState, d3i_sym(d, op[1])) -
 				op[2]);
 			break;
-		case D3_MUL:     // a*b
+		case D3_MUL:     /* a*b */
 			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
 				d3state_getvalue(d->mState, d3i_sym(d, op[1])) *
 				d3state_getvalue(d->mState, d3i_sym(d, op[2])));
 			break;
-		case D3_MULC:    // a*n
+		case D3_MULC:    /* a*n */
 			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
 				d3state_getvalue(d->mState, d3i_sym(d, op[1])) *
 				op[2]);
 			break;
-		case D3_DIV:     // a/b
+		case D3_DIV:     /* a/b */
 			t = d3state_getvalue(d->mState, d3i_sym(d, op[2]));
 			if (t)
 			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
 				d3state_getvalue(d->mState, d3i_sym(d, op[1])) /
 				t);
 			break;
-		case D3_DIVC:     // a/n
+		case D3_DIVC:     /* a/n */
 			t = op[2];
 			if (t)
 			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
@@ -435,7 +434,7 @@ void d3i_parsecard(d3* d)
 	while (*(unsigned int*)p == D3_SECT)
 	{
 		p += 4 + 4 + 4; /* tag + size + a */
-		target = (int)(p - d->mData); // offset to data buffer
+		target = (int)(p - d->mData); /* offset to data buffer */
 		p += 4; /* target */
 		/* Set answer text pointer */
 		((char**)d->mMemPool)[d->mAnswerCount] = d->mMemPool + d->mMemPoolTop;
@@ -509,10 +508,10 @@ void d3_free(d3* d)
 int d3i_prep(d3* d, int len)
 {
 	char* p;
-	// Sanity check: is header tag ok
+	/* Sanity check: is header tag ok */
 	if (*(unsigned int*)d->mData != D3_HEAD)
 		return 2;
-	// Sanity check: is file length same as reported
+	/* Sanity check: is file length same as reported */
 	if (*(unsigned int*)(d->mData + 4) != len)
 		return 3;
 	p = d->mData + 4 + 4;
