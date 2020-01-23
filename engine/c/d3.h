@@ -64,6 +64,7 @@ typedef struct d3_ {
 	int      mCurrentCard;
 	int      mCurrentSection;
 	int      mCurrentParagraph;
+	int      mRandState;
 } d3;
 
 extern d3*   d3_alloc(void *state);
@@ -148,6 +149,12 @@ enum d3_opcodeval
 	D3_DIVC     // a/n
 };
 
+int d3i_rand(d3 *d)
+{
+	d->mRandState = ((d->mRandState * 1103515245U) + 12345U) & 0x7fffffff;
+	return d->mRandState;
+}
+
 char * d3i_sym(d3 *d, int id)
 {
 	/* tag + size + symcount + nsymcount*/
@@ -221,6 +228,8 @@ int d3i_predicate(d3* d, int *op, int ops)
 			break;
 
 		case D3_RND:
+			if ((d3i_rand(d) % 100) > op[1])
+				pred = 0;
 			break;
 
 		case D3_GT:  // a>b
