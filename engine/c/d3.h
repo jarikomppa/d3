@@ -207,7 +207,8 @@ int d3i_predicate(d3* d, int *op, int ops)
 	{
 		switch (*op)
 		{
-		case D3_NOP:
+		//case D3_NOP:
+		default:
 			break;
 
 		case D3_HAS:
@@ -219,68 +220,62 @@ int d3i_predicate(d3* d, int *op, int ops)
 				pred = 0;
 			break;
 
-		case D3_SET:
-			break;
-		case D3_CLR:
-			break;
-		case D3_XOR:
-			break;
-
 		case D3_RND:
 			break;
 
-		case D3_GO:
-			break;
-		case D3_GOSUB:
-			break;
-
-		case D3_PRINT:
-			break;
-
 		case D3_GT:  // a>b
+			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) >
+				  d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
+				pred = 0;
 			break;
 		case D3_GTC: // a>n
+			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) > op[2]))
+				pred = 0;
 			break;
 		case D3_LT:  // a<b
+			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) <
+				d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
+				pred = 0;
 			break;
 		case D3_LTC: // a<n
+			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) < op[2]))
+				pred = 0;
 			break;
 		case D3_GTE: // a>=b
+			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) >=
+				d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
+				pred = 0;
 			break;
 		case D3_GTEC:// a>=n
+			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) >= op[2]))
+				pred = 0;
 			break;
 		case D3_LTE: // a<=b
+			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) <=
+				d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
+				pred = 0;
 			break;
 		case D3_LTEC:// a<=n
+			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) <= op[2]))
+				pred = 0;
 			break;
 		case D3_EQ:  // a==b
+			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) ==
+				d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
+				pred = 0;
 			break;
 		case D3_EQC: // a==n
+			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) == op[2]))
+				pred = 0;
 			break;
 		case D3_IEQ: // a!=b
+			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) !=
+				d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
+				pred = 0;
 			break;
 		case D3_IEQC:// a!=n
-			break;
-
-		case D3_ASSIGN:  // a=b
-			break;
-		case D3_ASSIGNC: // a=n
-			break;
-		case D3_ADD:     // a+b
-			break;
-		case D3_ADDC:    // a+n
-			break;
-		case D3_SUB:     // a-b
-			break;
-		case D3_SUBC:    // a-n
-			break;
-		case D3_MUL:     // a*b
-			break;
-		case D3_MULC:    // a*n
-			break;
-		case D3_DIV:     // a/b
-			break;
-		case D3_DIVC:     // a/n
+			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) != op[2]))
+				pred = 0;
 			break;
 		}
 		op += 3;
@@ -288,20 +283,16 @@ int d3i_predicate(d3* d, int *op, int ops)
 	return pred;
 }
 
-void d3i_execute(d3* d, int *op, int ops)
+void d3i_execute(d3* d, int *op, int ops, int execute)
 {
-	int i;
-	int v;
+	int i, t, v;
 	for (i = 0; i < ops; i++)
 	{
+		if (execute || *op == D3_PRINT)
 		switch (*op)
 		{
-		case D3_NOP:
-			break;
-
-		case D3_HAS:
-			break;
-		case D3_NOT:
+		default:
+		//case D3_NOP:
 			break;
 
 		case D3_SET:
@@ -312,12 +303,13 @@ void d3i_execute(d3* d, int *op, int ops)
 			break;
 		case D3_XOR:
 			if (d3state_get(d->mState, d3i_sym(d, op[1])))
+			{
 				d3state_clear(d->mState, d3i_sym(d, op[1]));
+			}
 			else
+			{
 				d3state_set(d->mState, d3i_sym(d, op[1]));
-			break;
-
-		case D3_RND:
+			}
 			break;
 
 		case D3_GO:
@@ -326,55 +318,61 @@ void d3i_execute(d3* d, int *op, int ops)
 			break;
 
 		case D3_PRINT:
-			v = snprintf(NULL, 0, "%d", 0x7447);
-			snprintf(d3i_reserve(d, v+1), v+1, "%d", 0x7447);
+			t = d3state_getvalue(d->mState, d3i_sym(d, op[1]));
+			v = snprintf(NULL, 0, "%d", t);
+			snprintf(d3i_reserve(d, v+1), v+1, "%d", t);
 			d->mMemPoolTop--; /* overwrite the terminating 0 */
 			break;
 
-		case D3_GT:  // a>b
-			break;
-		case D3_GTC: // a>n
-			break;
-		case D3_LT:  // a<b
-			break;
-		case D3_LTC: // a<n
-			break;
-		case D3_GTE: // a>=b
-			break;
-		case D3_GTEC:// a>=n
-			break;
-		case D3_LTE: // a<=b
-			break;
-		case D3_LTEC:// a<=n
-			break;
-		case D3_EQ:  // a==b
-			break;
-		case D3_EQC: // a==n
-			break;
-		case D3_IEQ: // a!=b
-			break;
-		case D3_IEQC:// a!=n
-			break;
-
 		case D3_ASSIGN:  // a=b
+			d3state_setvalue(d->mState, d3i_sym(d, op[1]), d3state_getvalue(d->mState, d3i_sym(d, op[2])));
 			break;
 		case D3_ASSIGNC: // a=n
+			d3state_setvalue(d->mState, d3i_sym(d, op[1]), op[2]);
 			break;
 		case D3_ADD:     // a+b
+			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
+				d3state_getvalue(d->mState, d3i_sym(d, op[1])) +
+				d3state_getvalue(d->mState, d3i_sym(d, op[2])));
 			break;
 		case D3_ADDC:    // a+n
+			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
+				d3state_getvalue(d->mState, d3i_sym(d, op[1])) +
+				op[2]);
 			break;
 		case D3_SUB:     // a-b
+			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
+				d3state_getvalue(d->mState, d3i_sym(d, op[1])) -
+				d3state_getvalue(d->mState, d3i_sym(d, op[2])));
 			break;
 		case D3_SUBC:    // a-n
+			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
+				d3state_getvalue(d->mState, d3i_sym(d, op[1])) -
+				op[2]);
 			break;
 		case D3_MUL:     // a*b
+			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
+				d3state_getvalue(d->mState, d3i_sym(d, op[1])) *
+				d3state_getvalue(d->mState, d3i_sym(d, op[2])));
 			break;
 		case D3_MULC:    // a*n
+			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
+				d3state_getvalue(d->mState, d3i_sym(d, op[1])) *
+				op[2]);
 			break;
 		case D3_DIV:     // a/b
+			t = d3state_getvalue(d->mState, d3i_sym(d, op[2]));
+			if (t)
+			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
+				d3state_getvalue(d->mState, d3i_sym(d, op[1])) /
+				t);
 			break;
 		case D3_DIVC:     // a/n
+			t = op[2];
+			if (t)
+			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
+				d3state_getvalue(d->mState, d3i_sym(d, op[1])) /
+				t);
 			break;
 		}
 		op += 3;
@@ -412,7 +410,7 @@ void d3i_parsecard(d3* d)
 		pred = d3i_predicate(d, (int*)op, opcount);
 		if (pred)
 		{
-			d3i_execute(d, (int*)op, opcount);
+			d3i_execute(d, (int*)op, opcount, 1);
 		}
 		p += 4 + opcount * 4 * 3; /* skip ops */
 		textlen = *(unsigned int *)p;
@@ -441,6 +439,7 @@ void d3i_parsecard(d3* d)
 			opcount = *(unsigned int*)p;
 			op = p + 4; /* op count */
 			pred = d3i_predicate(d, (int*)op, opcount);
+			d3i_execute(d, (int*)op, opcount, 0);
 			p += 4 + opcount * 4 * 3; /* skip ops */
 			textlen = *(unsigned int*)p;
 			p += 4; /* text len */
@@ -572,7 +571,7 @@ void d3_choose(d3* d, int aChoise)
 	p += 4 + 4 + 4; /* id, tag, size*/
 	int ops = *(int*)p;
 	p += 4; /* op count */
-	d3i_execute(d, (int*)p, ops);
+	d3i_execute(d, (int*)p, ops, 1);
 	d->mCurrentCard = id;
 	d3i_parsecard(d);
 }
