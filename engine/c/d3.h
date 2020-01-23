@@ -411,7 +411,9 @@ void d3i_parsecard(d3* d)
 		op = p + 4; /* op count */
 		pred = d3i_predicate(d, (int*)op, opcount);
 		if (pred)
+		{
 			d3i_execute(d, (int*)op, opcount);
+		}
 		p += 4 + opcount * 4 * 3; /* skip ops */
 		textlen = *(unsigned int *)p;
 		p += 4; /* text len */
@@ -439,10 +441,6 @@ void d3i_parsecard(d3* d)
 			opcount = *(unsigned int*)p;
 			op = p + 4; /* op count */
 			pred = d3i_predicate(d, (int*)op, opcount);
-			if (pred)
-			{
-				d3i_execute(d, (int*)op, opcount);
-			}
 			p += 4 + opcount * 4 * 3; /* skip ops */
 			textlen = *(unsigned int*)p;
 			p += 4; /* text len */
