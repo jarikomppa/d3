@@ -77,6 +77,42 @@ while True:
 ```
 ..and most of the complexity there goes into making sure python doesn't crash when you typo the input.
 
+Something similar in C:
+```C
+void * s = d3state_alloc();
+d = d3_alloc(s);
+d3_loadfile(d, pars[1]);
+while (1)
+{ 
+    printf("%s\n", d->mText);
+    printf("-   -  - ---- -  -   -\n");
+    for (i = 0; i < d->mAnswerCount; i++)
+        printf("%d) %s\n", i, d->mAnswer[i]);
+    printf("q) quit\n");
+    ok = 0;
+    while (!ok)
+    {
+        c = _getch();
+        if (c == 'q')
+        {
+            d3_free(d);
+            d3state_free(s);
+            return 0;
+        }
+        c = c - '0';
+        if (c < 0 || c > d->mAnswerCount - 1)
+        {
+            printf("Choice out of range, 0 .. %d expected\n", d->mAnswerCount - 1);
+        }
+        else
+        {
+            ok = 1;
+            d3_choose(d, c);
+        }
+    }
+}
+```
+
 Now, if this was all DialogTree did, it wouldn't really need much of an engine. In addition to the moving from one card to another bit, DialogTree has quite bit of specialized, easy to use logic built in, meaning you can make it optionally to give certain options or display certain text. It can do bunch of boolean operations as well as handle simple math operations and comparisons.
 
 More about those in the documentation, when I get to that.

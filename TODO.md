@@ -11,6 +11,7 @@ Here's a non-exhaustive list of things still to be done:
     - Cleanup?
 - JavaScript engine
 - Pure C engine
+    - Largely done
 - C++ engine
 - Compiler
     - Path to localization
@@ -19,3 +20,4 @@ Here's a non-exhaustive list of things still to be done:
     - $G global page, same as doing gosub from every page
     - $R copy just the answers from a page
 - Multi-deck example
+- Figure out what to do with multi-paragraph answers and opcodes
