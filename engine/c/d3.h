@@ -62,9 +62,9 @@ typedef struct d3_ {
 	int      mMemPoolSize;
 	int      mMemPoolTop;
 	int      mCurrentCard;
-	int      mCurrentSection;
-	int      mCurrentParagraph;
 	int      mRandState;
+	int      mGoto;
+	int      mGosub;
 } d3;
 
 extern d3*   d3_alloc(void *state);
@@ -148,13 +148,13 @@ enum d3_opcodeval
 	D3_DIVC     /* a/n */
 };
 
-int d3i_rand(d3 *d)
+static int d3i_rand(d3 *d)
 {
 	d->mRandState = ((d->mRandState * 1103515245U) + 12345U) & 0x7fffffff;
 	return d->mRandState;
 }
 
-char * d3i_sym(d3 *d, int id)
+static char * d3i_sym(d3 *d, int id)
 {
 	/* tag + size + symcount + nsymcount*/
 	char *s = d->mSyms + 4 + 4 + 4 + 4;
@@ -169,13 +169,13 @@ char * d3i_sym(d3 *d, int id)
 	return s+4;
 }
 
-char * d3i_nsym(d3 *d, int id)
+static char * d3i_nsym(d3 *d, int id)
 {
 	/* tag + size, symcount, nsymcount */
 	return d3i_sym(d, id + *(int*)(d->mSyms + 4 + 4));
 }
 
-char * d3i_reserve(d3* d, int aBytes)
+static char * d3i_reserve(d3* d, int aBytes)
 {
 	char* b;
 	int newsize;
@@ -205,7 +205,7 @@ char * d3i_reserve(d3* d, int aBytes)
 }
 
 
-int d3i_predicate(d3* d, int *op, int ops)
+static int d3i_predicate(d3* d, int *op, int ops)
 {
 	int pred = 1;
 	int i;
@@ -291,7 +291,9 @@ int d3i_predicate(d3* d, int *op, int ops)
 	return pred;
 }
 
-void d3i_execute(d3* d, int *op, int ops, int execute)
+static void d3i_parsecard(d3* d);
+
+static void d3i_execute(d3* d, int *op, int ops, int execute)
 {
 	int i, t, v;
 	for (i = 0; i < ops; i++)
@@ -321,8 +323,20 @@ void d3i_execute(d3* d, int *op, int ops, int execute)
 			break;
 
 		case D3_GO:
+			/* Skip reset of text output */
+			d->mGoto = 1;
+			d->mCurrentCard = op[1];
+			d3i_parsecard(d);
+			/* Cancel processing of old card */
+			d->mGoto = 1;
+			return;
 			break;
 		case D3_GOSUB:
+			t = d->mCurrentCard;
+			d->mCurrentCard = op[1];
+			d->mGosub++;
+			d3i_parsecard(d);
+			d->mCurrentCard = t;
 			break;
 
 		case D3_PRINT:
@@ -388,7 +402,7 @@ void d3i_execute(d3* d, int *op, int ops, int execute)
 }
 
 
-void d3i_parsecard(d3* d)
+static void d3i_parsecard(d3* d)
 {
 	char *p, *op;
 	int i;
@@ -398,7 +412,11 @@ void d3i_parsecard(d3* d)
 	int target;
 	int output;
 	
-	d->mMemPoolTop = D3_MAX_ANSWERS * sizeof(char*) + D3_MAX_ANSWERS * sizeof(int);
+	if (d->mGoto == 0 && d->mGosub == 0)
+	{
+		d->mMemPoolTop = D3_MAX_ANSWERS * sizeof(char*) + D3_MAX_ANSWERS * sizeof(int);
+	}
+	d->mGoto = 0;
 	d->mAnswerCount = 0;
 	p = d->mData + 4 + 4; /* start of first card */
 	i = d->mCurrentCard;
@@ -420,6 +438,11 @@ void d3i_parsecard(d3* d)
 		{
 			d3i_execute(d, (int*)op, opcount, 1);
 		}
+		if (d->mGoto)
+		{
+			d->mGoto = 0;
+			return;
+		}
 		p += 4 + opcount * 4 * 3; /* skip ops */
 		textlen = *(unsigned int *)p;
 		p += 4; /* text len */
@@ -430,7 +453,14 @@ void d3i_parsecard(d3* d)
 		p += textlen;
 	}
 	memset(d3i_reserve(d, 1), 0, 1); /* zero terminate the q text block */
-	
+
+	if (d->mGosub)
+	{
+		d->mMemPoolTop--; /* Overwrite the zero terminator */
+		d->mGosub--;
+		return;
+	}
+
 	while (*(unsigned int*)p == D3_SECT)
 	{
 		p += 4 + 4 + 4; /* tag + size + a */
@@ -491,10 +521,10 @@ d3* d3_alloc(void *state)
 	d->mMemPoolSize = 65536;
 	d->mMemPool = (char*)malloc(d->mMemPoolSize);
 	d->mCurrentCard = 0;
-	d->mCurrentSection = 0;
-	d->mCurrentParagraph = 0;
 	d->mMemPoolTop = 0;
 	d->mSyms = 0;
+	d->mGoto = 0;
+	d->mGosub = 0;
 	return d;
 }
 
@@ -505,7 +535,7 @@ void d3_free(d3* d)
 	free(d);
 }
 
-int d3i_prep(d3* d, int len)
+static int d3i_prep(d3* d, int len)
 {
 	char* p;
 	/* Sanity check: is header tag ok */
