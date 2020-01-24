@@ -232,57 +232,57 @@ static int d3i_predicate(d3* d, int *op, int ops)
 			break;
 
 		case D3_GT:  /* a>b */
-			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) >
-				  d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
+			if (!(d3state_getvalue(d->mState, d3i_nsym(d, op[1])) >
+				  d3state_getvalue(d->mState, d3i_nsym(d, op[2]))))
 				pred = 0;
 			break;
 		case D3_GTC: /* a>n */
-			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) > op[2]))
+			if (!(d3state_getvalue(d->mState, d3i_nsym(d, op[1])) > op[2]))
 				pred = 0;
 			break;
 		case D3_LT:  /* a<b */
-			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) <
-				d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
+			if (!(d3state_getvalue(d->mState, d3i_nsym(d, op[1])) <
+				d3state_getvalue(d->mState, d3i_nsym(d, op[2]))))
 				pred = 0;
 			break;
 		case D3_LTC: /* a<n */
-			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) < op[2]))
+			if (!(d3state_getvalue(d->mState, d3i_nsym(d, op[1])) < op[2]))
 				pred = 0;
 			break;
 		case D3_GTE: /* a>=b */
-			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) >=
-				d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
+			if (!(d3state_getvalue(d->mState, d3i_nsym(d, op[1])) >=
+				d3state_getvalue(d->mState, d3i_nsym(d, op[2]))))
 				pred = 0;
 			break;
 		case D3_GTEC:/* a>=n */
-			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) >= op[2]))
+			if (!(d3state_getvalue(d->mState, d3i_nsym(d, op[1])) >= op[2]))
 				pred = 0;
 			break;
 		case D3_LTE: /* a<=b */
-			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) <=
-				d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
+			if (!(d3state_getvalue(d->mState, d3i_nsym(d, op[1])) <=
+				d3state_getvalue(d->mState, d3i_nsym(d, op[2]))))
 				pred = 0;
 			break;
 		case D3_LTEC:/* a<=n */
-			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) <= op[2]))
+			if (!(d3state_getvalue(d->mState, d3i_nsym(d, op[1])) <= op[2]))
 				pred = 0;
 			break;
 		case D3_EQ:  /* a==b */
-			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) ==
-				d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
+			if (!(d3state_getvalue(d->mState, d3i_nsym(d, op[1])) ==
+				d3state_getvalue(d->mState, d3i_nsym(d, op[2]))))
 				pred = 0;
 			break;
 		case D3_EQC: /* a==n */
-			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) == op[2]))
+			if (!(d3state_getvalue(d->mState, d3i_nsym(d, op[1])) == op[2]))
 				pred = 0;
 			break;
 		case D3_IEQ: /* a!=b */
-			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) !=
-				d3state_getvalue(d->mState, d3i_sym(d, op[2]))))
+			if (!(d3state_getvalue(d->mState, d3i_nsym(d, op[1])) !=
+				d3state_getvalue(d->mState, d3i_nsym(d, op[2]))))
 				pred = 0;
 			break;
 		case D3_IEQC:/* a!=n */
-			if (!(d3state_getvalue(d->mState, d3i_sym(d, op[1])) != op[2]))
+			if (!(d3state_getvalue(d->mState, d3i_nsym(d, op[1])) != op[2]))
 				pred = 0;
 			break;
 		}
@@ -340,60 +340,60 @@ static void d3i_execute(d3* d, int *op, int ops, int execute)
 			break;
 
 		case D3_PRINT:
-			t = d3state_getvalue(d->mState, d3i_sym(d, op[1]));
+			t = d3state_getvalue(d->mState, d3i_nsym(d, op[1]));
 			v = snprintf(NULL, 0, "%d", t);
 			snprintf(d3i_reserve(d, v+1), v+1, "%d", t);
 			d->mMemPoolTop--; /* overwrite the terminating 0 */
 			break;
 
 		case D3_ASSIGN:  /* a=b */
-			d3state_setvalue(d->mState, d3i_sym(d, op[1]), d3state_getvalue(d->mState, d3i_sym(d, op[2])));
+			d3state_setvalue(d->mState, d3i_nsym(d, op[1]), d3state_getvalue(d->mState, d3i_nsym(d, op[2])));
 			break;
 		case D3_ASSIGNC: /* a=n */
-			d3state_setvalue(d->mState, d3i_sym(d, op[1]), op[2]);
+			d3state_setvalue(d->mState, d3i_nsym(d, op[1]), op[2]);
 			break;
 		case D3_ADD:     /* a+b */
-			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
-				d3state_getvalue(d->mState, d3i_sym(d, op[1])) +
-				d3state_getvalue(d->mState, d3i_sym(d, op[2])));
+			d3state_setvalue(d->mState, d3i_nsym(d, op[1]),
+				d3state_getvalue(d->mState, d3i_nsym(d, op[1])) +
+				d3state_getvalue(d->mState, d3i_nsym(d, op[2])));
 			break;
 		case D3_ADDC:    /* a+n */
-			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
-				d3state_getvalue(d->mState, d3i_sym(d, op[1])) +
+			d3state_setvalue(d->mState, d3i_nsym(d, op[1]),
+				d3state_getvalue(d->mState, d3i_nsym(d, op[1])) +
 				op[2]);
 			break;
 		case D3_SUB:     /* a-b */
-			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
-				d3state_getvalue(d->mState, d3i_sym(d, op[1])) -
-				d3state_getvalue(d->mState, d3i_sym(d, op[2])));
+			d3state_setvalue(d->mState, d3i_nsym(d, op[1]),
+				d3state_getvalue(d->mState, d3i_nsym(d, op[1])) -
+				d3state_getvalue(d->mState, d3i_nsym(d, op[2])));
 			break;
 		case D3_SUBC:    /* a-n */
-			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
-				d3state_getvalue(d->mState, d3i_sym(d, op[1])) -
+			d3state_setvalue(d->mState, d3i_nsym(d, op[1]),
+				d3state_getvalue(d->mState, d3i_nsym(d, op[1])) -
 				op[2]);
 			break;
 		case D3_MUL:     /* a*b */
-			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
-				d3state_getvalue(d->mState, d3i_sym(d, op[1])) *
-				d3state_getvalue(d->mState, d3i_sym(d, op[2])));
+			d3state_setvalue(d->mState, d3i_nsym(d, op[1]),
+				d3state_getvalue(d->mState, d3i_nsym(d, op[1])) *
+				d3state_getvalue(d->mState, d3i_nsym(d, op[2])));
 			break;
 		case D3_MULC:    /* a*n */
-			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
-				d3state_getvalue(d->mState, d3i_sym(d, op[1])) *
+			d3state_setvalue(d->mState, d3i_nsym(d, op[1]),
+				d3state_getvalue(d->mState, d3i_nsym(d, op[1])) *
 				op[2]);
 			break;
 		case D3_DIV:     /* a/b */
-			t = d3state_getvalue(d->mState, d3i_sym(d, op[2]));
+			t = d3state_getvalue(d->mState, d3i_nsym(d, op[2]));
 			if (t)
-			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
-				d3state_getvalue(d->mState, d3i_sym(d, op[1])) /
+			d3state_setvalue(d->mState, d3i_nsym(d, op[1]),
+				d3state_getvalue(d->mState, d3i_nsym(d, op[1])) /
 				t);
 			break;
 		case D3_DIVC:     /* a/n */
 			t = op[2];
 			if (t)
-			d3state_setvalue(d->mState, d3i_sym(d, op[1]),
-				d3state_getvalue(d->mState, d3i_sym(d, op[1])) /
+			d3state_setvalue(d->mState, d3i_nsym(d, op[1]),
+				d3state_getvalue(d->mState, d3i_nsym(d, op[1])) /
 				t);
 			break;
 		}
@@ -512,6 +512,7 @@ void d3_close(d3* d)
 d3* d3_alloc(void *state)
 {
 	d3* d = (d3*)malloc(sizeof(d3));
+	if (!d) return NULL;
 	d->mState = state;
 	d->mText = 0;
 	d->mAnswer = 0;
@@ -572,6 +573,11 @@ int d3_loadfile(d3* d, char* aFilename)
 	len = ftell(f);
 	fseek(f, 0, SEEK_SET);
 	d->mData = (char*)malloc(len + 1);
+	if (!d->mData)
+	{
+		fclose(f);
+		return 2;
+	}
 	d->mDataAllocated = 1;
 	fread(d->mData, 1, len, f);
 	fclose(f);

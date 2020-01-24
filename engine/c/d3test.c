@@ -50,6 +50,8 @@ int main(int parc, char** pars)
 			{
 				d3_close(d);
 				d3state_serialize(s, "d3state.dat");
+				d3state_free(s);
+				d3_free(d);
 				return 0;
 			}
 			c = c - '0';

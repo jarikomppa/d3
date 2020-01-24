@@ -46,7 +46,7 @@ typedef struct _hashmap_map {
  */
 static void* hashmap_new() {
 	hashmap_map* m = (hashmap_map*)malloc(sizeof(hashmap_map));
-
+	if (!m)	return NULL;
 	m->data = (hashmap_element*)calloc(INITIAL_SIZE, sizeof(hashmap_element));
 
 	m->table_size = INITIAL_SIZE;
@@ -133,6 +133,8 @@ static void hashmap_rehash(void* in) {
 			continue;
 
 		hashmap_put(m, curr[i].key, curr[i].data);
+		free(curr[i].key);
+		curr[i].key = 0;
 	}
 	free(curr);
 }
@@ -156,7 +158,7 @@ static void hashmap_put(void* in, char* key, int value) {
 
 	/* Set the data */
 	m->data[index].data = value;
-	m->data[index].key = key;
+	m->data[index].key = _strdup(key);
 	m->data[index].in_use = 1;
 	m->size++;
 }
@@ -227,7 +229,13 @@ static void hashmap_remove(void *in, char* key) {
 
 /* Deallocate the hashmap */
 static void hashmap_free(void* in) {
+	int i;
 	hashmap_map* m = (hashmap_map*)in;
+	for (i = 0; i < m->table_size; i++)
+	{
+		if (m->data[i].in_use)
+			free(m->data[i].key);
+	}
 	free(m->data);
 	free(m);
 }
@@ -248,30 +256,135 @@ void d3state_free(void *s)
 	hashmap_free(s);
 }
 
+int d3state_serialize_size(void* s)
+{
+	hashmap_map* m = (hashmap_map*)s;
+	int i;
+	int total = sizeof(int);
+
+	for (i = 0; i < m->table_size; i++)
+	{
+		if (m->data[i].in_use)
+		{
+			total += strlen(m->data[i].key) + 1 + sizeof(int) + sizeof(int);
+		}
+	}
+	return total;
+}
+
+int d3state_serialize_mem(void* s, char* mem, int size)
+{	
+	hashmap_map* m = (hashmap_map*)s;
+	char* d = mem;
+	int i, l;
+	int sizeneeded = d3state_serialize_size(s);
+
+	if (size < sizeneeded)
+		return 1;
+	*(int*)d = m->size;
+	d += sizeof(int);
+	for (i = 0; i < m->table_size; i++)
+	{
+		if (m->data[i].in_use)
+		{
+			l = strlen(m->data[i].key) + 1;
+			*(int*)d = m->data[i].data;
+			d += sizeof(int);
+			*(int*)d = l;
+			d += sizeof(int);
+			memcpy(d, m->data[i].key, l);
+			d += l;
+		}
+	}
+
+	return 0;
+}
+
+int d3state_deserialize_mem(void* s, char* mem, int size)
+{
+	hashmap_map* m = (hashmap_map*)s;
+	char* d = mem;
+	int l, data, len, ofs;
+	ofs = 0;
+	l = *(int*)(d + ofs);
+	ofs += sizeof(int);
+	if (ofs > size) return 1;
+	while (l)
+	{
+		data = *(int*)(d + ofs);
+		ofs += sizeof(int);
+		if (ofs > size) return 1;
+		len = *(int*)(d + ofs);
+		ofs += sizeof(int);
+		if (ofs > size) return 1;
+		d3state_setvalue(s, d + ofs, data);
+		ofs += len;
+		if (ofs > size) return 1;
+		l--;
+	}
+
+	return 0;
+}
+
 int d3state_serialize(void *s, char *aFilename)
 {
+	int len;
+	char* buf;
+	FILE* f;
+	len = d3state_serialize_size(s);
+	buf = (char*)malloc(len);
+	if (buf == NULL)
+	{
+		return 2;
+	}
+	d3state_serialize_mem(s, buf, len);
+#if defined(_MSC_VER) && (_MSC_VER >= 1400)
+	fopen_s(&f, aFilename, "wb");
+#else
+	f = fopen(aFilename, "wb");
+#endif
+	if (f == NULL)
+	{
+		free(buf);
+		return 1;
+	}
+	fwrite(buf, 1, len, f);
+	fclose(f);
+	free(buf);	
 	return 0;
 }
 
 int d3state_deserialize(void *s, char *aFilename)
 {
+	int len;
+	char* buf;
+	FILE* f;
+#if defined(_MSC_VER) && (_MSC_VER >= 1400)
+	fopen_s(&f, aFilename, "rb");
+#else
+	f = fopen(aFilename, "rb");
+#endif
+	if (f == NULL)
+	{
+		return 1;
+	}
+	fseek(f, 0, SEEK_END);
+	len = ftell(f);
+	fseek(f, 0, SEEK_SET);
+	buf = (char*)malloc(len);
+	if (buf == NULL)
+	{
+		fclose(f);
+		return 2;
+	}
+	fread(buf, 1, len, f);
+	fclose(f);
+	d3state_deserialize_mem(s, buf, len);
+	free(buf);
 	return 0;
 }
 
-int d3state_serialize_size(void *s)
-{
-	return 0;
-}
 
-int d3state_serialize_mem(void *s, char *mem, int size)
-{
-	return 0;
-}
-
-int d3state_deserialize_mem(void *s, char *mem, int size)
-{
-	return 0;
-}
 
 
 void d3state_set(void *s, char *symbol)
