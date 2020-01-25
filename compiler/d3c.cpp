@@ -219,6 +219,7 @@ int gMaxCardSymbol = 0;
 bool gVerbose = false;
 bool gQuiet = false;
 bool gDumpTree = false;
+bool gDumpDot = false;
 bool gImplicitFlags = true;
 char *gPrefix = 0;
 char *gGlobalPage = 0;
@@ -530,44 +531,44 @@ int Symbol::isSymbol(char* aString)
 }
 
 
-void disasm_op(int aOperation, int aParameter1, int aParameter2)
+void disasm_op(FILE *f, int aOperation, int aParameter1, int aParameter2)
 {
 	switch (aOperation)
 	{
-	case OP_NOP:     printf("NOP"); break;
-	case OP_HAS:     printf("HAS(%s)",        gSymbol.mName[aParameter1]); break;
-	case OP_NOT:     printf("NOT(%s)",        gSymbol.mName[aParameter1]); break;
-	case OP_SET:     printf("SET(%s)",        gSymbol.mName[aParameter1]); break;
-	case OP_CLR:     printf("CLR(%s)",        gSymbol.mName[aParameter1]); break;
-	case OP_XOR:     printf("XOR(%s)",        gSymbol.mName[aParameter1]); break;
-	case OP_RND:     printf("RND(%d)",        aParameter1); break;
-	case OP_GO:      printf("GO(%s)",         gSymbol.mName[aParameter1]); break;
-	case OP_GOSUB:   printf("GOSUB(%s)",      gSymbol.mName[aParameter1]); break;
-	case OP_PRINT:   printf("PRINT(%s)",      gNumber.mName[aParameter1]); break;
-	case OP_GT:      printf("GT(%s,%s)",      gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
-	case OP_GTC:     printf("GTC(%s,%d)",     gNumber.mName[aParameter1], aParameter2); break;
-	case OP_LT:      printf("LT(%s,%s)",      gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
-	case OP_LTC:     printf("LTC(%s,%d)",     gNumber.mName[aParameter1], aParameter2); break;
-	case OP_GTE:     printf("GTE(%s,%s)",     gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
-	case OP_GTEC:    printf("GTEC(%s,%d)",    gNumber.mName[aParameter1], aParameter2); break;
-	case OP_LTE:     printf("LTE(%s,%s)",     gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
-	case OP_LTEC:    printf("LTEC(%s,%d)",    gNumber.mName[aParameter1], aParameter2); break;
-	case OP_EQ:      printf("EQ(%s,%s)",      gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
-	case OP_EQC:     printf("EQC(%s,%d)",     gNumber.mName[aParameter1], aParameter2); break;
-	case OP_IEQ:     printf("IEQ(%s,%s)",     gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
-	case OP_IEQC:    printf("IEQC(%s,%d)",    gNumber.mName[aParameter1], aParameter2); break;
-	case OP_ASSIGN:  printf("ASSIGN(%s,%s)",  gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
-	case OP_ASSIGNC: printf("ASSIGNC(%s,%d)", gNumber.mName[aParameter1], aParameter2); break;
-	case OP_ADD:     printf("ADD(%s,%s)",     gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
-	case OP_ADDC:    printf("ADDC(%s,%d)",    gNumber.mName[aParameter1], aParameter2); break;
-	case OP_SUB:     printf("SUB(%s,%s)",     gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
-	case OP_SUBC:    printf("SUBC(%s,%d)",    gNumber.mName[aParameter1], aParameter2); break;
-	case OP_MUL:     printf("MUL(%s,%s)",     gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
-	case OP_MULC:    printf("MULC(%s,%d)",    gNumber.mName[aParameter1], aParameter2); break;
-	case OP_DIV:     printf("DIV(%s,%s)",     gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
-	case OP_DIVC:    printf("DIVC(%s,%d)",    gNumber.mName[aParameter1], aParameter2); break;
+	case OP_NOP:     fprintf(f, "NOP"); break;
+	case OP_HAS:     fprintf(f, "HAS(%s)",        gSymbol.mName[aParameter1]); break;
+	case OP_NOT:     fprintf(f, "NOT(%s)",        gSymbol.mName[aParameter1]); break;
+	case OP_SET:     fprintf(f, "SET(%s)",        gSymbol.mName[aParameter1]); break;
+	case OP_CLR:     fprintf(f, "CLR(%s)",        gSymbol.mName[aParameter1]); break;
+	case OP_XOR:     fprintf(f, "XOR(%s)",        gSymbol.mName[aParameter1]); break;
+	case OP_RND:     fprintf(f, "RND(%d)",        aParameter1); break;
+	case OP_GO:      fprintf(f, "GO(%s)",         gSymbol.mName[aParameter1]); break;
+	case OP_GOSUB:   fprintf(f, "GOSUB(%s)",      gSymbol.mName[aParameter1]); break;
+	case OP_PRINT:   fprintf(f, "PRINT(%s)",      gNumber.mName[aParameter1]); break;
+	case OP_GT:      fprintf(f, "GT(%s,%s)",      gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
+	case OP_GTC:     fprintf(f, "GTC(%s,%d)",     gNumber.mName[aParameter1], aParameter2); break;
+	case OP_LT:      fprintf(f, "LT(%s,%s)",      gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
+	case OP_LTC:     fprintf(f, "LTC(%s,%d)",     gNumber.mName[aParameter1], aParameter2); break;
+	case OP_GTE:     fprintf(f, "GTE(%s,%s)",     gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
+	case OP_GTEC:    fprintf(f, "GTEC(%s,%d)",    gNumber.mName[aParameter1], aParameter2); break;
+	case OP_LTE:     fprintf(f, "LTE(%s,%s)",     gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
+	case OP_LTEC:    fprintf(f, "LTEC(%s,%d)",    gNumber.mName[aParameter1], aParameter2); break;
+	case OP_EQ:      fprintf(f, "EQ(%s,%s)",      gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
+	case OP_EQC:     fprintf(f, "EQC(%s,%d)",     gNumber.mName[aParameter1], aParameter2); break;
+	case OP_IEQ:     fprintf(f, "IEQ(%s,%s)",     gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
+	case OP_IEQC:    fprintf(f, "IEQC(%s,%d)",    gNumber.mName[aParameter1], aParameter2); break;
+	case OP_ASSIGN:  fprintf(f, "ASSIGN(%s,%s)",  gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
+	case OP_ASSIGNC: fprintf(f, "ASSIGNC(%s,%d)", gNumber.mName[aParameter1], aParameter2); break;
+	case OP_ADD:     fprintf(f, "ADD(%s,%s)",     gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
+	case OP_ADDC:    fprintf(f, "ADDC(%s,%d)",    gNumber.mName[aParameter1], aParameter2); break;
+	case OP_SUB:     fprintf(f, "SUB(%s,%s)",     gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
+	case OP_SUBC:    fprintf(f, "SUBC(%s,%d)",    gNumber.mName[aParameter1], aParameter2); break;
+	case OP_MUL:     fprintf(f, "MUL(%s,%s)",     gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
+	case OP_MULC:    fprintf(f, "MULC(%s,%d)",    gNumber.mName[aParameter1], aParameter2); break;
+	case OP_DIV:     fprintf(f, "DIV(%s,%s)",     gNumber.mName[aParameter1], gNumber.mName[aParameter2]); break;
+	case OP_DIVC:    fprintf(f, "DIVC(%s,%d)",    gNumber.mName[aParameter1], aParameter2); break;
 	default:
-		printf("Unknown operation %d (%d, %d)", aOperation, aParameter1, aParameter2);
+		fprintf(f, "Unknown operation %d (%d, %d)", aOperation, aParameter1, aParameter2);
 	}
 }
 
@@ -576,7 +577,7 @@ void store_cmd(int aOperation, int aParameter1, int aParameter2)
 	if (gVerbose)
 	{
 		printf("    Opcode: ");
-		disasm_op(aOperation, aParameter1, aParameter2);
+		disasm_op(stdout, aOperation, aParameter1, aParameter2);
 		printf("\n");
 	}
 	Op* o = new Op();
@@ -1499,37 +1500,108 @@ void output(char* aFilename)
 	fclose(f);
 }
 
-
-void dump_tree()
+void dump_dot(char *aBaseFilename)
 {
+	char temp[1024];
+	snprintf(temp, 1024, "%s.dot", aBaseFilename);
+#if defined(_MSC_VER) && (_MSC_VER >= 1400)
+	FILE *f;
+	fopen_s(&f, temp, "wb");
+#else
+	FILE *f = fopen(temp, "wb");
+#endif
+	fprintf(f, "digraph dialog_tree {\n");
+	
 	Card* cw = gCardRoot;
 	while (cw)
 	{
-		printf("Card\n");
+		char* q = 0;
 		Section* sw = cw->mSection;
 		while (sw)
 		{
-			printf(" Section (%c:%s)\n", sw->mQuestion ? 'Q' : 'A', gSymbol.mName[sw->mSymbol]);
+			if (sw->mQuestion)
+				q = gSymbol.mName[sw->mSymbol];		
+
+			int primaryEdge = 0;
 			Paragraph* pw = sw->mParagraph;
 			while (pw)
 			{
-				printf("  Paragraph\n");
 				Op* ow = pw->mOp;
 				while (ow)
 				{
-					printf("   Opcode:");
-					disasm_op(ow->mOpcode, ow->mOperand1, ow->mOperand2);
-					printf("\n");
+					if (ow->mOpcode == OP_GO)
+					{
+						fprintf(f, "\t%s -> %s [ label=\"goto\", color=red, fontcolor=red, fontname=\"Arial\", fontsize=\"10.0\" ];\n", q, gSymbol.mName[ow->mOperand1]);
+					}
+					if (ow->mOpcode == OP_GOSUB)
+					{
+						fprintf(f, "\t%s -> %s [ label=\"gosub\", color=blue, fontcolor=blue, fontname=\"Arial\", fontsize=\"10.0\" ];\n", q, gSymbol.mName[ow->mOperand1]);
+					}
+					ow = ow->mNext;
+				}
+				
+				if (pw->mText && !sw->mQuestion && !primaryEdge)
+				{
+					snprintf(temp, 10, "%s", pw->mText);
+					fprintf(f, "\t%s -> %s [ label=\"%s%s\", color=black, fontname=\"Arial\", fontsize=\"10.0\" ];\n", q, gSymbol.mName[sw->mSymbol], temp, strlen(pw->mText)>10?"...":"");
+					primaryEdge = 1;
+				}
+				pw = pw->mNext;
+			}
+			if (!sw->mQuestion && !primaryEdge)
+			{
+				fprintf(f, "\t%s -> %s [ label=\"??\", color=black, fontname=\"Arial\", fontsize=\"10.0\" ];\n", q, gSymbol.mName[sw->mSymbol]);
+			}
+
+			sw = sw->mNext;
+		}
+		cw = cw->mNext;
+	}
+
+	fprintf(f, "}\n");
+	fclose(f);
+}
+
+void dump_tree(char *aBaseFilename)
+{
+	char temp[1024];
+	snprintf(temp, 1024, "%s.tree", aBaseFilename);	
+#if defined(_MSC_VER) && (_MSC_VER >= 1400)
+	FILE *f;
+	fopen_s(&f, temp, "wb");
+#else
+	FILE *f = fopen(temp, "wb");
+#endif
+
+	Card* cw = gCardRoot;
+	while (cw)
+	{
+		fprintf(f, "Card\n");
+		Section* sw = cw->mSection;
+		while (sw)
+		{
+			fprintf(f, " Section (%c:%s)\n", sw->mQuestion ? 'Q' : 'A', gSymbol.mName[sw->mSymbol]);
+			Paragraph* pw = sw->mParagraph;
+			while (pw)
+			{
+				fprintf(f, "  Paragraph\n");
+				Op* ow = pw->mOp;
+				while (ow)
+				{
+					fprintf(f, "   Opcode:");
+					disasm_op(f, ow->mOpcode, ow->mOperand1, ow->mOperand2);
+					fprintf(f, "\n");
 					ow = ow->mNext;
 				}
 				if (pw->mText)
-					printf("   Text:\n%s\n\"\"\"\n", pw->mText);
+					fprintf(f, "   Text:\n%s\n\"\"\"\n", pw->mText);
 				pw = pw->mNext;
 			}
 			sw = sw->mNext;
 		}
 		cw = cw->mNext;
 	}
+	fclose(f);
 }
 
 void sanity_check()
@@ -1653,7 +1725,8 @@ int main(int aParc, char** aPars)
 			"  -v   verbose (useful for debugging)\n"
 			"  -q   quiet (minimal output)\n"
 			"  -m   disable implicit flags by default\n"
-			"  -t   output data tree after parsing\n"
+			"  -t   output data tree file for debugging (.tree)\n"
+			"  -d   Output graphviz .dot file for debugging (.dot)\n"
 			"  -j   JSON output\n"
 			"  -b   Binary output (default)\n",
 			aPars[0]);
@@ -1681,6 +1754,10 @@ int main(int aParc, char** aPars)
 			case 't':
 			case 'T':
 				gDumpTree = true;
+				break;
+			case 'd':
+			case 'D':
+				gDumpDot = true;
 				break;
 			case 'j':
 			case 'J':
@@ -1734,7 +1811,12 @@ int main(int aParc, char** aPars)
 
 	if (gDumpTree)
 	{
-		dump_tree();
+		dump_tree(aPars[outfile]);
+	}
+
+	if (gDumpDot)
+	{
+		dump_dot(aPars[outfile]);
 	}
 
 	if (!gQuiet) report();

@@ -16,7 +16,6 @@ Here's a non-exhaustive list of things still to be done:
 - Compiler
     - Path to localization
     - Path to voiceover
-    - Compiler output .dot files
     - $R copy just the answers from a page
 	- $O, $P change so both are predicable, $O doesn't have newline
 - Multi-deck example
