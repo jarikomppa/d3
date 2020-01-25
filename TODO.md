@@ -17,7 +17,7 @@ Here's a non-exhaustive list of things still to be done:
     - Path to localization
     - Path to voiceover
     - Compiler output .dot files
-    - $G global page, same as doing gosub from every page
     - $R copy just the answers from a page
+	- $O, $P change so both are predicable, $O doesn't have newline
 - Multi-deck example
 - Figure out what to do with multi-paragraph answers and opcodes

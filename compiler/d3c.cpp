@@ -1,4 +1,35 @@
-#define _CRT_SECURE_NO_WARNINGS
+/*
+DialogTree (d3) engine compiler
+Copyright (c) 2020 Jari Komppa
+http://iki.fi/sol
+Released under Unlicense
+
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to <http://unlicense.org/>
+*/
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -149,6 +180,7 @@ public:
 	Symbol();
 	int calcHash(char* aString);
 	int getId(char* aString);
+	int isSymbol(char* aString);
 };
 
 struct FileStack
@@ -189,6 +221,8 @@ bool gQuiet = false;
 bool gDumpTree = false;
 bool gImplicitFlags = true;
 char *gPrefix = 0;
+char *gGlobalPage = 0;
+int gGlobalPageId = 0;
 
 int gCommandPtrOpOfs = 0;
 
@@ -212,7 +246,11 @@ void open_file(char *aFilename)
 		printf("Internal Error: trying to open a file which is open\n");
 		exit(-1);
 	}
+#if defined(_MSC_VER) && (_MSC_VER >= 1400)
+	fopen_s(&(gFileStack[gFile].mFile), aFilename, "rb");
+#else
 	gFileStack[gFile].mFile = fopen(aFilename, "rb");
+#endif
 	if (!gFileStack[gFile].mFile)
 	{
 		printf("Error: can't open file '%s'\n", aFilename);
@@ -435,11 +473,11 @@ int Symbol::getId(char* aString)
 	char tempSym[64];
 	if (gPrefix == 0 || is_globalsymbol(aString))
 	{
-		sprintf(tempSym, "%s", aString);
+		snprintf(tempSym, 64, "%s", aString);
 	}
 	else
 	{
-		sprintf(tempSym, "%s.%s", gPrefix, aString);
+		snprintf(tempSym, 64, "%s.%s", gPrefix, aString);
 	}
 
 	int hash = calcHash(tempSym);
@@ -465,6 +503,30 @@ int Symbol::getId(char* aString)
 	mHash[mCount] = hash;
 	mCount++;
 	return mCount - 1;
+}
+
+int Symbol::isSymbol(char* aString)
+{
+	int i;
+	char tempSym[64];
+	if (gPrefix == 0 || is_globalsymbol(aString))
+	{
+		snprintf(tempSym, 64, "%s", aString);
+	}
+	else
+	{
+		snprintf(tempSym, 64, "%s.%s", gPrefix, aString);
+	}
+
+	int hash = calcHash(tempSym);
+	for (i = 0; i < mCount; i++)
+	{
+		if (mHash[i] == hash && stricmp(mName[i], tempSym) == 0)
+		{
+			return 1;
+		}
+	}
+	return 0;
 }
 
 
@@ -775,7 +837,7 @@ void start_paragraph()
 void start_section(char aSectionType, int id)
 {
 	Section* s = new Section();
-	s->mQuestion = aSectionType == 'Q';
+	s->mQuestion = (aSectionType == 'Q');
 	s->mSymbol = id;
 	if (gCurrentSection == 0)
 	{
@@ -822,6 +884,8 @@ void parse_statement()
 		gPreviousSection = 'Q';
 		if (gImplicitFlags)
 			set_op(OP_SET, i);
+		if (gGlobalPage && i != gGlobalPageId)
+			set_go_op(OP_GOSUB, gGlobalPageId);
 		break;
 	case 'A':
 		token(1, gScratch, t);
@@ -833,6 +897,10 @@ void parse_statement()
 		break;
 	case 'C':
 		if (gVerbose) printf("Config\n");
+		gCommandPtrOpOfs = 10000;
+		break;
+	case 'G':
+		if (gVerbose) printf("Global page config\n");
 		gCommandPtrOpOfs = 10000;
 		break;
 	case 'P':
@@ -1005,6 +1073,16 @@ void capture_text()
 
 void scan_second_pass(char* aFilename)
 {
+	if (gGlobalPage)
+	{
+		if (!gSymbol.isSymbol(gGlobalPage))
+		{
+			printf("Error: The set global page '%s' does not refer to any existing page.\n", gGlobalPage);
+			exit(1);
+		}
+		gGlobalPageId = gSymbol.getId(gGlobalPage);
+	}
+
 	open_file(aFilename);
 
 	if (gVerbose)
@@ -1031,6 +1109,11 @@ void scan_second_pass(char* aFilename)
 			if (gScratch[1] == 'C') 
 			{
 				// Skip config statement
+			}
+			else
+			if (gScratch[1] == 'G') 
+			{
+				// Skip global page statement
 			}
 			else
 			{
@@ -1079,6 +1162,27 @@ void scan_first_pass(char* aFilename)
 					exit(-1);
 				}
 				gSymbol.mHits[i]--; // clear the hit, as it'll be scanned again
+			}
+			if (gScratch[1] == 'G')
+			{
+				if (t[0] == 0)
+				{
+					printf("Warning: global page statement with no parameters\n");
+				}
+				else
+				{
+					if (gGlobalPage)
+					{
+						printf("Warning: global page already set, replacing '%s' with '%s'\n", gGlobalPage, t);
+						delete[] gGlobalPage;
+					}
+					gGlobalPage = mystrdup(t);
+					token(2, gScratch, t);
+					if (t[0])
+					{
+						printf("Warning: unexpected token(s) found after global page setup:%s\n", gScratch);
+					}
+				}
 			}
 			if (gScratch[1] == 'C')
 			{
@@ -1373,7 +1477,12 @@ void output_binary(FILE* f)
 
 void output(char* aFilename)
 {
+#if defined(_MSC_VER) && (_MSC_VER >= 1400)
+	FILE* f;
+	fopen_s(&f, aFilename, "wb");
+#else
 	FILE* f = fopen(aFilename, "wb");
+#endif
 	if (!f)
 	{
 		printf("Can't open \"%s\" for writing.\n", aFilename);
