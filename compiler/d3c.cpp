@@ -231,9 +231,6 @@ char gScratch[64 * 1024];
 char gText[64 * 1024];
 int gTextIdx;
 
-int gPreviousSection = 0;
-int gPreviousTexts = 0;
-
 void open_file(char *aFilename)
 {
 	gFile++;
@@ -739,6 +736,7 @@ void parse_op(char* aOperation)
 			if (stricmp(cmd, "toggle") == 0) set_op(OP_XOR, gSymbol.getId(sym)); else
 			if (stricmp(cmd, "xor")    == 0) set_op(OP_XOR, gSymbol.getId(sym)); else
 			if (stricmp(cmd, "flip")   == 0) set_op(OP_XOR, gSymbol.getId(sym)); else
+			if (stricmp(cmd, "print")  == 0) set_op(OP_PRINT, gSymbol.getId(sym)); else
 			if (stricmp(cmd, "random") == 0) set_op(OP_RND, atoi(sym)); else
 			if (stricmp(cmd, "rand")   == 0) set_op(OP_RND, atoi(sym)); else
 			if (stricmp(cmd, "rnd")    == 0) set_op(OP_RND, atoi(sym)); else
@@ -867,8 +865,6 @@ void paragraph_break()
 
 void parse_statement()
 {
-	gPreviousTexts = 0;
-
 	// parse statement
 	gCommandPtrOpOfs = 0;
 	int i;
@@ -882,7 +878,6 @@ void parse_statement()
 		start_card();
 		start_section('Q', i);
 		if (gVerbose) printf("Card: \"%s\" (%d)\n", t, i);
-		gPreviousSection = 'Q';
 		if (gImplicitFlags)
 			set_op(OP_SET, i);
 		if (gGlobalPage && i != gGlobalPageId)
@@ -894,7 +889,6 @@ void parse_statement()
 		gCommandPtrOpOfs = 2; // $A + cardno
 		start_section('A', i);
 		if (gVerbose) printf("Choice: %s (%d)\n", t, i);
-		gPreviousSection = 'A';
 		break;
 	case 'C':
 		if (gVerbose) printf("Config\n");
@@ -904,21 +898,21 @@ void parse_statement()
 		if (gVerbose) printf("Global page config\n");
 		gCommandPtrOpOfs = 10000;
 		break;
-	case 'P':
-		if (gVerbose) printf("Paragraph break\n");
-		gCommandPtrOpOfs = 10000;
-		token(1, gScratch, t);
-		if (t[0])
-		{
-			printf("Syntax error - statement P may not include any operations, %s line %d\n", gFileStack[gFile].mFilename, gFileStack[gFile].mLine);
-			exit(-1);
-		}
-		break;
 	case 'O':
-		gCommandPtrOpOfs = 1; // $O
+		if (gVerbose) printf("Predicated continuing paragraph\n");
+		if (gCurrentParagraph->mText)
+		{
+			// Remove potential newline(s) from the end of previous paragraph
+			int p = 0;
+			while (gCurrentParagraph->mText[p]) p++;
+			while (gCurrentParagraph->mText[p-1] == '\n') p--;
+			gCurrentParagraph->mText[p] = 0;
+		}
+		// fallthrough
+	case 'P':
+		gCommandPtrOpOfs = 1; // $O (or $P)
 		start_paragraph();
-		if (gVerbose) printf("Predicated section\n");
-		gPreviousSection = 'O';
+		if (gVerbose && gScratch[1] == 'P') printf("Predicated paragraph\n");
 		break;
 	default:
 		printf("Syntax error: unknown statement \"%s\", %s line %d\n", gScratch, gFileStack[gFile].mFilename, gFileStack[gFile].mLine);
@@ -933,13 +927,13 @@ void parse_statement()
 		i++;
 	} 
 	while (t[0]);
+
 	if (gScratch[1] == 'Q')
 	{
 		// Create a new paragraph at start of a 'Q' block to avoid
 		// the 'Q' blocks' text getting (potentially) predicated.
 		// This means the 'Q' blocks never have text by themselves.
 		start_paragraph();
-		gPreviousSection = 'O';
 	}
 }
 
@@ -1100,13 +1094,6 @@ void scan_second_pass(char* aFilename)
 		read_line(gScratch);
 		if (gScratch[0] == '$')
 		{
-			if (gScratch[1] == 'P')
-			{
-				// Paragraph break statement
-				paragraph_break();
-				paragraph_break();
-			}
-			else
 			if (gScratch[1] == 'C') 
 			{
 				// Skip config statement
