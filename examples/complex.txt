@@ -9,42 +9,44 @@ $Q start toggle:neon turns+1
 
 # Switch background between dark and light depending on the light switch
 
-# An  empty $O will always be shown.
-$O
+# An  empty $P or $P will always be shown.
+$P
 The room.
 
 ---- --- -- -
 
 # Basic description depends on the light switch..
-$O !light
-You are in a small dark room with a window looking down to the street. The room has a single door, with a light switch next to it.
-$O light
+$P !light
+You are in a small dark room with a window looking down to the street.
+
+The room has a single door, with a light switch next to it.
+$P light
 With the lights turned on, the room is not as opressive as it felt in the darkness.
 
 # We flash lightning really randomly (play sound effect)
-$O rnd:20 set:lightning 
+$P rnd:20 set:lightning 
 Lightning flashes in the window.
-$O open
+$P open
 The door is open.
 
 # Neon toggler (see $Q, above) switches border color and description
-$O neon 
+$P neon 
 Outside the window, neon sign glows red.
-$O !neon
+$P !neon
 Outside the window, neon sign glows blue.
 
 
 # Only see the key if we have light
-$O !key light
+$P !key light
 A small silver key glitters in the light.
 
-$O !key !light lightning
+$P !key !light lightning
 A small silver key glitters in the lightning's light.
 
-$O clr:lightning
+$P clr:lightning
 
 # Don't bother mentioning the key if door is unlocked
-$O key !unlocked
+$P key !unlocked
 You have the key.
 
 $A start toggle:light
@@ -71,7 +73,7 @@ The end.
 
 You played for <<turns>> turns.
 
-$O light
+$P light
 You left the lights on.
-$O !light
+$P !light
 You remembered to turn off the lights.

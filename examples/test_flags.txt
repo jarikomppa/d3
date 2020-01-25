@@ -2,28 +2,28 @@
 $Q testroom set:headerset has:unused
 Flag test
 
-$O set:bodyset has:unused
-$O testroom
+$P set:bodyset has:unused
+$P testroom
 testroom is set (ok)
-$O !testroom
+$P !testroom
 testroom is not set (ERROR)
-$O has:headerset
+$P has:headerset
 headerset is set (ERROR)
-$O not:headerset
+$P not:headerset
 headerset is not set (ok)
-$O has:bodyset
+$P has:bodyset
 bodyset is set (ERROR)
-$O not:bodyset
+$P not:bodyset
 bodyset is not set (ok)
-$O unused
+$P unused
 unused is set (ERROR)
-$O !unused
+$P !unused
 unused is not set (ok)
-$O toggle
+$P toggle
 toggle is set 
-$O !toggle
+$P !toggle
 toggle is not set
-$O toggle !toggle
+$P toggle !toggle
 toggle is both set and not set (ERROR)
 
 $A testroom set:toggle

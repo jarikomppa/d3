@@ -5,12 +5,20 @@
 
 $Q testroom
 
+Parabreak ->
+$P
+<- and no parabreak ->
+$O
+<-
 
+test 
+room, let's 
+check 
+it
 
-test room,
-let's check it
+<- there should be a break there
 
-$O c=0 c-=7
+$P c=0 c-=7
 
 <<c>><<c>> <<c>>
 $P

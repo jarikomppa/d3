@@ -6,7 +6,9 @@ $Q start
 
 WAITING FOR
 $P
+$P
 THE LIGHT
+$P
 $P
 By Kieran Coghlan
 $A p1
@@ -77,8 +79,8 @@ $A p26
 It won't solve their problems
 
 $Q p6
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 You answer before your opponents has a chance.
 
 "Correctamundo," replies Vine, giving you one of his trademark smiles. "Do you want to take the
@@ -118,8 +120,8 @@ $A p49 set:trophy
 Continue
 
 $Q p9
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 You buzz in a fraction of a second before your opponent and answer.
 "Well, blow me down and pick me up," begins Vine. "You're absolutely, positively, one-hundred
 percent correct! Will you be taking the point or would sir prefer the subtle mystery of a Surprise!
@@ -130,8 +132,8 @@ $A p2
 Take the card
 
 $Q p11
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 "Question two," continues Vine. "According to Sigmund Freud, the apparatus of the psyche
 consists of the id, ego and . . . is it the instinct or the super-ego?"
 $A p34
@@ -195,9 +197,9 @@ Prefer not to answer
 $Q scorecheck
 #Keep a record of your's and your opponent's scores on your note sheet. Note down that if you reach 3
 #points first to turn to 100. If your opponent manages to do so first, turn to 96.
-$O player_score>=3 go:p100
-$O opponent_score>=3 go:p96
-$O
+$P player_score>=3 go:p100
+$P opponent_score>=3 go:p96
+$P
 You have <<player_score>> points and your opponent has <<opponent_score>> points.
 
 $Q p13
@@ -274,8 +276,8 @@ $A p49 SET:S set:cash
 Continue
 
 $Q p20
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 "Yes it was indeed," responds Vine. "A classic painting though the police didn't take too kindly
 to me lifting it out of the Munch Museum - philistines! Now will that be a point or card you'll
 be wanting, sir?"
@@ -303,8 +305,8 @@ $A p53
 Continue
 
 $Q p22
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 "Yes! Yes! Yes!" replies Vine to your answer. "What did I do to deserve such smart contestants?
 So what's it going to be - the point of the card?"
 
@@ -396,8 +398,8 @@ $A p19
 Recommend a trial separation
 
 $Q p27
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 "Geez, hasn't anyone won yet?" continues Vine. "I hope I haven't left the oven on cos if I have my
 house'll be a pile of ashes at this rate. Now, question five: which artist created a series of
 expressionist paintings and prints named Skrik, or in English, The Scream between 1893 and
@@ -419,8 +421,8 @@ you cannot see your companion at all. Then the light fades completely and your w
 more.
 
 $Q p29
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 "Don't be silly now," responds Vine to your answer. "That's clearly not the answer we're looking
 for. And you're going to pay the price for such silliness because now your opponent gets a
 point."
@@ -476,8 +478,8 @@ the water. You cannot build a strong house on weak foundations."
 It is the last thing you hear before water enters your lungs and you fall into oblivion.
 
 $Q p34
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 "Wrooooooooooong!" bellows Vine. "Which means your opponent gets the point. You're really
 making this far too easy for him."
 $A p44 opponent_score+1
@@ -624,8 +626,8 @@ $A p58
 Talk to the one laughing hysterically
 
 $Q p44
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 "Question three already, people," says Vine. "Gosh, time passes quickly when you're having fun.
 Which of these is a film directed by David Lynch - Mulholland Avenue or Inland Empire?"
 $A p98
@@ -754,8 +756,8 @@ $A p57
 Ask the wife what she wants from the marriage
 
 $Q p55
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 Your opponent buzzes in.
 
 "I think it was the instinct," he says.
@@ -766,8 +768,8 @@ $A p44 player_score+1
 Continue
 
 $Q p56
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 Vine pulls a yellow card from his jacket pocket.
 
 "Well, what d'ya know, folks?" he says. "It's the card that can make or break any game - the Swap
@@ -816,8 +818,8 @@ $A p36
 Escape while you can
 
 $Q p59
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 "And our survey says . . . uh-uhh!" jokes Vine. "No, I'm afraid it was Descartes." Your opponent
 beams.
 $A p11 opponent_score+1
@@ -833,8 +835,8 @@ $A p49
 Continue
 
 $Q p63
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 Vine pulls a bright yellow card from his jacket pocket.
 
 "The card says -" he begins. The audience hushes in tension. "- that your opponent gets two
@@ -849,8 +851,8 @@ $A p11 opponent_score+2
 Continue
 
 $Q p64
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 Vine pulls forth a bright yellow card.
 
 "Audience," he says. "It's my favourite card cos it means I can hit the bar all the sooner - the
@@ -880,8 +882,8 @@ $A p97
 Hide amongst the trees
 
 $Q p67
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 "Balke?!" says Vine to your answer. "I balk at such an idea. No, it was Munch. Your opponent
 gets the point I'm afraid."
 
@@ -931,8 +933,8 @@ $A p49 SET:F set:medal
 Continue
 
 $Q p75
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 "So it's two all, folks," says Vine, his voice oddly serious. "Whoever gets the next question right
 wins and we can all go away and do something worthwhile with our lives. Question six: who
 played psychiatrist Frasier Crane in sitcoms Cheers and Frasier ? Was it Kelsey Grammer or
@@ -1040,8 +1042,8 @@ $A p49 SET:T set:trophy
 Continue
 
 $Q p84
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 Your opponent buzzes in very fast.
 
 "Inland Empire," he says confidently.
@@ -1067,8 +1069,8 @@ $A p49 SET:F set:medal
 Continue
 
 $Q p86
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 You are still pondering the question when your opponent hits his buzzer.
 
 "Descartes?" he ventures.
@@ -1101,8 +1103,8 @@ $A p49 SET:S set:cash
 Continue
 
 $Q p88
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 Vine takes out a yellow card from the confines of his jacket.
 
 "Hard luck, friend," he says. "You've just drawn the Bankruptcy card. We'll be taking any money
@@ -1120,8 +1122,8 @@ $A p75 clr:cash player_score=2 opponent_score=2
 Continue
 
 $Q p89
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 "Indeed it was," replies Vine. "So what will it be this time, bucko - the point or the card?"
 The audience mutter amongst themselves while you decide.
 $A p44 player_score+1
@@ -1149,8 +1151,8 @@ $A p49
 Press on into uncertain territory
 
 $Q p91
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 "Pay attention now," continues Vine. "We don't want you doing something stupid this late in the
 game. Question four: Which psychologist came up with the concept of the eight-spoked wheel
 of basic emotions in 1980? Was it Ernst Angel or Robert Plutchik?"
@@ -1254,8 +1256,8 @@ $A p35
 Continue
 
 $Q p98
-$O gosub:scorecheck
-$O
+$P gosub:scorecheck
+$P
 You buzz in a fraction of a second before your opponent and answer.
 
 "No," replies Vine, "you could not be more wrong. You could try, but you would not be

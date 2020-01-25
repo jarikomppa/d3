@@ -1,33 +1,37 @@
 # test file for numeric values
 $Q testroom b=2 count=0
-a is <<a>>, b is <<b>>
-$O a>b count+1
+Testing numeric operations.
+
+a is <<a>>
+
+b is <<b>>
+$P a>b count+1
 a>b (<<a>> > <<b>>)
-$O a>1 count+1
+$P a>1 count+1
 a>1 (<<a>> > 1)
-$O a<b count+1
+$P a<b count+1
 a<b (<<a>> < <<b>>)
-$O a<1 count+1
+$P a<1 count+1
 a<1 (<<a>> < 1)
-$O a>=b count+1
+$P a>=b count+1
 a>=b (<<a>> >= <<b>>)
-$O a>=1 count+1
+$P a>=1 count+1
 a>=1 (<<a>> >= 1)
-$O a<=b count+1
+$P a<=b count+1
 a<=b (<<a>> <= <<b>>)
-$O a<=1 count+1
+$P a<=1 count+1
 a<=1 (<<a>> <= 1)
-$O a==b count+1
+$P a==b count+1
 a==b (<<a>> == <<b>>)
-$O a==1 count+1
+$P a==1 count+1
 a==1 (<<a>> == 1)
-$O a!=b count+1
+$P a!=b count+1
 a!=b (<<a>> != <<b>>)
-$O a!=1 count+1
+$P a!=1 count+1
 a!=1 (<<a>> != 1)
-$O count==6
+$P count==6
 I counted <<count>> statements to be true. (which is what I expected)
-$O count!=6
+$P count!=6
 I counted <<count>> statements to be true. (which is NOT what I expected)
 $A testroom a=0
 a = 0 (0)

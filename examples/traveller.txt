@@ -1,20 +1,21 @@
 
 $Q start set:red
-You're about to enter a three room world; a red, green and blue room. There's
-a wild yellow running around the rooms, and your goal is to catch it.
+You're about to enter a three room world; a red, green and blue room.
+
+There's a wild yellow running around the rooms, and your goal is to catch it.
 $A redroom
 Got it!
 
 $Q redroom
 You're in the red room.
-$O clr:flip clr:stay
-$O rnd:127 set:flip
+$P clr:flip clr:stay
+$O rnd:50 set:flip
 $O rnd:20 set:stay
-$O red !stay flip clr:red set:green
+$P red !stay flip clr:red set:green
 You see Yellow run towards the green room.
-$O red !stay !flip clr:red set:blue
+$P red !stay !flip clr:red set:blue
 You see Yellow run towards the blue room.
-$O red
+$P red
 You see a wild Yellow here.
 $A greenroom
 Go to the green room
@@ -25,14 +26,14 @@ Catch Yellow
 
 $Q greenroom
 You're in the green room.
-$O clr:flip clr:stay
-$O rnd:127 set:flip
+$P clr:flip clr:stay
+$O rnd:50 set:flip
 $O rnd:20 set:stay
-$O green !stay flip clr:green set:red
+$P green !stay flip clr:green set:red
 You see Yellow run towards the red room.
-$O green !stay !flip clr:green set:blue
+$P green !stay !flip clr:green set:blue
 You see Yellow run towards the blue room.
-$O green
+$P green
 You see a wild Yellow here.
 $A redroom
 Go to the red room
@@ -43,14 +44,14 @@ Catch Yellow
 
 $Q blueroom
 You're in the blue room.
-$O clr:flip clr:stay
-$O rnd:127 set:flip
+$P clr:flip clr:stay
+$O rnd:50 set:flip
 $O rnd:20 set:stay
-$O blue !stay flip clr:blue set:red
+$P blue !stay flip clr:blue set:red
 You see Yellow run towards the red room.
-$O blue !stay !flip clr:blue set:green
+$P blue !stay !flip clr:blue set:green
 You see Yellow run towards the green room.
-$O blue
+$P blue
 You see a wild Yellow here.
 $A greenroom
 Go to the green room

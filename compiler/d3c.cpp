@@ -433,7 +433,7 @@ void read_line(char* aBuffer)
 			aBuffer[0] = 0;
 		}
 	} 
-	while (!feof(gFileStack[0].mFile) && (aBuffer[0] == '#' || aBuffer[0] == 0));
+	while (!feof(gFileStack[0].mFile) && (aBuffer[0] == '#'));
 }
 
 
@@ -971,7 +971,7 @@ void capture_text()
 	char* s = gScratch;
 	int column = 0;
 
-	if (*s == 0)
+	if (*s == 0 || *s == '\n')
 	{
 		paragraph_break();
 		return;
@@ -1637,7 +1637,10 @@ void patch_tree_pass()
 					{
 						if (ow->mOpcode == OP_GO && pw->mText)
 						{
-							printf("Warning: $O block with goto opcode and text. Text would never be shown, so it's removed:\n\"%s\"\n", pw->mText);
+							if (!(pw->mText[0] == '\n' || pw->mText[0] == '0'))
+							{
+								printf("Warning: $O block with goto opcode and text. Text would never be shown, so it's removed:\n\"%s\"\n", pw->mText);
+							}
 							delete[] pw->mText;
 							pw->mText = 0;
 						}

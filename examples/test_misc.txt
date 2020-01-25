@@ -1,21 +1,23 @@
 # Test file for misc/advanced stuff
+$C misc
+$G globalroom
 $Q testroom
 test room, let's check some randoms
-$O c=0
-$O rnd:100 c+=1
+$P c=0
+$P rnd:100 c+=1
 Should happen always
-$O rnd:90 c+1
+$P rnd:90 c+1
 Should happen almost always
-$O rnd:50 c+1
+$P rnd:50 c+1
 Should happen half of the time
-$O rnd:10 c+1
+$P rnd:10 c+1
 Should happen rarely
-$O rnd:0 c+1
+$P rnd:0 c+1
 Shouldn't happen
-$O
+$P
 Random events counted: <<c>>
 
-$O HAS:unused
+$P HAS:unused
 Shouldn't print anything <<c>> even though we have that para-paragraph for printing. 
 This may be tricky to fix.<<c>>
 <<c>>
@@ -30,22 +32,22 @@ test gosub
 
 $Q gotoroom
 page with goto
-$O GOTO:testroom HAS:unused
+$P GOTO:testroom HAS:unused
 Predicated goto should fail, but predication means this isn't shown either
-$O GOTO:testroom
+$P GOTO:testroom
 This paragraph shouldn't be seen, because we leave this page before it
-$O
+$P
 This should never be reached either
 $A gotoroom
 This answer shouldn't be seen
 
 $Q gosubroom
 Testing gosub:
-$O GOSUB:sub1 HAS:gosubroom
+$P GOSUB:sub1 HAS:gosubroom
 This text should appear after gosub
-$O
+$P
 So should this
-$O
+$P
 as should this
 $A testroom
 Back to main
@@ -56,3 +58,6 @@ $Q sub1
 Hello from subroom
 $A testroom
 This answer shoulnd't be seen
+
+$Q globalroom
+<-.'.->
