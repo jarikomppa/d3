@@ -1,0 +1,66 @@
+# Introduction
+
+DialogTree is a engine for building dialogue trees with non-player characters in games. The way it works, it can also be used as basis
+for multiple choise adventures, visual novels and the like. Just be careful not to use the trademarked terms enforced by ChooseCo.
+
+The d3 concept consists of several pieces. Each dialogue itself is called a "deck", where each scene is a "card" which contains a "question" 
+field and zero or more "answer" fields. Each answer then tells which card should be read next.
+
+image::justagraph.png[Just a flow chart,align="center"] 
+
+Think of each box as a page in a book, and at the bottom of each page you'll find something in the lines of, "Turn to page 32 if you want to..".
+
+These "decks" are written in DialogTree story definition language. Large portion of this document covers this process. For most uses,
+the format is trivial, but DialogTree offers functionality to make very complicated dialogues.
+
+The "deck" files are compiled to usable form with the d3 compiler. The resulting files are read by the d3 engine which can be integrated
+to your actual game engine, along with some form of persistent state.
+
+## Concepts
+
+Here's some of the terms used by DialogTree.
+
+[cols="20,~"]
+|===
+|Term      | Description
+
+| Card     | One set of question and zero to multiple answers 
+| Deck     | Set of cards 
+| Symbol   | Variable (containing whole numbers), a flag (on or off) or card identifier 
+| Variable | Integer (whole number) variable, used for complex logic 
+| Flag     | Boolean (on or off), used for simple logic 
+|===
+
+
+## Legalese
+
+DialogTree is released under Unlicense, which is basically public domain.
+
+<https://github.com/jarikomppa/d3>
+
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to 
+
+<http://unlicense.org/>

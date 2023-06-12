@@ -1,0 +1,28 @@
+# Engine Integration
+
+The DialogTree engine has been implemented in several programming languages, but the basic idea for all is the same; to make using the 
+dialogs as simple as possible. The interfaces follow this pattern:
+
+- Allocate and connect to persistent state
+- Load / Use data
+- Get question text
+- Get number of answers
+- Get answer text
+- Choose answer
+- Cleanup
+
+## Python Engine
+
+tbd
+
+## C Engine
+
+tbd
+
+## C++ Engine
+
+tbd
+
+## JavaScript Engine
+
+tbd

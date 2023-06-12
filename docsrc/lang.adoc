@@ -1,0 +1,420 @@
+# DialogTree Story Definition Language
+
+The DialogTree story definition language may sound scary, but it is actually very simple. The DialogTree scripts are plain text files, such as those that can be created with Windows Notepad, although the author recommends using something more advanced, such as Visual Studio Code, Sublime Text or Notepad++.
+
+Not all of the features of the language are needed to write adventures; this document is structured so that more complicated features are described later, so you won't need to read all of it to get started. If something feels complicated, don't worry about it - you can come back to it later.
+
+## Structure
+
+Structure of a multiple choice adventure is based on cards (other used terms include pages, rooms, locations, nodes). Each card consists of description part as well as zero or more choices for the user (also known as answers, selections, options).
+
+Consider the computer asking the user a question, and offering several possible answers for the question.
+
+The script for a simple page looks like this:
+
+    $Q roomname
+    The description of the room
+    $A otherroomname
+    Go to other room
+    
+The choices link pages together. Here we'll describe three rooms and let the user travel between them:
+
+image::rgbroom.png[Flow chart of the rgbroom,align="center"]
+
+    $Q redroom
+    You're in the red room.
+    $A greenroom
+    Go to the green room
+    $A blueroom
+    Go to the blue room
+    
+    $Q greenroom
+    You're in the green room.
+    $A blueroom
+    Go to the blue room    
+    $A redroom
+    Go to the red room
+    
+    $Q blueroom
+    You're in the blue room.
+    $A greenroom
+    Go to the green room
+    $A redroom
+    Go to the red room
+    
+
+Everything between two $Q lines goes to a single card. The first word after the $Q and $A is the identifier of the room. In programming terms, you could think of it as GOTO label. Two rooms may not have the same identifier, but any number of $A lines may point to the same identifier. Identifiers may not include spaces (i.e, they need to be a single word).
+
+It is also perfectly legal for a room to have an choice which goes back to the same page. This is actually rather useful.
+
+If a card has no $A lines, it is considered an "end node", and the dialogue ends if player ends up on that page.
+
+### Text
+
+The text in the page descriptions is automatically formatted, removing any unnecessary "white space" like line breaks or additional spaces. To start a new paragraph, add an empty line in your text.
+
+    All of
+    these go
+    on the
+    same line.
+    
+    This is a new paragraph.
+    
+        Adding   more   spaces   does   nothing.
+
+To add an empty line, use the $P line (see below).
+
+### Comments
+
+You can add comments in the script which do not end up in your adventure file by starting a line with the hash character.
+
+    # This is a comment
+    This is not a comment    
+
+### Paragraph Breaks
+
+While the text is expected to flow by default, sometimes empty lines may be desirable. To output an empty line, use the $P statement.
+
+    $Q fountain
+    You arrive at a picturesque fountain. Assume there's a long description here.
+    $P
+    You can see some mushrooms here.
+    
+## Flags
+
+In addition to the basic structure of the cards, flags can be used to introduce more complicated behavior. By default, every time the player goes to a card, the flag with the card's name is turned on. Using these, an optional part can be added to a card's description.
+
+    $Q alleyway
+    You're in a dark alley. There's a door.
+    $P backyard
+    You remember seeing the bad guys inside when you were at the back yard.
+
+In this example the "You remember.." line is only shown if the player has visited the backyard page before ending up here.
+
+If you wish to have optional part of the text between two parts of text that is always shown, you can reset the optionality by using an empty $P line.
+
+    Text always shown
+    $P daytime
+    Text shown only during daytime
+    $P
+    Another text always shown
+
+If you want to use optional paragraphs but do not want the newline, you can use $O in place of $P. In more complicated cases this can get a bit messy though, so it's usually a good idea to keep things simple.
+    
+### Checking Flags
+
+You can check if a flag is on by using its label. You can also check if a flag is not on by prefixing the flag's label with an exclamation point (!), like !backyard.
+
+    $P daytime
+    The sun is shining.
+    $P !daytime
+    The moon is bright tonight.
+    
+Alternate syntax for this is to use the has: and not: prefixes.
+
+    $P has:daytime
+    The sun is shining.
+    $P not:daytime
+    The moon is bright tonight.
+
+If you wish something to happen randomly, you can use the rnd: prefix with a value.
+
+    $P rnd:25
+    Thorin sits down and starts singing about gold.
+    
+The maximum value is 100, so a value of 50 gives about 50% chance, etc.
+
+The flag checks can also be used with the $Q and $A lines.
+    
+If flag check is used with the $A line, the choice is only given to the player if the flag check succeeds.
+
+    $A mine has:cleared
+    Enter the mine through the cleared tunnel.
+
+If flag check is used with the $Q line, any other commands on that same line are only executed if the flag check is positive. (See below for the other commands). The card itself is still displayed.
+
+### Setting Flags
+
+To set a flag, use the set: prefix with a flag label.
+
+    $A alleyway set:trapped
+    Place the trap just outside the door.
+    
+If used with the $A line, the command is performed if the player picks the line. If used on a $Q, $I or $O line, the command is performed if the line's flag check succeeds. 
+
+Setting a flag that is already on is legal, but has no effect.
+
+### Clearing Flags
+
+You can also clear flags, including the ones set by visiting a page. This is done with the clear: or clr: command.
+
+    $A alleyway clear:trapped
+    Change your mind, and clear the trap from the door.
+    
+Clearing a flag that is not on is legal, but has no effect.
+    
+### Toggling Flags
+
+Flags can be toggled with the toggle: command. This way you don't need to know which state the flag is in, if you wish to switch between two states.
+
+    $Q busystreet toggle:trafficlights
+    $P trafficlights
+    The traffic lights are red.
+    $P !trafficlights
+    The traffic lights are green.
+
+    $A busystreet
+    Wait for a while
+    $A sleepytown !trafficlights
+    Cross the street
+
+## Numbers
+
+Sometimes it's useful to handle numbers instead. Many gamebooks have concept of hit points, for instance.
+
+### Setting Numbers
+
+To set the value of a number, use the = operator.
+
+    $A fountain hitpoints=7
+    Drink from the fountain
+
+You can set a number variable to the value of another variable or to a fixed value.
+
+    $A tavern temp=player_money player_money=stranger_money stranger_money=temp
+    Swap purses with the stranger
+
+Note that there must be no spaces around the operators.
+
+### Adding and Subtracting Numbers
+
+Adding and subtracting are done with the - and + operators.
+
+    $A fountain hitpoints-1
+    Eat a mushroom
+    $A fountain hitpoints+1
+    Eat a biscuit
+    
+Again, fixed values or other variables can be used.
+
+    $A fountain hitpoints+potion potion-1 potion>0
+    Drink from the healing potion
+    
+If you prefer, you can use -= and += instead of - and +:
+
+    $A fountain score+=3 darts-=1 darts>0
+    Throw a dart at the board
+
+### Comparing Numbers
+
+Numeric variables can be compared in various ways, to each other and to fixed numbers.
+
+    $O a==42
+    a is 42
+    $O a!=42
+    a is not 42
+    $O a>42
+    a is bigger than 42
+    $O a>=42
+    a is bigger or equal to 42
+    $O a<42
+    a is smaller than 42
+    $O a<=42
+    a is smaller or equal to 42
+    
+Note that a=1 means "assign 1 to a", while a==1 means "is a equal to 1".
+
+As you might expect, it's also possible to compare two variables.
+
+    $O a==b
+    a is equal to b
+    $O a!=b
+    a is not equal to b
+    $O a>b
+    a is bigger than b
+    $O a>=b
+    a is bigger or equal to b
+    $O a<b
+    a is smaller than b
+    $O a<=b
+    a is smaller or equal to b
+
+Here again, a=b means "assign a to value of b" and a==b means "is a equal to b".
+
+When comparing a varialbe with a number, the variable must always be the first parameter, i.e, you can't do 3==pi.
+
+### Printing Numbers
+
+It is also possible to print out the values of the numeric variables, by simply putting
+the variable name between << and >> in the text. Note that there must be no spaces between
+these characters.
+
+    $Q store
+    The shopkeeper polishes an apple while he's waiting for you
+    to make a selection. You currently have <<gold>> gold.
+    $A store gold>5 gold-5 set:dagger
+    Buy the dagger for 5 gold
+
+Alternatively it's possible to use the print command:
+
+    You have
+    $O print:gold
+    gold pieces.
+
+This is basically what the compiler turns the "inline" number printing to. This can cause
+issued with voiceover and/or localization efforts, so use the number printing with caution.
+    
+### Mixing Flags and Numbers
+
+Numbers and flags do not mix. If you try to assign flag to a numeric variable, for instance,
+it won't do what you expect:
+
+    $O set:parrot
+    $O bird=parrot
+    
+This will create a new numeric variable called "parrot", which will live alongside the flag "parrot". The compiler will warn you if you try to do this.
+
+## Go and Gosub
+
+Sometimes it is useful to interrupt the normal page flow and do something else for a change.
+
+For example, if your game has a hit point mechanism, it would be wasteful to add checking if the player has died on every single page.
+
+    $Q healthcheck
+    $P hitpoints==0 go:dead
+    $P hitpoints<5
+    You're not feeling too good.
+    
+    $Q fountain
+    The fountain.
+    $O gosub:healthcheck
+    You find yourself near a marble fountain in the forest 
+    clearing. There are some mushrooms nearby.
+
+In the example above, whenever the player arrives at the "fountain" page, the game will load the healthcheck page, which will
+first check if player is dead, and if so, will turn to the "dead" page immediately. If the player is still alive, the 
+page will output the "You're not feeling too good" message if hitpoints are low. Otherwise the processing of that sub-page
+is done and drawing of the "fountain" page resumes from where we were at.
+
+Subpages can also not have any $A statements; if any exist, they will be ignored.
+
+## Deck Configuration
+
+DialogTree has special statement that can be used to configure the way the deck works.
+
+    $C prefix
+    
+The first parameter to the $C statement is the deck's prefix. All of the local symbols in the deck are prefixed with
+this string before they're sent to the persistent state. The prefix can be followed by other options. Currently only
+two options exist:
+
+[cols="20,~"]
+|===
+|Option          | Description
+
+|noimplicitflags | Disable flag setting upon entering a card
+|implicitflags   | Enable flag setting upon entering a card
+|===
+
+By default, DialogTree sets a flag with the same name as the card. This behavior can be enabled or disabled. If the
+option is enabled or disabled on command line, this option overrides it.
+
+## Global Pages
+
+Sometimes it's useful to have a card that is evaluated at the start of every other card.
+
+    $G symbol
+    
+This is functionally identical to having gosub:symbol at the start of every other $Q statement.
+
+## More Technically Speaking..
+
+Here's some a bit more technical notes which may be useful in problematic cases.
+
+### Command Execution Order
+
+To get a little bit more nitty-gritty, here's a few words about command execution order.
+
+Commands are, generally speaking, executed in the order they're set. In the following example, foo is set to 1, and then we go to
+another page, which means the foo=2 instruction is never executed:
+
+    $O foo=1 goto:elsewhere foo=2
+    
+However, flag check is always performed first, and only if the whole flag check succeeds, the other commands
+are executed. Thus, if you write something as convoluted as:
+
+    $O set:flaggy flaggy clear:flaggy toggle:flaggy
+    
+what happens is:
+
+    If flaggy is on:
+        Set flaggy
+        Clear flaggy
+        Toggle flaggy
+
+Another example, just to be sure:
+
+    $O attr=7 apple cls=1 banana rnd:25 orange set:strawberry
+    
+This becomes:
+    
+    If apple is on, and banana is on, 
+    and random is less than 25 and orange is on:
+        Set attr to 7
+        Set cls to 1
+        Set strawberry
+
+To reiterate: first everything that affects whether the line should be executed is
+evaluated, and only then the rest are executed, assuming all of those things turn
+out to be true.
+
+If any of the checks fail, the rest are not executed.
+
+In case of $A blocks, the answer is included if it produces any text (i.e, if there is
+at least one paragraph that is not predicated away), but the commands are only executed
+when the option is selected.
+
+### Go and Gosub Revisited
+
+The exact point at which the go and gosub commands are executed is exactly where the opcode is:
+
+    $Q mysubpage
+    Hello
+    
+    $Q normalpage
+    $O gosub:mysubpage
+    World
+
+Outputs "Hello World".
+
+Using the go: command will send the player to a new page just as if they had selected an option: the room's flag will be set, the screen
+cleared, etc. The jump happens at the place where the opcode is, meaning that the rest of the opcodes (if any) as well as the rest of the
+page, including any $A blocks, is ignored.
+
+### The $P vs the $O Statement
+
+The $O and $P statements work exactly the same, except that when the compiler finds an $O statement, it will look back to the previous paragraph and will remove any newlines from the end of it. This works fairly well in simple cases, but if you find yourself chaining several predicated $O and $P blocks, things may get confusing.
+
+### Using Several Source Files
+
+It is possible to split source files into several pieces and combine them with the $I statement. If you find you want to include some piece
+of text (or logic!) in several decks, this can be done by using this include statement.
+
+    The troll takes a deep breath, and says:
+    $I legalese.txt
+    
+The $I statement works exactly as if you copy-pasted the file on that line.
+
+### Using Several Decks
+
+Since all decks talk with the same persistent state, keeping track of the symbols can be rather difficult. Every deck can have a prefix set
+using the config statement:
+
+    $C prefix
+    
+This will turn every local symbol to a global one. For example, if you have a deck with prefix "joe", and you set the symbol "grateful", the
+symbol that actually gets set in the state is called "joe.grateful". If you refer to a symbol with a period in it, the prefix is not set.
+Thus, you can take your deck with prefix "lisa" and check if joe is grateful by referring to the "joe.grateful" tag.
+
+It is also possible to have several decks with the same prefix. This can be useful if you have several discussions with the same NPC, and don't
+want to put all of the text into a single source file.

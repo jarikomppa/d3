@@ -5,6 +5,7 @@ Jari Komppa, https://iki.fi/sol
 :toc:
 :toclevels: 4
 :data-uri:
+:front-cover-image: image:d3.jpg[Front Cover,1024,1024]
 
 # Introduction
 

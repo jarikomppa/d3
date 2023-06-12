@@ -1,0 +1,124 @@
+## Reference
+
+Here's all of the syntax in handy table form. In many cases there are several ways to do the same thing so you can pick your favorite syntax. All of the variants compile to the same thing.
+
+### Line Types
+
+[cols="20,~"]
+|===
+|Line start    | Description
+|$Q            | Start of a new card. Can include opcodes (commands and predicates)
+|$A            | Answer block. Can include opcodes (commands and predicates)
+|$P            | Paragraph. May contain opcodes (commands and predicates)
+|$O            | Optional. Same as $P but without paragraph break.
+|$C            | Deck configuration. Use to set deck prefix and optional flags.
+|$I            | Include another file into the script
+|$G            | Global page. Works like $Q, included at start of every $Q
+|===
+
+### Predicates
+
+Predicates control whether the rest of the commands are executed, as well as control whether an answer is shown to the user.
+
+#### Flags
+
+[cols="20,~"]
+|===
+|Opcode      | Description
+
+|has:symbol  | Check if a symbol is set
+|need:symbol |
+|symbol      | 
+|not:symbol  | Check if a symbol is not set
+|!symbol     | 
+|===
+
+#### Random
+
+[cols="20,~"]
+|===
+|Opcode       | Description
+
+|random:value | Take random number in 0..99 range and compare it to given value
+|rand:value   |
+|rnd:value    |
+|===
+
+#### Numeric
+
+[cols="20,~"]
+|===
+|Opcode         | Description
+
+|symbol==value  | Check if variable is equal to value
+|symbol==symbol | Check if variable is equal variable
+|symbol!=value  | Check if variable is not equal to value
+|symbol!=symbol | Check if variable is not equal variable 
+|symbol<value   | Check if variable is less than value 
+|symbol<symbol  | Check if variable is less than variable 
+|symbol<=value  | Check if variable is less or equal than value 
+|symbol<=symbol | Check if variable is less or equal than variable 
+|symbol>value   | Check if variable is greater than value 
+|symbol>symbol  | Check if variable is greater than variable 
+|symbol>=value  | Check if variable is greater or equal than value 
+|symbol>=symbol | Check if variable is greater or equal than variable 
+|===
+
+### Commands
+
+Commands are used mostly to modify the state of variables and flags, but there are other uses too.
+
+#### Flags
+
+[cols="20,~"]
+|===
+|Opcode         |Description                    
+
+|set:symbol     | Set the symbol                
+|clear:symbol   | Clear the symbol              
+|clr:symbol     |
+|toggle:symbol  | Toggle the symbol on/off      
+|xor:symbol     |                              
+|flip:symbol    |                          
+|===
+
+#### Control Flow
+
+[cols="20,~"]
+|===
+|Opcode         |Description                    
+
+|go:symbol      | Go to the card with this symbol 
+|goto:symbol    |                               
+|gosub:symbol   | Visit the card with this symbol, then come back 
+|call:symbol    |                               
+|===
+
+#### Numeric
+
+[cols="20,~"]
+|===
+|Opcode         |Description                    
+
+|print:symbol   | Print the value of variable 
+|symbol=value   | Set numeric value to variable   
+|symbol=symbol  | Copy numeric value of variable to variable 
+|symbol+value   | Add numeric value to variable   
+|symbol+=value  |                               
+|symbol+symbol  | Add numeric value of variable to variable 
+|symbol+=symbol |                               
+|symbol-value   | Subtract numeric value from variable 
+|symbol-=value  |                               
+|symbol-symbol  | Subtract numeric value of variable from variable 
+|symbol-=symbol |                               
+|symbol/value   | Divide variable with numeric value 
+|symbol/=value  |                               
+|symbol/symbol  | Divide variable with variable 
+|symbol/=symbol |                               
+|symbol*value   | Multiply variable with numeric value 
+|symbol*=value  |                               
+|symbol*symbol  | Multiply variable with variable 
+|symbol*=symbol |                              
+|===
+
+Note: division by zero is considered a non-operation.

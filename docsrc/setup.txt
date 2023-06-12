@@ -1,0 +1,7 @@
+Install ruby, and then run the following commands to set up asciidoctor and the needed extensions:
+
+gem install asciidoctor
+gem install asciidoctor-diagram
+gem install asciidoctor-pdf
+gem install asciidoctor-epub3
+gem install kindlegen
