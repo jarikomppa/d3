@@ -4,7 +4,15 @@ Here's a few example snippets of more complicated behaviors that are possible wi
 
 ### Simple Dialogue
 
-The description-choices structure can also describe dialogue with a non-player character.
+[blockdiag, "simpledialogue", align="center"]
+....
+blockdiag {
+   orientation = portrait
+   start -> name;
+   start -> jobs;
+   start -> virtue;
+}
+....
 
     $Q start
     Well hello there. What do you want to know about?
@@ -14,8 +22,18 @@ The description-choices structure can also describe dialogue with a non-player c
     Jobs
     $A virtue
     Virtue
-    
+
+The description-choices structure can also describe dialogue with a non-player character.
+
 ### Button Toggle
+
+[blockdiag, "buttontoggle", align="center"]
+....
+blockdiag {
+   orientation = portrait
+   room -> room;
+}
+....
 
     $Q room
     $P !light
@@ -31,7 +49,14 @@ The same flag could be used for other things, such as revealing other things to 
 
 ### Using Room Flags to Change Flavor Text
 
-image::flavor.png[Flow chart of the flavor example,align="center"] 
+[blockdiag, "flavor", align="center"]
+....
+blockdiag {
+   orientation = portrait
+   start -> cave -> end;
+   start -> forest -> end -> start;
+}
+....
 
     $Q start
     Go to cave or forest?
@@ -64,7 +89,15 @@ This example shows two different routes to a room, and the room's description re
 
 ### Lock and Key
 
-image::lockandkey.png[Flow chart of the lock and key example,align="center"]
+[blockdiag, "lockandkey", align="center"]
+....
+blockdiag {
+   orientation = portrait
+   room -> room;
+   room <-> locked;
+   room -> end;
+}
+....
 
     $Q room
     You're in a room with a door.
@@ -127,7 +160,14 @@ Finally, the player is given the "Exit" option, which sends the player to the en
 
 ### Separate Gate
 
-image::separategate.png[Flow chart of the separate gate example,align="center"]
+[blockdiag, "separategate", align="center"]
+....
+blockdiag {
+   orientation = portrait
+   rivercrossing <-> forestpath <-> upstream;
+   rivercrossing -> end;
+}
+....
 
     $Q rivercrossing
     River flows north to south. There's signs of people 
@@ -169,7 +209,13 @@ create a dam in order to be able to cross the river.
 
 In order to keep the result of a random decision, set the result in a flag.
 
-image::stickyrandoms.png[Flow chart of the sticky randoms example,align="center"] 
+[blockdiag, "stickyrandoms", align="center"]
+....
+blockdiag {
+   orientation = portrait
+   coinroom -> coinroom;
+}
+....
 
     $Q coinroom
     $P !toss clr:result
@@ -237,14 +283,29 @@ Here's short overview of some of the examples included in the kit.
 
 ### Simple
 
-image::simple.png[Flow chart of the Simple example,align="center"] 
+[blockdiag, "simple", align="center"]
+....
+blockdiag {
+   start -> window, door, trapdoor;
+   door -> window;
+   door -> trapdoor;
+   window -> start;
+   trapdoor -> start;
+   trapdoor -> trapdoor, end;
+}
+....
 
-The simple example has four pages, with links between them. None of the more 
-advanced features of DialogTree are used.
+The simple example has four pages, with links between them. None of the more advanced features of DialogTree are used.
 
 ### Complex
 
-image::complex.png[Flow chart of the Complex example,align="center"] 
+[blockdiag, "complex", align="center"]
+....
+blockdiag {
+   orientation = portrait
+   start -> start -> end;
+}
+....
 
 The complex example concentrates on the more advanced features of DialogTree, including
 flag manipulation, and primarily has one heavily self-referential page.
@@ -254,13 +315,19 @@ unlock a door, open the door, and then leave.
 
 ### Traveller
 
-image::traveller.png[Flow chart of the Traveller example,align="center"] 
+[blockdiag, "traveller", align="center"]
+....
+blockdiag {
+   start -> redroom;
+   redroom <-> greenroom <->blueroom <-> redroom;
+   redroom, greenroom, blueroom -> end;
+}
+....
 
-In the traveller example the player is expected to run after a fleeing creature, which
-hops from one room to the next randomly, with a small chance of it staying put.
 
-This effect is created through a relatively complicated logic. Each room consists of the
-following kind of structure:
+In the traveller example the player is expected to run after a fleeing creature, which hops from one room to the next randomly, with a small chance of it staying put.
+
+This effect is created through a relatively complicated logic. Each room consists of the following kind of structure:
 
     $P clr:flip clr:stay
     $P rnd:50 set:flip
@@ -315,7 +382,15 @@ The dialogtree version is actually more difficult than the paper version because
 
 ### Blackjack
 
-image::blackjack.png[Flow chart of the Blackjack example,align="center"] 
+[blockdiag, "blackjack", align="center"]
+....
+blockdiag {
+    intro -> start -> start -> ingame;
+    ingame -> ingame -> hit, stand;
+    hit, stand -> dealerhit -> bothbust, bust, win;
+    bothbust, bust, win -> start;
+}
+....
 
 The Blackjack example demonstrates some complex handling of numeric variables. The rules are a bit simplified as compared to actual blackjack; there's no actual card deck, and cards are valued from 0 to 10.
 

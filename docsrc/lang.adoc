@@ -19,7 +19,13 @@ The script for a simple page looks like this:
     
 The choices link pages together. Here we'll describe three rooms and let the user travel between them:
 
-image::rgbroom.png[Flow chart of the rgbroom,align="center"]
+[blockdiag, "rgbroom", align="center"]
+....
+blockdiag {
+   orientation = portrait
+   redroom <-> greenroom <-> blueroom <-> redroom;
+}
+....
 
     $Q redroom
     You're in the red room.

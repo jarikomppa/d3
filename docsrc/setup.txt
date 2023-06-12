@@ -5,3 +5,7 @@ gem install asciidoctor-diagram
 gem install asciidoctor-pdf
 gem install asciidoctor-epub3
 gem install kindlegen
+
+Install python, and then run
+
+pip install blockdiag
