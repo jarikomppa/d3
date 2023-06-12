@@ -1,3 +1,11 @@
+# DialogTree (D3)
+Jari Komppa, https://iki.fi/sol
+:doctype: book
+:imagesdir: ./images
+:toc:
+:toclevels: 4
+:data-uri:
+
 # Introduction
 
 DialogTree is a engine for building dialogue trees with non-player characters in games. The way it works, it can also be used as basis
@@ -6,7 +14,7 @@ for multiple choise adventures, visual novels and the like. Just be careful not 
 The d3 concept consists of several pieces. Each dialogue itself is called a "deck", where each scene is a "card" which contains a "question" 
 field and zero or more "answer" fields. Each answer then tells which card should be read next.
 
-![Just a flow chart](images/justagraph)\ 
+image::justagraph.png[Just a flow chart,align="center"] 
 
 Think of each box as a page in a book, and at the bottom of each page you'll find something in the lines of, "Turn to page 32 if you want to..".
 
@@ -15,6 +23,22 @@ the format is trivial, but DialogTree offers functionality to make very complica
 
 The "deck" files are compiled to usable form with the d3 compiler. The resulting files are read by the d3 engine which can be integrated
 to your actual game engine, along with some form of persistent state.
+
+## Concepts
+
+Here's some of the terms used by DialogTree.
+
+[cols="20,~"]
+|===
+|Term      | Description
+
+| Card     | One set of question and zero to multiple answers 
+| Deck     | Set of cards 
+| Symbol   | Variable (containing whole numbers), a flag (on or off) or card identifier 
+| Variable | Integer (whole number) variable, used for complex logic 
+| Flag     | Boolean (on or off), used for simple logic 
+|===
+
 
 ## Legalese
 
@@ -51,17 +75,13 @@ For more information, please refer to
 
 # DialogTree Story Definition Language
 
-The DialogTree story definition language may sound scary, but it is actually very simple. The DialogTree scripts are plain text
-files, such as those that can be created with Windows Notepad, although the author recommends using something more
-advanced, such as UltraEdit, Sublime Text or Notepad++.
+The DialogTree story definition language may sound scary, but it is actually very simple. The DialogTree scripts are plain text files, such as those that can be created with Windows Notepad, although the author recommends using something more advanced, such as Visual Studio Code, Sublime Text or Notepad++.
 
-Not all of the features of the language are needed to write adventures; this document is structured so that more 
-complicated features are described later, so you won't need to read all of it to get started. If something feels
-complicated, don't worry about it - you can come back to it later.
+Not all of the features of the language are needed to write adventures; this document is structured so that more complicated features are described later, so you won't need to read all of it to get started. If something feels complicated, don't worry about it - you can come back to it later.
 
 ## Structure
 
-Structure of a multiple choice adventure is based on pages (other used terms include rooms, locations, nodes). Each page consists of description part as well as zero or more choices for the user (also known as answers, selections, options).
+Structure of a multiple choice adventure is based on cards (other used terms include pages, rooms, locations, nodes). Each card consists of description part as well as zero or more choices for the user (also known as answers, selections, options).
 
 Consider the computer asking the user a question, and offering several possible answers for the question.
 
@@ -74,7 +94,7 @@ The script for a simple page looks like this:
     
 The choices link pages together. Here we'll describe three rooms and let the user travel between them:
 
-![Flow chart of the rgbroom](images/rgbroom)\ 
+image::rgbroom.png[Flow chart of the rgbroom,align="center"]
 
     $Q redroom
     You're in the red room.
@@ -98,11 +118,11 @@ The choices link pages together. Here we'll describe three rooms and let the use
     Go to the red room
     
 
-Everything between two $Q lines goes to a single page. The first word after the $Q and $A is the label of the room. In programming terms, you could think of it as GOTO label. Two rooms may not have the same label, but any number of $A lines may point to the same label. Labels may not include spaces (i.e, they need to be a single word).
+Everything between two $Q lines goes to a single card. The first word after the $Q and $A is the identifier of the room. In programming terms, you could think of it as GOTO label. Two rooms may not have the same identifier, but any number of $A lines may point to the same identifier. Identifiers may not include spaces (i.e, they need to be a single word).
 
 It is also perfectly legal for a room to have an choice which goes back to the same page. This is actually rather useful.
 
-If a room has no $A lines, it is considered an "end node", and the adventure ends if player ends up on that page.
+If a card has no $A lines, it is considered an "end node", and the dialogue ends if player ends up on that page.
 
 ### Text
 
@@ -128,8 +148,7 @@ You can add comments in the script which do not end up in your adventure file by
 
 ### Paragraph Breaks
 
-While the text is often expected to flow, sometimes empty lines may be desirable. To output an empty line, use the $P
-statement.
+While the text is expected to flow by default, sometimes empty lines may be desirable. To output an empty line, use the $P statement.
 
     $Q fountain
     You arrive at a picturesque fountain. Assume there's a long description here.
@@ -138,7 +157,7 @@ statement.
     
 ## Flags
 
-In addition to the basic structure of the pages, flags can be used to introduce more complicated behavior. By default, every time the player goes to a page, the flag with the page's name is turned on. Using these, an optional part can be added to a page's description.
+In addition to the basic structure of the cards, flags can be used to introduce more complicated behavior. By default, every time the player goes to a card, the flag with the card's name is turned on. Using these, an optional part can be added to a card's description.
 
     $Q alleyway
     You're in a dark alley. There's a door.
@@ -187,7 +206,7 @@ If flag check is used with the $A line, the choice is only given to the player i
     $A mine has:cleared
     Enter the mine through the cleared tunnel.
 
-If flag check is used with the $Q line, any other commands on that same line are only executed if the flag check is positive. (See below for the other commands).
+If flag check is used with the $Q line, any other commands on that same line are only executed if the flag check is positive. (See below for the other commands). The card itself is still displayed.
 
 ### Setting Flags
 
@@ -211,8 +230,7 @@ Clearing a flag that is not on is legal, but has no effect.
     
 ### Toggling Flags
 
-Flags can be toggled with the toggle: command. This way you don't need to know which state the flag is in, if you wish
-to switch between two states.
+Flags can be toggled with the toggle: command. This way you don't need to know which state the flag is in, if you wish to switch between two states.
 
     $Q busystreet toggle:trafficlights
     $P trafficlights
@@ -240,6 +258,8 @@ You can set a number variable to the value of another variable or to a fixed val
 
     $A tavern temp=player_money player_money=stranger_money stranger_money=temp
     Swap purses with the stranger
+
+Note that there must be no spaces around the operators.
 
 ### Adding and Subtracting Numbers
 
@@ -327,8 +347,7 @@ it won't do what you expect:
     $O set:parrot
     $O bird=parrot
     
-This will create a new numeric variable called "parrot", which will live alongside the flag "parrot". The
-compiler will warn you if you try to do this.
+This will create a new numeric variable called "parrot", which will live alongside the flag "parrot". The compiler will warn you if you try to do this.
 
 ## Go and Gosub
 
@@ -364,10 +383,13 @@ The first parameter to the $C statement is the deck's prefix. All of the local s
 this string before they're sent to the persistent state. The prefix can be followed by other options. Currently only
 two options exist:
 
-|Option|Description|
-|:---  |:--------------|
-|noimplicitflags| Disable flag setting upon entering a card |
-|implicitflags | Enable flag setting upon entering a card |
+[cols="20,~"]
+|===
+|Option          | Description
+
+|noimplicitflags | Disable flag setting upon entering a card
+|implicitflags   | Enable flag setting upon entering a card
+|===
 
 By default, DialogTree sets a flag with the same name as the card. This behavior can be enabled or disabled. If the
 option is enabled or disabled on command line, this option overrides it.
@@ -380,7 +402,7 @@ Sometimes it's useful to have a card that is evaluated at the start of every oth
     
 This is functionally identical to having gosub:symbol at the start of every other $Q statement.
 
-## More Technically Speaking
+## More Technically Speaking..
 
 Here's some a bit more technical notes which may be useful in problematic cases.
 
@@ -438,7 +460,7 @@ The exact point at which the go and gosub commands are executed is exactly where
     $O gosub:mysubpage
     World
 
-..will output Hello World.
+Outputs "Hello World".
 
 Using the go: command will send the player to a new page just as if they had selected an option: the room's flag will be set, the screen
 cleared, etc. The jump happens at the place where the opcode is, meaning that the rest of the opcodes (if any) as well as the rest of the
@@ -446,9 +468,7 @@ page, including any $A blocks, is ignored.
 
 ### The $P vs the $O Statement
 
-The $O and $P statements work exactly the same, except that when the compiler finds an $O statement, it will look back to the previous
-paragraph and will remove any newlines from the end of it. This works fairly well in simple cases, but if you find yourself chaining several 
-predicated $O and $P blocks, things may get confusing.
+The $O and $P statements work exactly the same, except that when the compiler finds an $O statement, it will look back to the previous paragraph and will remove any newlines from the end of it. This works fairly well in simple cases, but if you find yourself chaining several predicated $O and $P blocks, things may get confusing.
 
 ### Using Several Source Files
 
@@ -474,88 +494,128 @@ Thus, you can take your deck with prefix "lisa" and check if joe is grateful by 
 It is also possible to have several decks with the same prefix. This can be useful if you have several discussions with the same NPC, and don't
 want to put all of the text into a single source file.
 
-## Opcode reference
+## Reference
 
-Here's all the opcodes in handy table form. In many cases there are several ways to do the same thing.
+Here's all of the syntax in handy table form. In many cases there are several ways to do the same thing so you can pick your favorite syntax. All of the variants compile to the same thing.
 
-### Predicates - Flags
+### Line Types
 
-|Opcode         |Description                    |
-|:---           |:------------------------------|
-|has:symbol     | Check if a symbol is set      |
-|need:symbol    |                               |
-|symbol         |                               |
-|not:symbol     | Check if a symbol is not set  |
-|!symbol        |                               |
+[cols="20,~"]
+|===
+|Line start    | Description
+|$Q            | Start of a new card. Can include opcodes (commands and predicates)
+|$A            | Answer block. Can include opcodes (commands and predicates)
+|$P            | Paragraph. May contain opcodes (commands and predicates)
+|$O            | Optional. Same as $P but without paragraph break.
+|$C            | Deck configuration. Use to set deck prefix and optional flags.
+|$I            | Include another file into the script
+|$G            | Global page. Works like $Q, included at start of every $Q
+|===
 
-### Predicates - Random
+### Predicates
 
-|Opcode         |Description                    |
-|:---           |:------------------------------|
-|random:value   | Take random number in 0..99 range and compare it to given value |
-|rand:value     |                               |
-|rnd:value      |                               |
+Predicates control whether the rest of the commands are executed, as well as control whether an answer is shown to the user.
 
-### Predicates - Numeric
+#### Flags
 
-|Opcode         |Description                    |
-|:---           |:------------------------------|
-|symbol==value  | Check if symbol's value is equal to value |
-|symbol==symbol | Check if symbol's value is equal symbol's value |
-|symbol!=value  | Check if symbol's value is not equal to value |
-|symbol!=symbol | Check if symbol's value is not equal symbol's value |
-|symbol<value   | Check if symbol's value is less than value |
-|symbol<symbol  | Check if symbol's value is less than symbol's value |
-|symbol<=value  | Check if symbol's value is less or equal than value |
-|symbol<=symbol | Check if symbol's value is less or equal than symbol's value |
-|symbol>value   | Check if symbol's value is greater than value |
-|symbol>symbol  | Check if symbol's value is greater than symbol's value |
-|symbol>=value  | Check if symbol's value is greater or equal than value |
-|symbol>=symbol | Check if symbol's value is greater or equal than symbol's value |
+[cols="20,~"]
+|===
+|Opcode      | Description
 
-### Commands - Flags
+|has:symbol  | Check if a symbol is set
+|need:symbol |
+|symbol      | 
+|not:symbol  | Check if a symbol is not set
+|!symbol     | 
+|===
 
-|Opcode         |Description                    |
-|:---           |:------------------------------|
-|set:symbol     | Set the symbol                |
-|clear:symbol   | Clear the symbol              |
-|clr:symbol     |                               |
-|toggle:symbol  | Toggle the symbol on/off      |
-|xor:symbol     |                               |
-|flip:symbol    |                               |
+#### Random
 
-## Commands - Control Flow
+[cols="20,~"]
+|===
+|Opcode       | Description
 
-|Opcode         |Description                    |
-|:---           |:------------------------------|
-|go:symbol      | Go to the card with this symbol |
-|goto:symbol    |                               |
-|gosub:symbol   | Visit the card with this symbol, then come back |
-|call:symbol    |                               |
+|random:value | Take random number in 0..99 range and compare it to given value
+|rand:value   |
+|rnd:value    |
+|===
 
-## Commands - Numeric
+#### Numeric
 
-|Opcode         |Description                    |
-|:---           |:------------------------------|
-|print:symbol   | Print the value of numeric symbol |
-|symbol=value   | Set numeric value to symbol   |
-|symbol=symbol  | Copy numeric value of symbol to symbol |
-|symbol+value   | Add numeric value to symbol   |
-|symbol+=value  |                               |
-|symbol+symbol  | Add numeric value of symbol to symbol |
-|symbol+=symbol |                               |
-|symbol-value   | Subtract numeric value from symbol |
-|symbol-=value  |                               |
-|symbol-symbol  | Subtract numeric value of symbol from symbol |
-|symbol-=symbol |                               |
-|symbol/value   | Divide symbol with value |
-|symbol/=value  |                               |
-|symbol/symbol  | Divide symbol with numeric value of symbol |
-|symbol/=symbol |                               |
-|symbol*value   | Multiply symbol with value |
-|symbol*=value  |                               |
-|symbol*symbol  | Multiply symbol with numeric value of symbol |
-|symbol*=symbol |                              |
+[cols="20,~"]
+|===
+|Opcode         | Description
+
+|symbol==value  | Check if variable is equal to value
+|symbol==symbol | Check if variable is equal variable
+|symbol!=value  | Check if variable is not equal to value
+|symbol!=symbol | Check if variable is not equal variable 
+|symbol<value   | Check if variable is less than value 
+|symbol<symbol  | Check if variable is less than variable 
+|symbol<=value  | Check if variable is less or equal than value 
+|symbol<=symbol | Check if variable is less or equal than variable 
+|symbol>value   | Check if variable is greater than value 
+|symbol>symbol  | Check if variable is greater than variable 
+|symbol>=value  | Check if variable is greater or equal than value 
+|symbol>=symbol | Check if variable is greater or equal than variable 
+|===
+
+### Commands
+
+Commands are used mostly to modify the state of variables and flags, but there are other uses too.
+
+#### Flags
+
+[cols="20,~"]
+|===
+|Opcode         |Description                    
+
+|set:symbol     | Set the symbol                
+|clear:symbol   | Clear the symbol              
+|clr:symbol     |
+|toggle:symbol  | Toggle the symbol on/off      
+|xor:symbol     |                              
+|flip:symbol    |                          
+|===
+
+#### Control Flow
+
+[cols="20,~"]
+|===
+|Opcode         |Description                    
+
+|go:symbol      | Go to the card with this symbol 
+|goto:symbol    |                               
+|gosub:symbol   | Visit the card with this symbol, then come back 
+|call:symbol    |                               
+|===
+
+#### Numeric
+
+[cols="20,~"]
+|===
+|Opcode         |Description                    
+
+|print:symbol   | Print the value of variable 
+|symbol=value   | Set numeric value to variable   
+|symbol=symbol  | Copy numeric value of variable to variable 
+|symbol+value   | Add numeric value to variable   
+|symbol+=value  |                               
+|symbol+symbol  | Add numeric value of variable to variable 
+|symbol+=symbol |                               
+|symbol-value   | Subtract numeric value from variable 
+|symbol-=value  |                               
+|symbol-symbol  | Subtract numeric value of variable from variable 
+|symbol-=symbol |                               
+|symbol/value   | Divide variable with numeric value 
+|symbol/=value  |                               
+|symbol/symbol  | Divide variable with variable 
+|symbol/=symbol |                               
+|symbol*value   | Multiply variable with numeric value 
+|symbol*=value  |                               
+|symbol*symbol  | Multiply variable with variable 
+|symbol*=symbol |                              
+|===
 
 Note: division by zero is considered a non-operation.
 
@@ -579,7 +639,7 @@ The same flag could be used for other things, such as revealing other things to 
 
 ### Using Room Flags to Change Flavor Text
 
-![Flow chart of the flavor example](images/flavor)\ 
+image::flavor.png[Flow chart of the flavor example,align="center"] 
 
     $Q start
     Go to cave or forest?
@@ -612,7 +672,7 @@ This example shows two different routes to a room, and the room's description re
 
 ### Lock and Key
 
-![Flow chart of the lock and key example](images/lockandkey)\ 
+image::lockandkey.png[Flow chart of the lock and key example,align="center"]
 
     $Q room
     You're in a room with a door.
@@ -649,26 +709,22 @@ reaches this page, the view looks like this:
     Get key
     Open door
 
-The "open door" option shown here does not actually open the door, but sends the player to a page that just says
-"The door is locked" with the only option of returning back to the page.
+The "open door" option shown here does not actually open the door, but sends the player to a page that just says "The door is locked" with the only option of returning back to the page.
 
-If the "Get key" option is picked, the player is sent back to the same page, but with the "key" flag enabled. Now
-the page looks like this:
+If the "Get key" option is picked, the player is sent back to the same page, but with the "key" flag enabled. Now the page looks like this:
 
     You're in a room with a door.
     ----
     Unlock door
     Open door
 
-The "Open door" option is still the same "The door is locked" option. Hitting the "Unlock" option again sends the
-player back to the same page, now with the "unlocked" flag on.
+The "Open door" option is still the same "The door is locked" option. Hitting the "Unlock" option again sends the player back to the same page, now with the "unlocked" flag on.
 
     You're in a room with a door.
     ----
     Open door
 
-Now the "Open door" option does something different (it's a different "Open door", after all); sending the player
-back to the same page with the "open" flag on.
+Now the "Open door" option does something different (it's a different "Open door", after all); sending the player back to the same page with the "open" flag on.
 
     You're in a room with a door.
     The door is open.
@@ -679,8 +735,7 @@ Finally, the player is given the "Exit" option, which sends the player to the en
 
 ### Separate Gate
 
-
-![Flow chart of the separate gate example](images/separategate)\ 
+image::separategate.png[Flow chart of the separate gate example,align="center"]
 
     $Q rivercrossing
     River flows north to south. There's signs of people 
@@ -718,10 +773,9 @@ Finally, the player is given the "Exit" option, which sends the player to the en
 This example uses several locations. The player has to travel upstream to
 create a dam in order to be able to cross the river.
 
-### Dialogue
+### Simple Dialogue
 
-The description-choices structure can also describe dialogue with a non-player
-character.
+The description-choices structure can also describe dialogue with a non-player character.
 
     $Q start
     Well hello there. What do you want to know about?
@@ -736,7 +790,7 @@ character.
 
 In order to keep the result of a random decision, set the result in a flag.
 
-![Flow chart of the sticky randoms example](images/stickyrandoms)\ 
+image::stickyrandoms.png[Flow chart of the sticky randoms example,align="center"] 
 
     $Q coinroom
     $P !toss clr:result
@@ -804,14 +858,14 @@ Here's short overview of some of the examples included in the kit.
 
 ### Simple
 
-![Flow chart of the Simple example](images/simple)\ 
+image::simple.png[Flow chart of the Simple example,align="center"] 
 
 The simple example has four pages, with links between them. None of the more 
 advanced features of DialogTree are used.
 
 ### Complex
 
-![Flow chart of the Complex example](images/complex)\ 
+image::complex.png[Flow chart of the Complex example,align="center"] 
 
 The complex example concentrates on the more advanced features of DialogTree, including
 flag manipulation, and primarily has one heavily self-referential page.
@@ -821,7 +875,7 @@ unlock a door, open the door, and then leave.
 
 ### Traveller
 
-![Flow chart of the Traveller example](images/traveller)\ 
+image::traveller.png[Flow chart of the Traveller example,align="center"] 
 
 In the traveller example the player is expected to run after a fleeing creature, which
 hops from one room to the next randomly, with a small chance of it staying put.
@@ -848,7 +902,7 @@ If the creature is still in this room after those checks, we announce it.
 
 ### Waiting
 
-![Flow chart of the Waiting example](images/waiting)\ 
+image::waiting.png[Flow chart of the Waiting example,align="center"] 
 
 This is the complete "Waiting for the Light" gamebook by Kieran Coghlan, consisting of
 a hundred locations, flags and numbers, converted to MuCho, the zx spectrum predecessor of DialogTree. 
@@ -856,34 +910,33 @@ The MuCho version was done with persmission of the author.
 
 To understand the structure, let's look at some sub-graphs.
 
-![Flow chart of the Waiting example, base pages](images/waiting_base)\ 
+image::waiting_base.png[Flow chart of the Waiting example: base pages,align="center"]
 
 The base structure is as follows: we start, have a couple simple trap choices, then arrive at the hall of lights (page 49), visit some other segments but eventually pick the white light (page 25) which checks if we've gone through all the other segments (via checking the various items), and then presents one of the 16 endings depending on the player choices in the other colored light segments.
 
-![Flow chart of the Waiting example, green pages](images/waiting_green)\ 
+image::waiting_green.png[Flow chart of the Waiting example: green pages,align="center"] 
 
 The green segment is relatively simple (in context of this gamebook). Note that the player can die here in a few ways (p30). In the end, the player can either be kill the beast or not (pages 15 and 16).
 
-![Flow chart of the Waiting example, pink pages](images/waiting_pink)\ 
+image::waiting_pink.png[Flow chart of the Waiting example: pink pages,align="center"] 
 
 The pink segment represents a relatively complex dialogue. Basically you get to recommend various options, one being a good one and the rest are less so.
 
-![Flow chart of the Waiting example, red pages](images/waiting_red)\ 
+image::waiting_red.png[Flow chart of the Waiting example: red pages,align="center"]
 
 The red segment is again relatively simple, in the end you get to pick whether to be aggressive or not.
 
-![Flow chart of the Waiting example, red pages](images/waiting_yellow)\ 
+image::waiting_yellow.png[Flow chart of the Waiting example: yellow pages,align="center"] 
 
 The yellow segment is super complicated: it's a game show. Not only can you answer right or wrong, or let the opponent answer instead, if you get the answers right, you can either take a point or take a card that has various results. And if either you or your opponent reaches 3 points, you hop to an ending.
 
 This uses a subpage to check (and display) the scores and a couple numeric variables to keep the score.
 
-The MuCho zx spectrum version is actually more difficult than the paper version because the player keeps track of the variables in the book
-version; the spectrum version hides them, so you don't know which result you're getting from your choices until the end.
+The dialogtree version is actually more difficult than the paper version because the player keeps track of the variables in the book version; the computer version hides them, so you don't know which result you're getting from your choices until the end.
 
 ### Blackjack
 
-![Flow chart of the Blackjack example](images/blackjack)\ 
+image::blackjack.png[Flow chart of the Blackjack example,align="center"] 
 
 The Blackjack example demonstrates some complex handling of numeric variables. The rules are a bit simplified as compared to actual blackjack; there's no actual card deck, and cards are valued from 0 to 10.
 
@@ -902,7 +955,6 @@ In the win page the player gets their money back twice, and we carefully check i
 The hit and dealerhit pages generate 4 random flags, and then produce a value between 0 and 10 to add to either the player's, or the dealer's, score. Since there are 16 options, 3 of the options give 10 points and 4 of the options give 0 (9+4+3=16). (There's no looping in DialogTree (yet, anyway), so we can't just ignore the zero results and randomize again).
 
 And there you have it - something that approximates blackjack in DialogTree.
-
 
 # Engine Integration
 

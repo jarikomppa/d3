@@ -1,5 +1,0 @@
-<p>Copyright&copy;2020 <a href="http://iki.fi/sol/">Jari Komppa</a></p>
-
-		</div>
-	</body>
-</html>

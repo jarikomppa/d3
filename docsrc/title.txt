@@ -1,2 +1,0 @@
-% DialogTree (d3) - Multiple Choice Dialogue Engine
-% Jari Komppa
