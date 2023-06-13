@@ -19,11 +19,11 @@ The script for a simple page looks like this:
     
 The choices link pages together. Here we'll describe three rooms and let the user travel between them:
 
-[blockdiag, "rgbroom", align="center"]
+[graphviz, "rgbroom", align="center"]
 ....
-blockdiag {
-   orientation = portrait
-   redroom <-> greenroom <-> blueroom <-> redroom;
+digraph {
+   redroom -> greenroom -> blueroom -> redroom;
+   redroom -> blueroom -> greenroom -> redroom;   
 }
 ....
 

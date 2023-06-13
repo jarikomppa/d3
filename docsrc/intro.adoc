@@ -6,9 +6,9 @@ for multiple choise adventures, visual novels and the like. Just be careful not 
 The d3 concept consists of several pieces. Each dialogue itself is called a "deck", where each scene is a "card" which contains a "question" 
 field and zero or more "answer" fields. Each answer then tells which card should be read next.
 
-[blockdiag, "intro", align="center"]
+[graphviz, "intro", align="center"]
 ....
-blockdiag {
+digraph {
    orientation = portrait
    1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7;
    5 -> 8 -> 9;

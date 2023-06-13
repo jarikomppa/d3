@@ -4,15 +4,17 @@ Here's a few example snippets of more complicated behaviors that are possible wi
 
 ### Simple Dialogue
 
-[blockdiag, "simpledialogue", align="center"]
+[graphviz, "simpledialogue", align="center"]
 ....
-blockdiag {
+digraph {
    orientation = portrait
    start -> name;
    start -> jobs;
    start -> virtue;
 }
 ....
+
+The description-choices structure can also describe dialogue with a non-player character.
 
     $Q start
     Well hello there. What do you want to know about?
@@ -23,17 +25,17 @@ blockdiag {
     $A virtue
     Virtue
 
-The description-choices structure can also describe dialogue with a non-player character.
-
 ### Button Toggle
 
-[blockdiag, "buttontoggle", align="center"]
+[graphviz, "buttontoggle", align="center"]
 ....
-blockdiag {
+digraph {
    orientation = portrait
    room -> room;
 }
 ....
+
+This example has a single room with a light that can be on or off. The player's option always points back to the same room, and the optional text blocks show whether the light is on or off.
 
     $Q room
     $P !light
@@ -43,21 +45,22 @@ blockdiag {
     $A room toggle:light
     Toggle light
 
-This example has a single room with a light that can be on or off. The player's option always points back to the same room, and the optional text blocks show whether the light is on or off.
-
 The same flag could be used for other things, such as revealing other things to do if the light is on.
 
 ### Using Room Flags to Change Flavor Text
 
-[blockdiag, "flavor", align="center"]
+[graphviz, "flavor", align="center"]
 ....
-blockdiag {
-   orientation = portrait
+digraph {
    start -> cave -> end;
-   start -> forest -> end -> start;
+   start -> forest -> end;
+   end -> start;
 }
 ....
 
+This example shows two different routes to a room, and the room's description reacts to where you came from. Note that the room flags are also cleared when the flavor text is shown, so it won't be shown again, should the player end up back on the same page from some other direction later on.
+
+....
     $Q start
     Go to cave or forest?
     $A cave
@@ -84,21 +87,24 @@ blockdiag {
     ...the end of the example.
     $A start
     Restart
-
-This example shows two different routes to a room, and the room's description reacts to where you came from. Note that the room flags are also cleared when the flavor text is shown, so it won't be shown again, should the player end up back on the same page from some other direction later on.
+....
 
 ### Lock and Key
 
-[blockdiag, "lockandkey", align="center"]
+[graphviz, "lockandkey", align="center"]
 ....
-blockdiag {
+digraph {
    orientation = portrait
    room -> room;
-   room <-> locked;
+   room -> locked;
+   locked -> room;
    room -> end;
 }
 ....
 
+In this example the player needs to take a key, unlock door, open door, and leave. 
+
+....
     $Q room
     You're in a room with a door.
     $P !key
@@ -124,9 +130,9 @@ blockdiag {
     
     $Q end
     You went through the door.
+....
 
-In this example the player needs to take a key, unlock door, open door, and leave. When the player initially
-reaches this page, the view looks like this:
+When the player initially reaches this card, the view looks like this:
 
     You're in a room with a door.
     There is a key here.
@@ -160,15 +166,20 @@ Finally, the player is given the "Exit" option, which sends the player to the en
 
 ### Separate Gate
 
-[blockdiag, "separategate", align="center"]
+[graphviz, "separategate", align="center"]
 ....
-blockdiag {
+digraph {
    orientation = portrait
-   rivercrossing <-> forestpath <-> upstream;
+   rivercrossing -> forestpath -> upstream;
+   upstream -> forestpath -> rivercrossing;
    rivercrossing -> end;
 }
 ....
 
+This example uses several locations. The player has to travel upstream to
+create a dam in order to be able to cross the river.
+
+....
     $Q rivercrossing
     River flows north to south. There's signs of people 
     having crossed the river here.
@@ -201,17 +212,15 @@ blockdiag {
     
     $Q end
     You crossed the river.
-    
-This example uses several locations. The player has to travel upstream to
-create a dam in order to be able to cross the river.
+....
 
 ### Sticky Randoms
 
 In order to keep the result of a random decision, set the result in a flag.
 
-[blockdiag, "stickyrandoms", align="center"]
+[graphviz, "stickyrandoms", align="center"]
 ....
-blockdiag {
+digraph {
    orientation = portrait
    coinroom -> coinroom;
 }
@@ -283,9 +292,9 @@ Here's short overview of some of the examples included in the kit.
 
 ### Simple
 
-[blockdiag, "simple", align="center"]
+[graphviz, "simple", align="center"]
 ....
-blockdiag {
+digraph {
    start -> window, door, trapdoor;
    door -> window;
    door -> trapdoor;
@@ -299,9 +308,9 @@ The simple example has four pages, with links between them. None of the more adv
 
 ### Complex
 
-[blockdiag, "complex", align="center"]
+[graphviz, "complex", align="center"]
 ....
-blockdiag {
+digraph {
    orientation = portrait
    start -> start -> end;
 }
@@ -315,11 +324,12 @@ unlock a door, open the door, and then leave.
 
 ### Traveller
 
-[blockdiag, "traveller", align="center"]
+[graphviz, "traveller", align="center"]
 ....
-blockdiag {
+digraph {
    start -> redroom;
-   redroom <-> greenroom <->blueroom <-> redroom;
+   redroom -> greenroom ->blueroom -> redroom;
+   redroom -> blueroom -> greenroom -> redroom;
    redroom, greenroom, blueroom -> end;
 }
 ....
@@ -382,13 +392,14 @@ The dialogtree version is actually more difficult than the paper version because
 
 ### Blackjack
 
-[blockdiag, "blackjack", align="center"]
+[graphviz, "blackjack", align="center"]
 ....
-blockdiag {
+digraph {
     intro -> start -> start -> ingame;
     ingame -> ingame -> hit, stand;
     hit, stand -> dealerhit -> bothbust, bust, win;
     bothbust, bust, win -> start;
+    dealerhit -> ingame;
 }
 ....
 

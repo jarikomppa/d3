@@ -5,7 +5,8 @@ gem install asciidoctor-diagram
 gem install asciidoctor-pdf
 gem install asciidoctor-epub3
 gem install kindlegen
+gem install graphviz
 
-Install python, and then run
+Install graphviz and add the directory with dot.exe to system path
 
 pip install blockdiag
