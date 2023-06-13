@@ -1,1 +1,7 @@
 *.bak
+doc/images/blackjack.png
+doc/.asciidoctor/
+doc/images/
+build/obj/
+build/.vs/
+bin/
