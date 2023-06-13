@@ -19,7 +19,7 @@ Op* gCurrentOp = 0;
 int gFile = -1;
 FileStack gFileStack[MAX_FILESTACK];
 
-bool gJsonOutput = false;
+int gOutputFormat = OUTPUT_BINARY;
 
 int gCards = 0;
 int gCardNo = 0;

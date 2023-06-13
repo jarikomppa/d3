@@ -5,3 +5,4 @@ doc/images/
 build/obj/
 build/.vs/
 bin/
+build/d3c.vcxproj.user

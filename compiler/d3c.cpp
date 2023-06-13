@@ -1,6 +1,6 @@
 /*
 DialogTree (d3) engine compiler
-Copyright (c) 2020 Jari Komppa
+Copyright (c) 2020-2023 Jari Komppa
 http://iki.fi/sol
 Released under Unlicense
 
@@ -74,6 +74,7 @@ int main(int aParc, char** aPars)
 			"  -t   output data tree file for debugging (.tree)\n"
 			"  -d   Output graphviz .dot file for debugging (.dot)\n"
 			"  -j   JSON output\n"
+			"  -x   tag-d3 format output\n"
 			"  -b   Binary output (default)\n",
 			aPars[0]);
 		return -1;
@@ -107,11 +108,15 @@ int main(int aParc, char** aPars)
 				break;
 			case 'j':
 			case 'J':
-				gJsonOutput = true;
+				gOutputFormat = OUTPUT_JSON;
+				break;
+			case 'x':
+			case 'X':
+				gOutputFormat = OUTPUT_TAGGED;
 				break;
 			case 'b':
 			case 'B':
-				gJsonOutput = false;
+				gOutputFormat = OUTPUT_BINARY;
 				break;
 			case 'm':
 			case 'M':

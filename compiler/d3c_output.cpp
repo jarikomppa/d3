@@ -50,6 +50,161 @@ void escape_string(char* s)
 	*o = 0;
 }
 
+void repar_string(char* s)
+{
+	gScratch[0] = 0;
+	if (s == 0)
+	{
+		return;
+	}
+
+	char* o = gScratch;
+	while (*s)
+	{
+		if (*s == '\n')
+		{
+			*o = '<'; o++;
+			*o = '/'; o++;
+			*o = 'p'; o++;
+			*o = '>'; o++;
+			*o = '\n'; o++;
+			*o = ' '; o++;
+			*o = ' '; o++;
+			*o = ' '; o++;
+			*o = ' '; o++;
+			*o = ' '; o++;
+			*o = '<'; o++;
+			*o = 'p'; o++;
+			*o = '>';
+		}
+		else
+		{
+			*o = *s;
+		}
+		o++;
+		s++;
+	}
+	*o = 0;
+}
+
+void decode_op(Op* op)
+{
+	switch (op->mOpcode)
+	{
+		
+	case OP_NOP: snprintf(gScratch, 65536, "nop"); break;
+
+	case OP_HAS: snprintf(gScratch, 65536, "%s", gSymbol.mName[op->mOperand1]); break;
+	case OP_NOT: snprintf(gScratch, 65536, "!%s", gSymbol.mName[op->mOperand1]); break;
+
+	case OP_SET: snprintf(gScratch, 65536, "set:%s", gSymbol.mName[op->mOperand1]); break;
+	case OP_CLR: snprintf(gScratch, 65536, "clr:%s", gSymbol.mName[op->mOperand1]); break;
+	case OP_XOR: snprintf(gScratch, 65536, "xor:%s", gSymbol.mName[op->mOperand1]); break;
+
+	case OP_RND: snprintf(gScratch, 65536, "rnd:%d", op->mOperand1); break;
+
+	case OP_GO: snprintf(gScratch, 65536, "go:%s", gSymbol.mName[op->mOperand1]); break;
+	case OP_GOSUB: snprintf(gScratch, 65536, "gosub:%s", gSymbol.mName[op->mOperand1]); break;
+
+			// Print value of variable
+	case OP_PRINT: snprintf(gScratch, 65536, "print:%s", gNumber.mName[op->mOperand1]); break;
+
+			// variable-constant pairs. The code below depends on the pairing.
+	case OP_GT:  snprintf(gScratch, 65536, "%s>%s", gNumber.mName[op->mOperand1], gNumber.mName[op->mOperand2]); break;// a>b
+	case OP_GTC: snprintf(gScratch, 65536, "%s>%d", gNumber.mName[op->mOperand1], op->mOperand2); break;// a>n
+	case OP_LT:  snprintf(gScratch, 65536, "%s<%s", gNumber.mName[op->mOperand1], gNumber.mName[op->mOperand2]); break;// a<b
+	case OP_LTC: snprintf(gScratch, 65536, "%s<%d", gNumber.mName[op->mOperand1], op->mOperand2); break;// a<n
+	case OP_GTE: snprintf(gScratch, 65536, "%s>=%s", gNumber.mName[op->mOperand1], gNumber.mName[op->mOperand2]); break;// a>=b
+	case OP_GTEC:snprintf(gScratch, 65536, "%s>=%d", gNumber.mName[op->mOperand1], op->mOperand2); break;// a>=n
+	case OP_LTE: snprintf(gScratch, 65536, "%s<=%s", gNumber.mName[op->mOperand1], gNumber.mName[op->mOperand2]); break;// a<=b
+	case OP_LTEC:snprintf(gScratch, 65536, "%s<=%d", gNumber.mName[op->mOperand1], op->mOperand2); break;// a<=n
+	case OP_EQ:  snprintf(gScratch, 65536, "%s==%s", gNumber.mName[op->mOperand1], gNumber.mName[op->mOperand2]); break;// a==b
+	case OP_EQC: snprintf(gScratch, 65536, "%s==%d", gNumber.mName[op->mOperand1], op->mOperand2); break;// a==n
+	case OP_IEQ: snprintf(gScratch, 65536, "%s!=%s", gNumber.mName[op->mOperand1], gNumber.mName[op->mOperand2]); break;// a!=b
+	case OP_IEQC:snprintf(gScratch, 65536, "%s!=%d", gNumber.mName[op->mOperand1], op->mOperand2); break;// a!=n
+
+	case OP_ASSIGN:  snprintf(gScratch, 65536, "%s=%s", gNumber.mName[op->mOperand1], gNumber.mName[op->mOperand2]); break;// a=b
+	case OP_ASSIGNC: snprintf(gScratch, 65536, "%s=%d", gNumber.mName[op->mOperand1], op->mOperand2); break;// a=n
+	case OP_ADD:     snprintf(gScratch, 65536, "%s+=%s", gNumber.mName[op->mOperand1], gNumber.mName[op->mOperand2]); break;// a+b
+	case OP_ADDC:    snprintf(gScratch, 65536, "%s+=%d", gNumber.mName[op->mOperand1], op->mOperand2); break;// a+n
+	case OP_SUB:     snprintf(gScratch, 65536, "%s-=%s", gNumber.mName[op->mOperand1], gNumber.mName[op->mOperand2]); break;// a-b
+	case OP_SUBC:    snprintf(gScratch, 65536, "%s-=%d", gNumber.mName[op->mOperand1], op->mOperand2); break;// a-n
+	case OP_MUL:     snprintf(gScratch, 65536, "%s*=%s", gNumber.mName[op->mOperand1], gNumber.mName[op->mOperand2]); break;// a*b
+	case OP_MULC:    snprintf(gScratch, 65536, "%s*=%d", gNumber.mName[op->mOperand1], op->mOperand2); break;// a*n
+	case OP_DIV:     snprintf(gScratch, 65536, "%s/=%s", gNumber.mName[op->mOperand1], gNumber.mName[op->mOperand2]); break;// a/b
+	case OP_DIVC:    snprintf(gScratch, 65536, "%s/=%d", gNumber.mName[op->mOperand1], op->mOperand2); break;// a/n
+	}
+}
+
+void output_tagged(FILE* f)
+{
+	fprintf(f, "<deck>\n");
+	Card* cw = gCardRoot;
+	while (cw)
+	{
+		Section* sw = cw->mSection;
+		while (sw)
+		{
+			Paragraph* pw = sw->mParagraph;
+			if (sw->mQuestion)
+			{
+				fprintf(f, " <card %s", gSymbol.mName[sw->mSymbol]);
+				Op* ow = pw->mOp;
+				while (ow)
+				{
+					decode_op(ow);
+					fprintf(f, " %s", gScratch);
+					ow = ow->mNext;
+				}
+				fprintf(f, ">\n");
+				pw = pw->mNext;
+			}
+			else
+			{
+				fprintf(f, "  <a %s", gSymbol.mName[sw->mSymbol]);
+				Op* ow = pw->mOp;
+				while (ow)
+				{
+					decode_op(ow);
+					fprintf(f, " %s", gScratch);
+					ow = ow->mNext;
+				}
+				fprintf(f, ">\n");
+			}
+			while (pw)
+			{
+				if (sw->mQuestion && pw->mOp != 0)
+				{					
+					fprintf(f, "   <o");
+					Op* ow = pw->mOp;
+					while (ow)
+					{
+						decode_op(ow);
+						fprintf(f, " %s", gScratch);
+						ow = ow->mNext;
+					}
+					fprintf(f, ">\n");
+					repar_string(pw->mText);
+					fprintf(f, "     <p>%s</p>\n   </o>\n", gScratch);
+				}
+				else
+				{
+					fprintf(f, "   <p>");
+					repar_string(pw->mText);
+					fprintf(f, "%s</p>\n", gScratch);
+				}
+				pw = pw->mNext;
+			}
+			if (!sw->mQuestion)
+				fprintf(f, "  </a>\n");
+			sw = sw->mNext;
+		}
+		cw = cw->mNext;
+		fprintf(f, " </card>\n");
+	}
+	fprintf(f, "</deck>");
+}
+
 void output_json(FILE* f)
 {
 	fprintf(f, "{\n \"cards\": [\n");
@@ -118,6 +273,7 @@ void output_json(FILE* f)
 
 	fprintf(f, " ]\n}\n");
 }
+
 
 void writedword(unsigned int d, FILE* f)
 {
@@ -240,13 +396,19 @@ void output(char* aFilename)
 		printf("Can't open \"%s\" for writing.\n", aFilename);
 		exit(-1);
 	}
-	if (gJsonOutput)
+	if (gOutputFormat == OUTPUT_JSON)
 	{
 		output_json(f);
 	}
 	else
+	if (gOutputFormat == OUTPUT_BINARY)
 	{
 		output_binary(f);
+	}
+	else
+	if (gOutputFormat == OUTPUT_TAGGED)
+	{
+		output_tagged(f);
 	}
 	fclose(f);
 }

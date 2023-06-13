@@ -1,6 +1,6 @@
 /*
 DialogTree (d3) engine compiler
-Copyright (c) 2020 Jari Komppa
+Copyright (c) 2020-2023 Jari Komppa
 http://iki.fi/sol
 Released under Unlicense
 
@@ -51,6 +51,13 @@ enum d3_tags
 	D3_SECT = 0x54434553,
 	D3_PARA = 0x41524150,
 	D3_SYMS = 0x534d5953
+};
+
+enum outputformats
+{
+	OUTPUT_BINARY,
+	OUTPUT_JSON,
+	OUTPUT_TAGGED
 };
 
 enum opcodeval
@@ -173,7 +180,7 @@ extern Op* gCurrentOp;
 extern int gFile;
 extern FileStack gFileStack[];
 
-extern bool gJsonOutput;
+extern int gOutputFormat;
 
 extern int gCards;
 extern int gCardNo;
