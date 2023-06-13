@@ -358,31 +358,421 @@ If the creature is still in this room after those checks, we announce it.
 
 ### Waiting
 
-image::waiting.png[Flow chart of the Waiting example,align="center"] 
+[graphviz, "waitingfull", align="center"]
+....
+digraph dialog_tree {
+	start -> p1 [ label="Now Begin", color=black, fontname="Arial", fontsize="10.0" ];
+	p1 -> p90 [ label="Turn righ", color=black, fontname="Arial", fontsize="10.0" ];
+	p1 -> p33 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p2 -> p100 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p3 -> p49 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p5 -> p87 [ label="State tha...", color=black, fontname="Arial", fontsize="10.0" ];
+	p5 -> p26 [ label="It won't ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p6 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p6 -> p11 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p6 -> p63 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p7 -> p77 [ label="Pick up a...", color=black, fontname="Arial", fontsize="10.0" ];
+	p7 -> p21 [ label="Run away ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p8 -> p49 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p9 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p9 -> p91 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p9 -> p2 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p11 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p11 -> p34 [ label="answer in...", color=black, fontname="Arial", fontsize="10.0" ];
+	p11 -> p89 [ label="answer th...", color=black, fontname="Arial", fontsize="10.0" ];
+	p11 -> p55 [ label="prefer no...", color=black, fontname="Arial", fontsize="10.0" ];
+	p12 -> p6 [ label="Answer De...", color=black, fontname="Arial", fontsize="10.0" ];
+	p12 -> p59 [ label="Answer Ho...", color=black, fontname="Arial", fontsize="10.0" ];
+	p12 -> p86 [ label="Prefer no...", color=black, fontname="Arial", fontsize="10.0" ];
+	scorecheck -> p100 [ label="goto", color=red, fontcolor=red, fontname="Arial", fontsize="10.0" ];
+	scorecheck -> p96 [ label="goto", color=red, fontcolor=red, fontname="Arial", fontsize="10.0" ];
+	p13 -> p71 [ label="Grab the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p13 -> p85 [ label="Play dead...", color=black, fontname="Arial", fontsize="10.0" ];
+	p15 -> p61 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p16 -> p61 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p17 -> p99 [ label="Ask her t...", color=black, fontname="Arial", fontsize="10.0" ];
+	p17 -> p3 [ label="Let her b", color=black, fontname="Arial", fontsize="10.0" ];
+	p19 -> p49 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p20 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p20 -> p75 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p20 -> p88 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p21 -> p53 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p22 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p22 -> p27 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p22 -> p64 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p23 -> p16 [ label="Seize the...", color=black, fontname="Arial", fontsize="10.0" ];
+	p23 -> p15 [ label="Approach ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p80 [ label="A medal, ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p73 [ label="You have ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p73 [ label="A medal", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p73 [ label="A horn", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p73 [ label="A medal a...", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p73 [ label="A wad of ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p73 [ label="A medal a...", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p73 [ label="A horn an...", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p73 [ label="A medal, ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p73 [ label="A trophy", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p73 [ label="A medal a...", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p73 [ label="A horn an...", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p73 [ label="A medal, ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p73 [ label="A wad of ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p73 [ label="A medal, ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p73 [ label="A horn, a...", color=black, fontname="Arial", fontsize="10.0" ];
+	p26 -> p94 [ label="Ask why t...", color=black, fontname="Arial", fontsize="10.0" ];
+	p26 -> p19 [ label="Recommend...", color=black, fontname="Arial", fontsize="10.0" ];
+	p27 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p27 -> p20 [ label="Answer Mu...", color=black, fontname="Arial", fontsize="10.0" ];
+	p27 -> p67 [ label="Answer Ba...", color=black, fontname="Arial", fontsize="10.0" ];
+	p27 -> p41 [ label="Stay sile...", color=black, fontname="Arial", fontsize="10.0" ];
+	p29 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p29 -> p27 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p31 -> p96 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p32 -> p38 [ label="Suggest y...", color=black, fontname="Arial", fontsize="10.0" ];
+	p32 -> p92 [ label="Keep quie...", color=black, fontname="Arial", fontsize="10.0" ];
+	p34 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p34 -> p44 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p35 -> p23 [ label="Follow th...", color=black, fontname="Arial", fontsize="10.0" ];
+	p35 -> p30 [ label="Run off i...", color=black, fontname="Arial", fontsize="10.0" ];
+	p35 -> p45 [ label="Continue ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p36 -> p49 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p37 -> p100 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p38 -> p13 [ label="Aid the s...", color=black, fontname="Arial", fontsize="10.0" ];
+	p38 -> p36 [ label="Escape wh...", color=black, fontname="Arial", fontsize="10.0" ];
+	p39 -> p17 [ label="Ask the m...", color=black, fontname="Arial", fontsize="10.0" ];
+	p39 -> p14 [ label="Ask the w...", color=black, fontname="Arial", fontsize="10.0" ];
+	p40 -> p96 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p41 -> p100 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p43 -> p32 [ label="Try and c...", color=black, fontname="Arial", fontsize="10.0" ];
+	p43 -> p58 [ label="Talk to t...", color=black, fontname="Arial", fontsize="10.0" ];
+	p44 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p44 -> p98 [ label="Answer Mu...", color=black, fontname="Arial", fontsize="10.0" ];
+	p44 -> p9 [ label="Answer In...", color=black, fontname="Arial", fontsize="10.0" ];
+	p44 -> p84 [ label="Remain si...", color=black, fontname="Arial", fontsize="10.0" ];
+	p45 -> p23 [ label="Follow th...", color=black, fontname="Arial", fontsize="10.0" ];
+	p45 -> p30 [ label="Run in th...", color=black, fontname="Arial", fontsize="10.0" ];
+	p47 -> p8 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p49 -> p76 [ label="Red?", color=black, fontname="Arial", fontsize="10.0" ];
+	p49 -> p82 [ label="Green?", color=black, fontname="Arial", fontsize="10.0" ];
+	p49 -> p39 [ label="Pink?", color=black, fontname="Arial", fontsize="10.0" ];
+	p49 -> p12 [ label="Yellow?", color=black, fontname="Arial", fontsize="10.0" ];
+	p49 -> p25 [ label="White?", color=black, fontname="Arial", fontsize="10.0" ];
+	p51 -> p53 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p53 -> p23 [ label="Follow th...", color=black, fontname="Arial", fontsize="10.0" ];
+	p53 -> p30 [ label="Run off i...", color=black, fontname="Arial", fontsize="10.0" ];
+	p54 -> p95 [ label="Agree wit...", color=black, fontname="Arial", fontsize="10.0" ];
+	p54 -> p57 [ label="Ask the w...", color=black, fontname="Arial", fontsize="10.0" ];
+	p55 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p55 -> p44 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p56 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p56 -> p44 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p57 -> p81 [ label="Agree tha...", color=black, fontname="Arial", fontsize="10.0" ];
+	p57 -> p79 [ label="Say that ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p58 -> p13 [ label="Aid the s...", color=black, fontname="Arial", fontsize="10.0" ];
+	p58 -> p36 [ label="Escape wh...", color=black, fontname="Arial", fontsize="10.0" ];
+	p59 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p59 -> p11 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p61 -> p49 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p63 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p63 -> p11 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p64 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p64 -> p27 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p65 -> p57 [ label="Ask her w...", color=black, fontname="Arial", fontsize="10.0" ];
+	p65 -> p5 [ label="Ask him w...", color=black, fontname="Arial", fontsize="10.0" ];
+	p66 -> p51 [ label="Stay wher...", color=black, fontname="Arial", fontsize="10.0" ];
+	p66 -> p97 [ label="Hide amon...", color=black, fontname="Arial", fontsize="10.0" ];
+	p67 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p67 -> p75 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p71 -> p49 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p74 -> p49 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p75 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p75 -> p37 [ label="Answer Ke...", color=black, fontname="Arial", fontsize="10.0" ];
+	p75 -> p40 [ label="Answer Da...", color=black, fontname="Arial", fontsize="10.0" ];
+	p75 -> p31 [ label="Keep sile...", color=black, fontname="Arial", fontsize="10.0" ];
+	p76 -> p74 [ label="Retreat b...", color=black, fontname="Arial", fontsize="10.0" ];
+	p76 -> p43 [ label="Stick aro...", color=black, fontname="Arial", fontsize="10.0" ];
+	p77 -> p53 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p79 -> p94 [ label="Ask why t...", color=black, fontname="Arial", fontsize="10.0" ];
+	p79 -> p19 [ label="Recommend...", color=black, fontname="Arial", fontsize="10.0" ];
+	p81 -> p49 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p82 -> p7 [ label="Investiga...", color=black, fontname="Arial", fontsize="10.0" ];
+	p82 -> p66 [ label="Head away...", color=black, fontname="Arial", fontsize="10.0" ];
+	p83 -> p49 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p84 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p84 -> p91 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p85 -> p49 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p86 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p86 -> p11 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p87 -> p49 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p88 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p88 -> p75 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p89 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p89 -> p44 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p89 -> p56 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p90 -> p28 [ label="Accept", color=black, fontname="Arial", fontsize="10.0" ];
+	p90 -> p49 [ label="Press on ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p91 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p91 -> p29 [ label="Answer An...", color=black, fontname="Arial", fontsize="10.0" ];
+	p91 -> p22 [ label="Answer Pl...", color=black, fontname="Arial", fontsize="10.0" ];
+	p91 -> p47 [ label="Say nothi...", color=black, fontname="Arial", fontsize="10.0" ];
+	p92 -> p13 [ label="Aid the s...", color=black, fontname="Arial", fontsize="10.0" ];
+	p92 -> p36 [ label="Escape wh...", color=black, fontname="Arial", fontsize="10.0" ];
+	p93 -> p8 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p94 -> p49 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p95 -> p49 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p96 -> p8 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p97 -> p35 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p98 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p98 -> p91 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p14 -> p54 [ label="Let him i...", color=black, fontname="Arial", fontsize="10.0" ];
+	p14 -> p65 [ label="Tell him ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p99 -> p54 [ label="Let him i...", color=black, fontname="Arial", fontsize="10.0" ];
+	p99 -> p65 [ label="Tell him ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p100 -> p93 [ label="Mystery P...", color=black, fontname="Arial", fontsize="10.0" ];
+	p100 -> p83 [ label="The car", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p72 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p18 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p62 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p48 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p52 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p78 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p24 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p68 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p46 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p42 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p50 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p60 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p69 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p10 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p70 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p4 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+}
+....
 
 This is the complete "Waiting for the Light" gamebook by Kieran Coghlan, consisting of
 a hundred locations, flags and numbers, converted to MuCho, the zx spectrum predecessor of DialogTree. 
-The MuCho version was done with persmission of the author. 
+The MuCho version was done with persmission of the author.
+
+This also works as a demonstration of d3 compiler's graphviz (.dot) export - the graphs here are based on said output.
 
 To understand the structure, let's look at some sub-graphs.
 
-image::waiting_base.png[Flow chart of the Waiting example: base pages,align="center"]
+[graphviz, "waitingbase", align="center"]
+....
+digraph dialog_tree {
+	start -> p1 [ label="Now Begin", color=black, fontname="Arial", fontsize="10.0" ];
+	p1 -> p90 [ label="Turn righ", color=black, fontname="Arial", fontsize="10.0" ];
+	p1 -> p33 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p90 -> p28 [ label="Accept", color=black, fontname="Arial", fontsize="10.0" ];
+	p90 -> p49 [ label="Press on ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p49 -> p25 [ label="White?", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p80 [ label="A medal, ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p25 -> p73 [ label="You have ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p72 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p18 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p62 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p48 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p52 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p78 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p24 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p68 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p46 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p42 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p50 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p60 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p69 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p10 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p70 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p80 -> p4 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+}
+....
 
 The base structure is as follows: we start, have a couple simple trap choices, then arrive at the hall of lights (page 49), visit some other segments but eventually pick the white light (page 25) which checks if we've gone through all the other segments (via checking the various items), and then presents one of the 16 endings depending on the player choices in the other colored light segments.
 
-image::waiting_green.png[Flow chart of the Waiting example: green pages,align="center"] 
+[graphviz, "waitinggreen", align="center"]
+....
+digraph dialog_tree {
+    p49_in[label="p49"];
+    p49_out[label="p49"];
+	p49_in -> p82 [ label="Green?", color=black, fontname="Arial", fontsize="10.0" ];
+	p82 -> p7 [ label="Investiga...", color=black, fontname="Arial", fontsize="10.0" ];
+	p82 -> p66 [ label="Head away...", color=black, fontname="Arial", fontsize="10.0" ];
+	p7 -> p77 [ label="Pick up a...", color=black, fontname="Arial", fontsize="10.0" ];
+	p7 -> p21 [ label="Run away ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p21 -> p53 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p77 -> p53 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p66 -> p51 [ label="Stay wher...", color=black, fontname="Arial", fontsize="10.0" ];
+	p66 -> p97 [ label="Hide amon...", color=black, fontname="Arial", fontsize="10.0" ];
+	p51 -> p53 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p97 -> p35 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p53 -> p23 [ label="Follow th...", color=black, fontname="Arial", fontsize="10.0" ];
+	p53 -> p30 [ label="Run off i...", color=black, fontname="Arial", fontsize="10.0" ];
+	p35 -> p23 [ label="Follow th...", color=black, fontname="Arial", fontsize="10.0" ];
+	p35 -> p30 [ label="Run off i...", color=black, fontname="Arial", fontsize="10.0" ];
+	p35 -> p45 [ label="Continue ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p45 -> p23 [ label="Follow th...", color=black, fontname="Arial", fontsize="10.0" ];
+	p45 -> p30 [ label="Run in th...", color=black, fontname="Arial", fontsize="10.0" ];
+	p23 -> p16 [ label="Seize the...", color=black, fontname="Arial", fontsize="10.0" ];
+	p23 -> p15 [ label="Approach ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p15 -> p61 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p16 -> p61 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p61 -> p49_out [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+}
+....
 
 The green segment is relatively simple (in context of this gamebook). Note that the player can die here in a few ways (p30). In the end, the player can either be kill the beast or not (pages 15 and 16).
 
-image::waiting_pink.png[Flow chart of the Waiting example: pink pages,align="center"] 
+[graphviz, "waitingpink", align="center"]
+....
+digraph dialog_tree {
+    p49_in[label="p49"];
+    p49_out[label="p49"];
+
+	p49_in -> p39 [ label="Pink?", color=black, fontname="Arial", fontsize="10.0" ];
+	p39 -> p17 [ label="Ask the m...", color=black, fontname="Arial", fontsize="10.0" ];
+	p39 -> p14 [ label="Ask the w...", color=black, fontname="Arial", fontsize="10.0" ];
+	p17 -> p99 [ label="Ask her t...", color=black, fontname="Arial", fontsize="10.0" ];
+	p17 -> p3 [ label="Let her b", color=black, fontname="Arial", fontsize="10.0" ];
+	p3 -> p49_out [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p99 -> p54 [ label="Let him i...", color=black, fontname="Arial", fontsize="10.0" ];
+	p99 -> p65 [ label="Tell him ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p14 -> p54 [ label="Let him i...", color=black, fontname="Arial", fontsize="10.0" ];
+	p14 -> p65 [ label="Tell him ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p65 -> p57 [ label="Ask her w...", color=black, fontname="Arial", fontsize="10.0" ];
+	p65 -> p5 [ label="Ask him w...", color=black, fontname="Arial", fontsize="10.0" ];
+	p54 -> p95 [ label="Agree wit...", color=black, fontname="Arial", fontsize="10.0" ];
+	p54 -> p57 [ label="Ask the w...", color=black, fontname="Arial", fontsize="10.0" ];
+	p5 -> p87 [ label="State tha...", color=black, fontname="Arial", fontsize="10.0" ];
+	p5 -> p26 [ label="It won't ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p57 -> p81 [ label="Agree tha...", color=black, fontname="Arial", fontsize="10.0" ];
+	p57 -> p79 [ label="Say that ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p95 -> p49_out [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p87 -> p49_out [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p26 -> p94 [ label="Ask why t...", color=black, fontname="Arial", fontsize="10.0" ];
+	p26 -> p19 [ label="Recommend...", color=black, fontname="Arial", fontsize="10.0" ];
+	p79 -> p94 [ label="Ask why t...", color=black, fontname="Arial", fontsize="10.0" ];
+	p79 -> p19 [ label="Recommend...", color=black, fontname="Arial", fontsize="10.0" ];
+	p81 -> p49_out [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p19 -> p49_out [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p94 -> p49_out [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+}
+....
 
 The pink segment represents a relatively complex dialogue. Basically you get to recommend various options, one being a good one and the rest are less so.
 
-image::waiting_red.png[Flow chart of the Waiting example: red pages,align="center"]
+[graphviz, "waitingred", align="center"]
+....
+digraph dialog_tree {
+    p49_in[label="p49"];
+    p49_out[label="p49"];
+	p49_in -> p76 [ label="Red?", color=black, fontname="Arial", fontsize="10.0" ];
+	p76 -> p74 [ label="Retreat b...", color=black, fontname="Arial", fontsize="10.0" ];
+	p76 -> p43 [ label="Stick aro...", color=black, fontname="Arial", fontsize="10.0" ];
+	p43 -> p32 [ label="Try and c...", color=black, fontname="Arial", fontsize="10.0" ];
+	p43 -> p58 [ label="Talk to t...", color=black, fontname="Arial", fontsize="10.0" ];
+	p74 -> p49_out [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p32 -> p38 [ label="Suggest y...", color=black, fontname="Arial", fontsize="10.0" ];
+	p32 -> p92 [ label="Keep quie...", color=black, fontname="Arial", fontsize="10.0" ];
+	p92 -> p13 [ label="Aid the s...", color=black, fontname="Arial", fontsize="10.0" ];
+	p92 -> p36 [ label="Escape wh...", color=black, fontname="Arial", fontsize="10.0" ];
+	p38 -> p13 [ label="Aid the s...", color=black, fontname="Arial", fontsize="10.0" ];
+	p38 -> p36 [ label="Escape wh...", color=black, fontname="Arial", fontsize="10.0" ];
+	p58 -> p13 [ label="Aid the s...", color=black, fontname="Arial", fontsize="10.0" ];
+	p58 -> p36 [ label="Escape wh...", color=black, fontname="Arial", fontsize="10.0" ];
+	p13 -> p71 [ label="Grab the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p13 -> p85 [ label="Play dead...", color=black, fontname="Arial", fontsize="10.0" ];
+	p36 -> p49_out [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p85 -> p49_out [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p71 -> p49_out [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+}
+....
 
 The red segment is again relatively simple, in the end you get to pick whether to be aggressive or not.
 
-image::waiting_yellow.png[Flow chart of the Waiting example: yellow pages,align="center"] 
+[graphviz, "waitingyellow", align="center"]
+....
+digraph dialog_tree {
+    p49_in[label="p49"];
+    p49_out[label="p49"];
+
+	p49_in -> p12 [ label="Yellow?", color=black, fontname="Arial", fontsize="10.0" ];
+	p12 -> p6 [ label="Answer De...", color=black, fontname="Arial", fontsize="10.0" ];
+	p12 -> p59 [ label="Answer Ho...", color=black, fontname="Arial", fontsize="10.0" ];
+	p12 -> p86 [ label="Prefer no...", color=black, fontname="Arial", fontsize="10.0" ];
+	p59 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p59 -> p11 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p6 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p6 -> p11 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p6 -> p63 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p86 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p86 -> p11 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p63 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p63 -> p11 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p11 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p11 -> p34 [ label="answer in...", color=black, fontname="Arial", fontsize="10.0" ];
+	p11 -> p89 [ label="answer th...", color=black, fontname="Arial", fontsize="10.0" ];
+	p11 -> p55 [ label="prefer no...", color=black, fontname="Arial", fontsize="10.0" ];
+	p34 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p34 -> p44 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p55 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p55 -> p44 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p89 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p89 -> p44 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p89 -> p56 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p56 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p56 -> p44 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p44 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p44 -> p98 [ label="Answer Mu...", color=black, fontname="Arial", fontsize="10.0" ];
+	p44 -> p9 [ label="Answer In...", color=black, fontname="Arial", fontsize="10.0" ];
+	p44 -> p84 [ label="Remain si...", color=black, fontname="Arial", fontsize="10.0" ];
+	p84 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p84 -> p91 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p98 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p98 -> p91 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p9 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p9 -> p91 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p9 -> p2 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p2 -> p100 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p91 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p91 -> p29 [ label="Answer An...", color=black, fontname="Arial", fontsize="10.0" ];
+	p91 -> p22 [ label="Answer Pl...", color=black, fontname="Arial", fontsize="10.0" ];
+	p91 -> p47 [ label="Say nothi...", color=black, fontname="Arial", fontsize="10.0" ];
+	p47 -> p8 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p29 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p29 -> p27 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p22 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p22 -> p27 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p22 -> p64 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p64 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p64 -> p27 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p27 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p27 -> p20 [ label="Answer Mu...", color=black, fontname="Arial", fontsize="10.0" ];
+	p27 -> p67 [ label="Answer Ba...", color=black, fontname="Arial", fontsize="10.0" ];
+	p27 -> p41 [ label="Stay sile...", color=black, fontname="Arial", fontsize="10.0" ];
+	p20 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p20 -> p75 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p20 -> p88 [ label="Take the ...", color=black, fontname="Arial", fontsize="10.0" ];
+	p67 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p67 -> p75 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p41 -> p100 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p88 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p88 -> p75 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p75 -> scorecheck [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	p75 -> p37 [ label="Answer Ke...", color=black, fontname="Arial", fontsize="10.0" ];
+	p75 -> p40 [ label="Answer Da...", color=black, fontname="Arial", fontsize="10.0" ];
+	p75 -> p31 [ label="Keep sile...", color=black, fontname="Arial", fontsize="10.0" ];
+	p31 -> p96 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p40 -> p96 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p37 -> p100 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	scorecheck -> p100 [ label="goto", color=red, fontcolor=red, fontname="Arial", fontsize="10.0" ];
+	scorecheck -> p96 [ label="goto", color=red, fontcolor=red, fontname="Arial", fontsize="10.0" ];
+	p93 -> p8 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p8 -> p49_out [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p83 -> p49_out [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	p100 -> p93 [ label="Mystery P...", color=black, fontname="Arial", fontsize="10.0" ];
+	p100 -> p83 [ label="The car", color=black, fontname="Arial", fontsize="10.0" ];
+	p96 -> p8 [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+}
+....
 
 The yellow segment is super complicated: it's a game show. Not only can you answer right or wrong, or let the opponent answer instead, if you get the answers right, you can either take a point or take a card that has various results. And if either you or your opponent reaches 3 points, you hop to an ending.
 
