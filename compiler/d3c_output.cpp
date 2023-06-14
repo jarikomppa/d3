@@ -9,6 +9,28 @@ See d3c.h for details
 
 #include "d3c.h"
 
+bool has_newline(const char* s)
+{
+	while (*s)
+	{
+		if (*s == '\n')
+			return true;
+		s++;
+	}
+	return false;
+}
+
+bool end_newline(const char* s)
+{
+	while (*s)
+	{
+		s++;
+	}
+	if (s[-1] == '\n')
+		return true;
+	return false;
+}
+
 void escape_string(char* s)
 {
 	gScratch[0] = 0;
@@ -61,27 +83,17 @@ void repar_string(char* s)
 	char* o = gScratch;
 	while (*s)
 	{
-		if (*s == '\n')
+		if (*s == '\n' && s[1])
 		{
-			*o = '<'; o++;
-			*o = '/'; o++;
-			*o = 'p'; o++;
-			*o = '>'; o++;
-			*o = '\n'; o++;
-			*o = ' '; o++;
-			*o = ' '; o++;
-			*o = ' '; o++;
-			*o = ' '; o++;
-			*o = ' '; o++;
-			*o = '<'; o++;
-			*o = 'p'; o++;
-			*o = '>';
+			o += snprintf(o, 65536, "</p>\n");
+			o += snprintf(o, 65536, "   <%s>", has_newline(s+1) ? "p" : "o");
 		}
 		else
+		if (*s != '\n')
 		{
 			*o = *s;
+			o++;
 		}
-		o++;
 		s++;
 	}
 	*o = 0;
@@ -136,6 +148,23 @@ void decode_op(Op* op)
 	}
 }
 
+void fprintf_ops(FILE *f, Op* op)
+{
+	if (op)
+	{
+		fprintf(f, " op=\"");
+		bool first = true;
+		while (op)
+		{
+			decode_op(op);
+			fprintf(f, "%s%s", first ? "" : " ", gScratch);
+			first = false;
+			op = op->mNext;
+		}
+		fprintf(f, "\"");
+	}
+}
+
 void output_tagged(FILE* f)
 {
 	fprintf(f, "<deck>\n");
@@ -149,49 +178,32 @@ void output_tagged(FILE* f)
 			if (sw->mQuestion)
 			{
 				fprintf(f, " <card %s", gSymbol.mName[sw->mSymbol]);
-				Op* ow = pw->mOp;
-				while (ow)
-				{
-					decode_op(ow);
-					fprintf(f, " %s", gScratch);
-					ow = ow->mNext;
-				}
+				fprintf_ops(f, pw->mOp);
 				fprintf(f, ">\n");
 				pw = pw->mNext;
 			}
 			else
 			{
 				fprintf(f, "  <a %s", gSymbol.mName[sw->mSymbol]);
-				Op* ow = pw->mOp;
-				while (ow)
-				{
-					decode_op(ow);
-					fprintf(f, " %s", gScratch);
-					ow = ow->mNext;
-				}
+				fprintf_ops(f, pw->mOp);
 				fprintf(f, ">\n");
 			}
+
 			while (pw)
 			{
-				if (sw->mQuestion && pw->mOp != 0)
-				{					
-					fprintf(f, "   <o");
-					Op* ow = pw->mOp;
-					while (ow)
-					{
-						decode_op(ow);
-						fprintf(f, " %s", gScratch);
-						ow = ow->mNext;
-					}
-					fprintf(f, ">\n");
+				if (sw->mQuestion)
+				{
+					fprintf(f, "   <%s", has_newline(pw->mText) ? "p" : "o");
+					fprintf_ops(f, pw->mOp);
+					fprintf(f, ">");
 					repar_string(pw->mText);
-					fprintf(f, "     <p>%s</p>\n   </o>\n", gScratch);
+					fprintf(f, "%s</%s>\n", gScratch, end_newline(pw->mText) ? "p" : "o");
 				}
 				else
 				{
-					fprintf(f, "   <p>");
+					fprintf(f, "   <%s>", has_newline(pw->mText) ? "p" : "o");
 					repar_string(pw->mText);
-					fprintf(f, "%s</p>\n", gScratch);
+					fprintf(f, "%s</%s>\n", gScratch, end_newline(pw->mText) ? "p" : "o");
 				}
 				pw = pw->mNext;
 			}
