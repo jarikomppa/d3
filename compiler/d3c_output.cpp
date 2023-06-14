@@ -217,6 +217,75 @@ void output_tagged(FILE* f)
 	fprintf(f, "</deck>");
 }
 
+void fprintf_ops_template(FILE* f, Op* op)
+{
+	if (op)
+	{
+		while (op)
+		{
+			decode_op(op);
+			fprintf(f, " %s", gScratch);
+			op = op->mNext;
+		}
+	}
+}
+
+void fprintf_doublenl(FILE* f, char *s)
+{
+	while (*s)
+	{
+		fprintf(f, "%c", *s);
+		if (*s == '\n')
+			fprintf(f, "%c", *s);
+		s++;
+	}
+}
+
+void output_template(FILE* f)
+{
+	Card* cw = gCardRoot;
+	while (cw)
+	{
+		Section* sw = cw->mSection;
+		while (sw)
+		{
+			Paragraph* pw = sw->mParagraph;
+			if (sw->mQuestion)
+			{
+				fprintf(f, "$Q %s", gSymbol.mName[sw->mSymbol]);
+				fprintf_ops_template(f, pw->mOp);
+				fprintf(f, "\n");
+				pw = pw->mNext;
+			}
+			else
+			{
+				fprintf(f, "$A %s", gSymbol.mName[sw->mSymbol]);
+				fprintf_ops_template(f, pw->mOp);
+				fprintf(f, "\n");
+			}
+
+			while (pw)
+			{
+				if (sw->mQuestion && pw->mOp)
+				{
+					fprintf(f, "$P");
+					fprintf_ops(f, pw->mOp);
+					fprintf(f, "\n");
+					fprintf_doublenl(f, pw->mText);
+				}
+				else
+				{
+					fprintf_doublenl(f, pw->mText);
+					fprintf(f, "\n");
+				}
+				pw = pw->mNext;
+			}
+			sw = sw->mNext;
+		}
+		cw = cw->mNext;
+	}
+}
+
 void output_json(FILE* f)
 {
 	fprintf(f, "{\n \"cards\": [\n");
@@ -408,19 +477,22 @@ void output(char* aFilename)
 		printf("Can't open \"%s\" for writing.\n", aFilename);
 		exit(-1);
 	}
-	if (gOutputFormat == OUTPUT_JSON)
+	switch (gOutputFormat)
 	{
+	case OUTPUT_JSON:
 		output_json(f);
-	}
-	else
-	if (gOutputFormat == OUTPUT_BINARY)
-	{
+		break;
+	case OUTPUT_BINARY:
 		output_binary(f);
-	}
-	else
-	if (gOutputFormat == OUTPUT_TAGGED)
-	{
+		break;
+	case OUTPUT_TAGGED:
 		output_tagged(f);
+		break;
+	case OUTPUT_TEMPLATE:
+		output_template(f);
+		break;
+	default:
+		printf("No output\n");
 	}
 	fclose(f);
 }

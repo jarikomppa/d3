@@ -75,6 +75,7 @@ int main(int aParc, char** aPars)
 			"  -d   Output graphviz .dot file for debugging (.dot)\n"
 			"  -j   JSON output\n"
 			"  -x   tag-d3 format output\n"
+			"  -c   template-d3 format output\n"
 			"  -b   Binary output (default)\n",
 			aPars[0]);
 		return -1;
@@ -113,6 +114,10 @@ int main(int aParc, char** aPars)
 			case 'x':
 			case 'X':
 				gOutputFormat = OUTPUT_TAGGED;
+				break;
+			case 'c':
+			case 'C':
+				gOutputFormat = OUTPUT_TEMPLATE;
 				break;
 			case 'b':
 			case 'B':

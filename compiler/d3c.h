@@ -57,7 +57,8 @@ enum outputformats
 {
 	OUTPUT_BINARY,
 	OUTPUT_JSON,
-	OUTPUT_TAGGED
+	OUTPUT_TAGGED,
+	OUTPUT_TEMPLATE
 };
 
 enum opcodeval
