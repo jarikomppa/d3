@@ -17,3 +17,8 @@ include::examples.adoc[]
 
 include::engines.adoc[]
 
+## Future topics
+
+- Localization
+- Voiceover
+- Post-release patching strategies

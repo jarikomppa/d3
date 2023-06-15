@@ -20,7 +20,7 @@ digraph {
 }
 ....
 
-Think of each box as a page in a book, and at the bottom of each page you'll find something in the lines of, "Turn to page 32 if you want to..".
+Think of each node as a page in a book, and at the bottom of each page you'll find something in the lines of, "Turn to page 32 if you want to..".
 
 These "decks" are written in DialogTree story definition language. Large portion of this document covers this process. For most uses,
 the format is trivial, but DialogTree offers functionality to make very complicated dialogues.

@@ -536,6 +536,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_c_engine">C Engine</a></li>
 <li><a href="#_c_engine_2">C++ Engine</a></li>
 <li><a href="#_javascript_engine">JavaScript Engine</a></li>
+<li><a href="#_future_topics">Future topics</a></li>
 </ul>
 </li>
 </ul>
@@ -559,7 +560,7 @@ field and zero or more "answer" fields. Each answer then tells which card should
 </div>
 </div>
 <div class="paragraph">
-<p>Think of each box as a page in a book, and at the bottom of each page you&#8217;ll find something in the lines of, "Turn to page 32 if you want to..".</p>
+<p>Think of each node as a page in a book, and at the bottom of each page you&#8217;ll find something in the lines of, "Turn to page 32 if you want to..".</p>
 </div>
 <div class="paragraph">
 <p>These "decks" are written in DialogTree story definition language. Large portion of this document covers this process. For most uses,
@@ -661,7 +662,7 @@ OTHER DEALINGS IN THE SOFTWARE.</p>
 <div class="openblock partintro">
 <div class="content">
 <div class="paragraph">
-<p>The DialogTree story definition language may sound scary, but it is actually very simple. The DialogTree scripts are plain text files, such as those that can be created with Windows Notepad, although the author recommends using something more advanced, such as Visual Studio Code, Sublime Text or Notepad++.</p>
+<p>The "DialogTree story definition language" may sound scary, but it is actually very simple. The DialogTree scripts are plain text files, such as those that can be created with Windows Notepad, although the author recommends using something more advanced, such as Visual Studio Code, Sublime Text or Notepad++.</p>
 </div>
 <div class="paragraph">
 <p>Not all of the features of the language are needed to write adventures; this document is structured so that more complicated features are described later, so you won&#8217;t need to read all of it to get started. If something feels complicated, don&#8217;t worry about it - you can come back to it later.</p>
@@ -692,7 +693,7 @@ OTHER DEALINGS IN THE SOFTWARE.</p>
 <p>Consider the computer asking the user a question, and offering several possible answers for the question.</p>
 </div>
 <div class="paragraph">
-<p>The script for a simple page looks like this in the template format:</p>
+<p>The script for a simple card looks like this in the template format:</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -757,7 +758,7 @@ Go to other room</pre>
 <p>If a card has no $A lines, it is considered an "end node", and the dialogue ends if player ends up on that page.</p>
 </div>
 <div class="paragraph">
-<p>The same in tagged format is a bit more verbose, but the you get more control over how whitespace works.</p>
+<p>The same in tagged format is a bit more verbose, but you get more control over how whitespace works.</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -799,27 +800,21 @@ Go to other room</pre>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>All of
-these go
-on the
-same line.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>This is a new paragraph.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>Adding   more   spaces   does   nothing.</pre>
+<pre>    All of
+    these go
+    on the
+    same line.
+
+    This is a new paragraph.
+
+        Adding   more   spaces   does   nothing.</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>To add an empty line, use the $P line (see below).</p>
 </div>
 <div class="paragraph">
-<p>In tagged format, you get exactly what you ask for.</p>
+<p>In tagged format, you get exactly what you ask for, and any additional whitespace you might put in is not removed.</p>
 </div>
 </div>
 <div class="sect2">
@@ -872,7 +867,7 @@ You can see some mushrooms here.</pre>
 <h2 id="_flags">Flags</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In addition to the basic structure of the cards, flags can be used to introduce more complicated behavior. By default, every time the player goes to a card, the flag with the card&#8217;s name is turned on. Using these, an optional part can be added to a card&#8217;s description.</p>
+<p>In addition to the basic structure of the cards, flags can be used to introduce more complicated behavior. By default, every time the player starts a new card, the flag with the card&#8217;s identifier is turned on. Using these, an optional part can easily be added to a card&#8217;s description.</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -886,7 +881,7 @@ You remember seeing the bad guys inside when you were at the back yard.</pre>
 <p>In this example the "You remember.." line is only shown if the player has visited the backyard page before ending up here.</p>
 </div>
 <div class="paragraph">
-<p>In tagged format, all operations are added with the op="" attribute:</p>
+<p>In tagged format, all operations are added using the op="" attribute:</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -969,6 +964,17 @@ Enter the mine through the cleared tunnel.</pre>
 <div class="paragraph">
 <p>If flag check is used with the $Q line, any other commands on that same line are only executed if the flag check is positive. (See below for the other commands). The card itself is still displayed.</p>
 </div>
+<div class="paragraph">
+<p>Multiple flags can be checked at once, and only if all of them are satisfied, text appears:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$P tuesday !wallet
+There's a wallet on the street.
+$P hammer toolbox
+Both of your hands are full.</pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_setting_flags">Setting Flags</h3>
@@ -983,6 +989,9 @@ Place the trap just outside the door.</pre>
 </div>
 <div class="paragraph">
 <p>If used with the $A line, the command is performed if the player picks the line. If used on a $Q, $P or $O line, the command is performed if the line&#8217;s flag check succeeds.</p>
+</div>
+<div class="paragraph">
+<p>By default, all cards have an implicit set:cardname command in their $Q line.</p>
 </div>
 <div class="paragraph">
 <p>Setting a flag that is already on is legal, but has no effect.</p>
@@ -1050,8 +1059,9 @@ Drink from the fountain</pre>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>$A tavern temp=player_money player_money=stranger_money stranger_money=temp
-Swap purses with the stranger</pre>
+<pre>&lt;a tavern op="temp=player_money player_money=stranger_money stranger_money=temp"&gt;
+ &lt;p&gt;Swap purses with the stranger&lt;/p&gt;
+&lt;/a&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1087,16 +1097,6 @@ Drink from the healing potion</pre>
 <div class="content">
 <pre>$A fountain score+=3 darts-=1 darts&gt;0
 Throw a dart at the board</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Here&#8217;s the last example in the tagged format:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>&lt;a fountain op="score+=3 darts-=1 darts&gt;0"&gt;
- &lt;p&gt;Throw a dart at the board&lt;/p&gt;
-&lt;/a&gt;</pre>
 </div>
 </div>
 </div>
@@ -1162,7 +1162,7 @@ these characters.</p>
 <pre>$Q store
 The shopkeeper polishes an apple while he's waiting for you
 to make a selection. You currently have &lt;&lt;gold&gt;&gt; gold.
-$A store gold&gt;5 gold-5 set:dagger
+$A store gold&gt;=5 gold-5 set:dagger
 Buy the dagger for 5 gold</pre>
 </div>
 </div>
@@ -1206,6 +1206,15 @@ $O bird=parrot</pre>
 </div>
 <div class="paragraph">
 <p>This will create a new numeric variable called "parrot", which will live alongside the flag "parrot". The compiler will warn you if you try to do this.</p>
+</div>
+<div class="paragraph">
+<p>What does work is checking for the flag and using number assignment:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$O parrot bird=1
+$O !parrot bird=0</pre>
+</div>
 </div>
 </div>
 </div>
@@ -1334,7 +1343,7 @@ $O bird=parrot</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>However, flag check is always performed first, and only if the whole flag check succeeds, the other commands are executed. Thus, if you write something as convoluted as:</p>
+<p>However, flag check is always performed first, and only if the whole flag check succeeds, the other commands are executed. (Random and numeric value comparisons are also part of this flag check). Thus, if you write something as convoluted as:</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -1357,7 +1366,7 @@ $O bird=parrot</pre>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>$O attr=7 apple cls=1 banana rnd:25 orange set:strawberry</pre>
+<pre>$O attr=7 apple cls=1 banana&gt;3 rnd:25 orange set:strawberry</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1365,8 +1374,8 @@ $O bird=parrot</pre>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>If apple is on, and banana is on,
-and random is less than 25 and orange is on:
+<pre>If apple is on, AND banana is bigger than 3,
+AND random is less than 25 AND orange is on:
     Set attr to 7
     Set cls to 1
     Set strawberry</pre>
@@ -1376,7 +1385,18 @@ and random is less than 25 and orange is on:
 <p>To reiterate: first everything that affects whether the line should be executed is evaluated, and only then the rest are executed, assuming all of those things turn out to be true.</p>
 </div>
 <div class="paragraph">
-<p>If any of the checks fail, the rest are not executed.</p>
+<p>Here&#8217;s another corner case:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$P alpha go:elsewhere beta set:gamma</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the above case the alpha and beta flags are checked first, then the go:elsewhere is executed and set:gamma is never reached.</p>
+</div>
+<div class="paragraph">
+<p>If any of the checks fail, the rest of the operations are not executed.</p>
 </div>
 <div class="paragraph">
 <p>In case of $A blocks, in addition to the $A line itself being predicated, the answer is only included if it produces any text (i.e, if there is at least one paragraph that is not predicated away), but the commands are only executed when the option is selected.</p>
@@ -1439,7 +1459,7 @@ $I legalese.txt</pre>
 <div class="sect2">
 <h3 id="_using_several_decks">Using Several Decks</h3>
 <div class="paragraph">
-<p>When using several decks you can share the same persistent state between all of the decks. This may make keeping track of the symbols can be rather difficult, but lets different decks make checks based on symbold used in another deck. As mentioned before (in deck configuration), every deck can have a prefix set using the config statement:</p>
+<p>When using several decks you can share the same persistent state between all of the decks. This may make keeping track of the symbols can be rather difficult, but lets different decks make checks based on symbols used in another deck. As mentioned before (in deck configuration), every deck can have a prefix set using the config statement:</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -1454,6 +1474,27 @@ $I legalese.txt</pre>
 </div>
 <div class="paragraph">
 <p>It is also possible to have several decks with the same prefix. This can be useful if you have several discussions with the same NPC.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s a larger example:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>    $C lisa
+    $Q entry
+    How may I help you?
+    $A milkshake joe.milkshake
+    Joe told me about this milkshake..</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>    $C joe
+    $Q entry
+    Yo dude, what's up?
+    $A thanks lisa.milkshake
+    You were right, Lisa's milkshake was great!</pre>
+</div>
 </div>
 </div>
 </div>
@@ -2397,10 +2438,28 @@ dialogs as simple as possible. The interfaces follow this pattern:</p>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_future_topics">Future topics</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Localization</p>
+</li>
+<li>
+<p>Voiceover</p>
+</li>
+<li>
+<p>Post-release patching strategies</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-06-13 09:58:51 +0300
+Last updated 2023-06-15 15:53:23 +0300
 </div>
 </div>
 </body>

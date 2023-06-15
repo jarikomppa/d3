@@ -1,6 +1,6 @@
 # DialogTree Story Definition Language
 
-The DialogTree story definition language may sound scary, but it is actually very simple. The DialogTree scripts are plain text files, such as those that can be created with Windows Notepad, although the author recommends using something more advanced, such as Visual Studio Code, Sublime Text or Notepad++.
+The "DialogTree story definition language" may sound scary, but it is actually very simple. The DialogTree scripts are plain text files, such as those that can be created with Windows Notepad, although the author recommends using something more advanced, such as Visual Studio Code, Sublime Text or Notepad++.
 
 Not all of the features of the language are needed to write adventures; this document is structured so that more complicated features are described later, so you won't need to read all of it to get started. If something feels complicated, don't worry about it - you can come back to it later.
 
@@ -18,7 +18,7 @@ Structure of a multiple choice adventure is based on cards (other used terms inc
 
 Consider the computer asking the user a question, and offering several possible answers for the question.
 
-The script for a simple page looks like this in the template format:
+The script for a simple card looks like this in the template format:
 
     $Q roomname
     The description of the room
@@ -73,7 +73,7 @@ It is also perfectly legal for a card to have an choice which goes back to the s
 
 If a card has no $A lines, it is considered an "end node", and the dialogue ends if player ends up on that page.
 
-The same in tagged format is a bit more verbose, but the you get more control over how whitespace works.
+The same in tagged format is a bit more verbose, but you get more control over how whitespace works.
 
 ....
     <deck>
@@ -112,6 +112,7 @@ The same in tagged format is a bit more verbose, but the you get more control ov
 
 The text in the page descriptions is automatically formatted, removing any unnecessary "white space" like line breaks or additional spaces. To start a new paragraph, add an empty line in your text.
 
+....
     All of
     these go
     on the
@@ -120,10 +121,11 @@ The text in the page descriptions is automatically formatted, removing any unnec
     This is a new paragraph.
     
         Adding   more   spaces   does   nothing.
+....
 
 To add an empty line, use the $P line (see below).
 
-In tagged format, you get exactly what you ask for.
+In tagged format, you get exactly what you ask for, and any additional whitespace you might put in is not removed.
 
 ### Comments
 
@@ -153,7 +155,7 @@ In tagged format, you can insert an empty paragraph for empty lines:
 
 ## Flags
 
-In addition to the basic structure of the cards, flags can be used to introduce more complicated behavior. By default, every time the player goes to a card, the flag with the card's name is turned on. Using these, an optional part can be added to a card's description.
+In addition to the basic structure of the cards, flags can be used to introduce more complicated behavior. By default, every time the player starts a new card, the flag with the card's identifier is turned on. Using these, an optional part can easily be added to a card's description.
 
     $Q alleyway
     You're in a dark alley. There's a door.
@@ -162,7 +164,7 @@ In addition to the basic structure of the cards, flags can be used to introduce 
 
 In this example the "You remember.." line is only shown if the player has visited the backyard page before ending up here.
 
-In tagged format, all operations are added with the op="" attribute:
+In tagged format, all operations are added using the op="" attribute:
 
     <p op="backyard">You remember seeing the bad guys...</p>
 
@@ -214,6 +216,13 @@ If flag check is used with the $A line, the choice is only given to the player i
 
 If flag check is used with the $Q line, any other commands on that same line are only executed if the flag check is positive. (See below for the other commands). The card itself is still displayed.
 
+Multiple flags can be checked at once, and only if all of them are satisfied, text appears:
+
+    $P tuesday !wallet
+    There's a wallet on the street.
+    $P hammer toolbox
+    Both of your hands are full.
+
 ### Setting Flags
 
 To set a flag, use the set: prefix with a flag label.
@@ -222,6 +231,8 @@ To set a flag, use the set: prefix with a flag label.
     Place the trap just outside the door.
     
 If used with the $A line, the command is performed if the player picks the line. If used on a $Q, $P or $O line, the command is performed if the line's flag check succeeds. 
+
+By default, all cards have an implicit set:cardname command in their $Q line.
 
 Setting a flag that is already on is legal, but has no effect.
 
@@ -266,8 +277,9 @@ To set the value of a number, use the = operator.
 
 You can set a number variable to the value of another variable or to a fixed value.
 
-    $A tavern temp=player_money player_money=stranger_money stranger_money=temp
-    Swap purses with the stranger
+    <a tavern op="temp=player_money player_money=stranger_money stranger_money=temp">
+     <p>Swap purses with the stranger</p>
+    </a>
 
 Note that there must be no spaces around the operators.
 
@@ -289,12 +301,6 @@ If you prefer, you can use -= and += instead of - and +:
 
     $A fountain score+=3 darts-=1 darts>0
     Throw a dart at the board
-
-Here's the last example in the tagged format:
-
-    <a fountain op="score+=3 darts-=1 darts>0">
-     <p>Throw a dart at the board</p>
-    </a>
 
 ### Comparing Numbers
 
@@ -343,7 +349,7 @@ these characters.
     $Q store
     The shopkeeper polishes an apple while he's waiting for you
     to make a selection. You currently have <<gold>> gold.
-    $A store gold>5 gold-5 set:dagger
+    $A store gold>=5 gold-5 set:dagger
     Buy the dagger for 5 gold
 
 Alternatively it's possible to use the print command:
@@ -370,6 +376,11 @@ it won't do what you expect:
     $O bird=parrot
     
 This will create a new numeric variable called "parrot", which will live alongside the flag "parrot". The compiler will warn you if you try to do this.
+
+What does work is checking for the flag and using number assignment:
+
+    $O parrot bird=1
+    $O !parrot bird=0
 
 ## Go and Gosub
 
@@ -440,7 +451,7 @@ Commands are, generally speaking, executed in the order they're set. In the foll
 
     $O foo=1 goto:elsewhere foo=2
     
-However, flag check is always performed first, and only if the whole flag check succeeds, the other commands are executed. Thus, if you write something as convoluted as:
+However, flag check is always performed first, and only if the whole flag check succeeds, the other commands are executed. (Random and numeric value comparisons are also part of this flag check). Thus, if you write something as convoluted as:
 
     <o op="set:flaggy flaggy clear:flaggy toggle:flaggy">
     
@@ -453,19 +464,25 @@ what happens is:
 
 Another example, just to be sure:
 
-    $O attr=7 apple cls=1 banana rnd:25 orange set:strawberry
+    $O attr=7 apple cls=1 banana>3 rnd:25 orange set:strawberry
     
 This becomes:
     
-    If apple is on, and banana is on, 
-    and random is less than 25 and orange is on:
+    If apple is on, AND banana is bigger than 3, 
+    AND random is less than 25 AND orange is on:
         Set attr to 7
         Set cls to 1
         Set strawberry
 
 To reiterate: first everything that affects whether the line should be executed is evaluated, and only then the rest are executed, assuming all of those things turn out to be true.
 
-If any of the checks fail, the rest are not executed.
+Here's another corner case:
+
+    $P alpha go:elsewhere beta set:gamma
+
+In the above case the alpha and beta flags are checked first, then the go:elsewhere is executed and set:gamma is never reached.
+
+If any of the checks fail, the rest of the operations are not executed.
 
 In case of $A blocks, in addition to the $A line itself being predicated, the answer is only included if it produces any text (i.e, if there is at least one paragraph that is not predicated away), but the commands are only executed when the option is selected.
 
@@ -507,7 +524,7 @@ For tagged format, use <include>:
 
 ### Using Several Decks
 
-When using several decks you can share the same persistent state between all of the decks. This may make keeping track of the symbols can be rather difficult, but lets different decks make checks based on symbold used in another deck. As mentioned before (in deck configuration), every deck can have a prefix set using the config statement:
+When using several decks you can share the same persistent state between all of the decks. This may make keeping track of the symbols can be rather difficult, but lets different decks make checks based on symbols used in another deck. As mentioned before (in deck configuration), every deck can have a prefix set using the config statement:
 
     $C prefix
     
@@ -516,4 +533,23 @@ This will turn every local symbol to a global one. For example, if you have a de
 Thus, you can take your deck with prefix "lisa" and check if joe is grateful by referring to the "joe.grateful" tag.
 
 It is also possible to have several decks with the same prefix. This can be useful if you have several discussions with the same NPC.
+
+Here's a larger example:
+
+....
+    $C lisa
+    $Q entry
+    How may I help you?
+    $A milkshake joe.milkshake
+    Joe told me about this milkshake..
+....
+
+....
+    $C joe
+    $Q entry
+    Yo dude, what's up?
+    $A thanks lisa.milkshake
+    You were right, Lisa's milkshake was great!
+....
+
 
