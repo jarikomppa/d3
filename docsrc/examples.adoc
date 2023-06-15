@@ -11,19 +11,22 @@ digraph {
    start -> name;
    start -> jobs;
    start -> virtue;
+   start -> end
 }
 ....
 
-The description-choices structure can also describe dialogue with a non-player character.
+The description-choices structure can also describe dialogue with a non-player character. Here the options are only shown if player hasn't picked them before, and the "Nothing" option only shows up after the others have been explored:
 
     $Q start
     Well hello there. What do you want to know about?
-    $A name
+    $A name !name
     Name
-    $A jobs
+    $A jobs !jobs
     Jobs
-    $A virtue
+    $A virtue !virtue
     Virtue
+    $A end name jobs virtue
+    Nothing
 
 ### Button Toggle
 
@@ -203,7 +206,8 @@ create a dam in order to be able to cross the river.
     $P !dam
     It seems you could easily roll a big stone to the river,
     $P dam
-    Huge rock is blocking the river flow.
+    Huge rock is blocking the river flow, 
+    $P
     creating a dam.
     $A forestpath
     Go south
@@ -316,11 +320,9 @@ digraph {
 }
 ....
 
-The complex example concentrates on the more advanced features of DialogTree, including
-flag manipulation, and primarily has one heavily self-referential page.
+The complex example concentrates on the more advanced features of DialogTree, including flag manipulation, and primarily has one heavily self-referential page.
 
-The player needs to put on a light in order to see a key, which the player must pick up,
-unlock a door, open the door, and then leave.
+The player needs to put on a light in order to see a key, which the player must pick up, unlock a door, open the door, and then leave.
 
 ### Traveller
 
@@ -333,7 +335,6 @@ digraph {
    redroom, greenroom, blueroom -> end;
 }
 ....
-
 
 In the traveller example the player is expected to run after a fleeing creature, which hops from one room to the next randomly, with a small chance of it staying put.
 
@@ -351,8 +352,7 @@ This effect is created through a relatively complicated logic. Each room consist
 
 First, "flip" and "stay" flags are cleared. Next, "flip" is set 50% of the time, and "stay" is set rather rarely.
 
-Then, if the creature is in this room and is not staying, depending on whether flip is on, the creature is moved
-from this room to one of the other ones.
+Then, if the creature is in this room and is not staying, depending on whether flip is on, the creature is moved from this room to one of the other ones.
 
 If the creature is still in this room after those checks, we announce it.
 
@@ -548,9 +548,7 @@ digraph dialog_tree {
 }
 ....
 
-This is the complete "Waiting for the Light" gamebook by Kieran Coghlan, consisting of
-a hundred locations, flags and numbers, converted to MuCho, the zx spectrum predecessor of DialogTree. 
-The MuCho version was done with persmission of the author.
+This is the complete "Waiting for the Light" gamebook by Kieran Coghlan, consisting of a hundred locations, flags and numbers, converted to MuCho, the zx spectrum predecessor of DialogTree. The MuCho version was done with persmission of the author.
 
 This also works as a demonstration of d3 compiler's graphviz (.dot) export - the graphs here are based on said output.
 
@@ -785,11 +783,24 @@ The dialogtree version is actually more difficult than the paper version because
 [graphviz, "blackjack", align="center"]
 ....
 digraph {
-    intro -> start -> start -> ingame;
-    ingame -> ingame -> hit, stand;
-    hit, stand -> dealerhit -> bothbust, bust, win;
-    bothbust, bust, win -> start;
-    dealerhit -> ingame;
+	intro -> start [ label="Shut up a...", color=black, fontname="Arial", fontsize="10.0" ];
+	start -> ingame [ label="Start pla...", color=black, fontname="Arial", fontsize="10.0" ];
+	start -> start [ label="Bet ...", color=black, fontname="Arial", fontsize="10.0" ];
+	ingame -> hit [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	ingame -> dealerhit [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	ingame -> ingame [ label="Hit", color=black, fontname="Arial", fontsize="10.0" ];
+	ingame -> stand [ label="Stand", color=black, fontname="Arial", fontsize="10.0" ];
+	ingame -> bust [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	ingame -> win [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	ingame -> bothbust [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	stand -> dealerhit [ label="gosub", color=blue, fontcolor=blue, fontname="Arial", fontsize="10.0" ];
+	stand -> win [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	stand -> bothbust [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	stand -> bust [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	stand -> win [ label="Continue", color=black, fontname="Arial", fontsize="10.0" ];
+	bust -> start [ label="Keep play...", color=black, fontname="Arial", fontsize="10.0" ];
+	bothbust -> start [ label="Keep play...", color=black, fontname="Arial", fontsize="10.0" ];
+	win -> start [ label="Keep play...", color=black, fontname="Arial", fontsize="10.0" ];
 }
 ....
 
@@ -807,6 +818,6 @@ In the bothbust page the player gets the bet back, and is sent back to start to 
 
 In the win page the player gets their money back twice, and we carefully check if the sum goes over maximum. If it does, we show the good ending text and end the game there. There's no separate game over page in this case either.
 
-The hit and dealerhit pages generate 4 random flags, and then produce a value between 0 and 10 to add to either the player's, or the dealer's, score. Since there are 16 options, 3 of the options give 10 points and 4 of the options give 0 (9+4+3=16). (There's no looping in DialogTree (yet, anyway), so we can't just ignore the zero results and randomize again).
+The hit and dealerhit pages generate 4 random flags, and then produce a value between 0 and 10 to add to either the player's, or the dealer's, score. Since there are 16 options, 3 of the options give 10 points and 4 of the options give 0 (9+4+3=16). (There's no looping in DialogTree (yet, anyway), so we can't just ignore the zero results and randomize again). (Well, that's not exactly true, you could just use go: calls to keep jumping to the same page..)
 
 And there you have it - something that approximates blackjack in DialogTree.
