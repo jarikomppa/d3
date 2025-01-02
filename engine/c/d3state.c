@@ -1,4 +1,13 @@
 /*
+DialogTree (d3) engine
+Copyright (c) 2020-2025 Jari Komppa
+http://iki.fi/sol
+Released under Unlicense
+
+See d3c.h for details
+*/
+
+/*
 Example implementation of state.
 When integrating with a game engine, it's possible
 that some kind of state system already exists,

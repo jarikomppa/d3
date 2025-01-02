@@ -1,3 +1,11 @@
+/*
+DialogTree (d3) engine
+Copyright (c) 2020-2025 Jari Komppa
+http://iki.fi/sol
+Released under Unlicense
+
+See d3c.h for details
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>

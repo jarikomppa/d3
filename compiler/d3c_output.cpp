@@ -1,6 +1,6 @@
 /*
 DialogTree (d3) engine compiler
-Copyright (c) 2020 Jari Komppa
+Copyright (c) 2020-2025 Jari Komppa
 http://iki.fi/sol
 Released under Unlicense
 
@@ -11,6 +11,8 @@ See d3c.h for details
 
 bool has_newline(const char* s)
 {
+	if (!s)
+		return false;
 	while (*s)
 	{
 		if (*s == '\n')
@@ -22,6 +24,8 @@ bool has_newline(const char* s)
 
 bool end_newline(const char* s)
 {
+	if (!s)
+		return false;
 	while (*s)
 	{
 		s++;
@@ -167,6 +171,7 @@ void fprintf_ops(FILE *f, Op* op)
 
 void output_tagged(FILE* f)
 {
+	printf("Output in <tagged> format\n");
 	fprintf(f, "<deck>\n");
 	Card* cw = gCardRoot;
 	while (cw)
@@ -232,6 +237,7 @@ void fprintf_ops_template(FILE* f, Op* op)
 
 void fprintf_doublenl(FILE* f, char *s)
 {
+	if (!s) return;
 	while (*s)
 	{
 		fprintf(f, "%c", *s);
@@ -243,6 +249,7 @@ void fprintf_doublenl(FILE* f, char *s)
 
 void output_template(FILE* f)
 {
+	printf("Output in $template format\n");
 	Card* cw = gCardRoot;
 	while (cw)
 	{
@@ -269,7 +276,7 @@ void output_template(FILE* f)
 				if (sw->mQuestion && pw->mOp)
 				{
 					fprintf(f, "$P");
-					fprintf_ops(f, pw->mOp);
+					fprintf_ops_template(f, pw->mOp);
 					fprintf(f, "\n");
 					fprintf_doublenl(f, pw->mText);
 				}
@@ -288,6 +295,7 @@ void output_template(FILE* f)
 
 void output_json(FILE* f)
 {
+	printf("Output in .json format\n");
 	fprintf(f, "{\n \"cards\": [\n");
 	Card* cw = gCardRoot;
 	while (cw)
@@ -371,6 +379,7 @@ void patchdword(unsigned int d, int ofs, FILE* f)
 
 void output_binary(FILE* f)
 {
+	printf("Output in 0xBinary format\n");
 	writedword(D3_HEAD, f); // 'D300' in reverse
 	int d300ofs = ftell(f);
 	writedword(0, f); // placeholder

@@ -1,6 +1,6 @@
 /*
 DialogTree (d3) engine compiler
-Copyright (c) 2020-2023 Jari Komppa
+Copyright (c) 2020-2025 Jari Komppa
 http://iki.fi/sol
 Released under Unlicense
 
