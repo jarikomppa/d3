@@ -230,6 +230,7 @@ digraph {
 }
 ....
 
+....
     $Q coinroom
     $P !toss clr:result
     $P !toss rnd:64 set:result
@@ -243,6 +244,7 @@ digraph {
     Look again.
     $A coinroom clear:toss
     Toss again.
+....
 
 In pseudocode, the above becomes:
 

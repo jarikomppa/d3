@@ -7,13 +7,27 @@ Here's all of the syntax in handy table form. In many cases there are several wa
 [cols="20,~"]
 |===
 |Line start    | Description
+|$C            | Deck configuration. Use to set deck prefix and optional flags.
 |$Q            | Start of a new card. Can include opcodes (commands and predicates)
 |$A            | Answer block. Can include opcodes (commands and predicates)
 |$P            | Paragraph. May contain opcodes (commands and predicates)
 |$O            | Optional. Same as $P but without paragraph break.
-|$C            | Deck configuration. Use to set deck prefix and optional flags.
 |$I            | Include another file into the script
-|$G            | Global page. Works like $Q, included at start of every $Q
+|$G            | Global page. Works like $Q, gosub'd at start of every $Q
+|===
+
+### Tag types
+
+[cols="20,~"]
+|===
+|tag           | Description
+|<deck>        | Deck configuration. Use to set deck prefix and optional flags.
+|<card>        | Start of a new card. Can include opcodes (commands and predicates)
+|<a>           | Answer block. Can include opcodes (commands and predicates)
+|<p>           | Paragraph. May contain opcodes (commands and predicates)
+|<o>           | Optional. Same as <p> but without paragraph break.
+|<include>     | Include another file into the script
+|<global>      | Global page. Works like <card>, gosub'd at start of every <card>
 |===
 
 ### Predicates
